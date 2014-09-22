@@ -1,0 +1,56 @@
+body{
+	
+	width:100%; 
+	background-color:blue;
+}
+
+font{
+	color:lightblue;
+}
+
+div.FillScreenTextCentered{
+	 width:90%;
+	 margin-right:auto; 
+	 margin-left:auto; 
+	 text-align:center;
+}
+
+p.ErrorMessageOutput{
+	width:80%;
+	margin-left:10%;
+	margin-right:10%;
+	background-color:lightgrey;
+	text-align:center;
+}
+
+input{
+	width:97%;
+}
+
+input.button{
+	font-size:18px;
+}
+
+table{
+	width:80%;
+	margin-left:10%;
+	marin-right:10%;
+}
+
+/*tr{
+	background-color:grey;
+}*/
+
+td{
+	text-align:center;
+}
+td.HomeInputTitle{
+	width:8%; /*20% of 40% = 
+	            since the table takes up 80% of the page width and we only want each column to take up max 50% of the table*/
+}
+
+td.HomeInputContent{
+	width:32%; /*80% of 40% = 32% 
+			    since the table takes up 80% of the page width and we only want each column to take up max 50% of the table*/
+}
+
