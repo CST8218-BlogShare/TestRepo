@@ -31,11 +31,11 @@ input.button{
 	font-size:18px;
 }
 
-table{
+/*table{
 	width:80%;
 	margin-left:10%;
 	marin-right:10%;
-}
+}*/
 
 /*tr{
 	background-color:grey;
@@ -44,13 +44,29 @@ table{
 td{
 	text-align:center;
 }
+
 td.HomeInputTitle{
-	width:8%; /*20% of 40% = 
-	            since the table takes up 80% of the page width and we only want each column to take up max 50% of the table*/
+	width:8%; 
+	
+	/*
+		Since the table surrounding the two forms, takes up 80% of the screen, each of the two tables should take up 40% of the screen.
+		
+		I am giving 20% of this 40% to the title of the element asking for user input.
+		0.2 * 40 = 8 
+	*/
 }
+*/
+
 
 td.HomeInputContent{
-	width:32%; /*80% of 40% = 32% 
-			    since the table takes up 80% of the page width and we only want each column to take up max 50% of the table*/
+	width:32%; 
+	
+	/*
+		Since the table surrounding the two forms, takes up 80% of the screen, each of the two tables should take up 40% of the screen.
+		
+		I am giving 80% of this 40% to the title of the element asking for user input.
+		0.8 * 40 = 32 
+	*/
 }
+
 

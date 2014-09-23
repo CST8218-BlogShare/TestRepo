@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
     pageEncoding="ISO-8859-1"%>  
 <html>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
 <link rel="stylesheet" href="LookAndFeel.css">
 <title>BlogShare - Home</title>
@@ -22,30 +23,53 @@
 	
 		<!-- table containing form for user registration and login-->
 		<div style="margin-bottom:5%;">
-			<form action="loginServlet" method="post">
-				<table cellpadding=3 cellspacing=1 bordercolor=lightgrey >
-			    	<tr> 
-			        	<td colspan=2> <font size=6 > <b> Register </b> </font> </td> 
-			        	<td colspan=2> <font size=6> <b> Login </b> </font> </td>       
-			    	</tr>
-					<tr> 
-						 <td><font>Username</font></td> <td><input type=text name=registerUsername maxlength=100/> </td> 
-				     	 <td><font>Username</font></td> <td><input type=text name=loginUsername maxlength=100/> </td> 
-					</tr>
-					<tr> 
-						<td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=registerPass  maxlength=100/></td>
-				     	<td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=loginUserpass  maxlength=100/>   </td> 
-					</tr>
-					<tr> 
-						<td class="HomeInputTitle"><font>Reenter Password</font></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
-					 	<td colspan=2></td> <!-- empty column to fill in table -->         
-					</tr>
-					<tr> 
-						<td colspan=2><input class=button type=button value="Register"/></td>         
-				     	<td colspan=2><input class=button type=submit value="Login" /></td>    
-			    	</tr>
-				</table>
-			</form>
+			<table style="width:80%;  margin-left:10%; marin-right:10%;">
+				<tr>
+					<td style="width:40%;">
+						<form name="RegisterForm" action="RegisterServlet" method="post">
+							<table>
+								<tr> 
+										 <td colspan=2> <font size=6 > <b> Register </b> </font> </td> 
+								</tr>
+								<tr>
+										 <td class="HomeInputTitle"><font>Username</font></td> <td  class="HomeInputContent"><input type=text name=registerUsername maxlength=100/> </td> 
+								</tr>
+								<tr>
+										 <td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=registerPass  maxlength=100/></td>
+								</tr>
+								<tr>
+										<td class="HomeInputTitle"><font>Reenter Password</font></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
+								</tr>
+								<tr>
+										 <td colspan=2><input class=button type=submit value="Register"/></td>     
+								</tr>
+							</table>
+						</form>
+					</td>
+						
+					<td  style="width:40%;">
+						<form name="LoginForm" action="loginServlet" method="post">
+							<table>
+								<tr>
+									<td colspan=2> <font size=6> <b> Login </b> </font> </td> 
+								</tr>
+							    <tr>
+									<td class="HomeInputTitle"><font>Username</font></td> <td><input type=text name=loginUsername maxlength=100/> </td> 
+								</tr>
+								<tr>
+									<td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=loginUserpass  maxlength=100/>   </td> 
+								</tr>
+								<tr>
+									<td colspan=2> <br><br> </td> <!-- empty column to fill in table -->  
+								</tr>
+								<tr>
+									<td colspan=2><input class=button type=submit value="Login"/></td>   
+								</tr>
+							</table>
+						</form>
+					</td>
+				</tr>	
+			</table>
 		</div>
 	
 		<!--  div for output of error messages related to registration and login -->
