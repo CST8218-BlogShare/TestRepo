@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;  
 import java.sql.SQLException;  
   
-public class LoginDao {  
+public class Login {  
     public static boolean validate(String name, String pass) {          
         boolean status = false;  
         Connection conn = null;  
@@ -14,11 +14,10 @@ public class LoginDao {
         ResultSet rs = null;  
   
         String url = "jdbc:mysql://localhost:3306/";  
-        String dbName = "blogsharedatatest";  //String dbName = "form";  
+        String dbName = "blogsharedatatest";  
         String driver = "com.mysql.jdbc.Driver";  
         String userName = "root";  
         String password = "rootpass";
-        //String password = "Xesastime13";  
         
         try {  
             Class.forName(driver).newInstance();  
