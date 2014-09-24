@@ -36,8 +36,15 @@ public class RegisterServlet extends HttpServlet {
 	        }    
 	        else{    
 	            out.print("<p style=\"color:red\">But they really like appearing here <br> Sorry username or password error on registration</p>"); 
-	        	//response.setContentType("text/plaintext");
-	            //out.print("<script> document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\"</script>");
+	        	response.setContentType("text/plaintext");
+	            //out.print("<% document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\" /%> ");
+	            
+	        	/*out.print("<script>");
+	        	out.print("function error() { document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\"; }");
+	        	out.print("\"error()\";");
+	        	out.print("</script>");*/
+	       
+	            
 	            RequestDispatcher rd=request.getRequestDispatcher("home.jsp");    
 	            rd.include(request,response);    
 	        }    
