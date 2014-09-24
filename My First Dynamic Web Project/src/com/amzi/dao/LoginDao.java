@@ -14,11 +14,10 @@ public class LoginDao {
         ResultSet rs = null;  
   
         String url = "jdbc:mysql://localhost:3306/";  
-        String dbName = "blogsharedatatest";  //String dbName = "form";  
+        String dbName = "form";  
         String driver = "com.mysql.jdbc.Driver";  
         String userName = "root";  
-        String password = "rootpass";
-        //String password = "Xesastime13";  
+        String password = "Xesastime13";  
         
         try {  
             Class.forName(driver).newInstance();  

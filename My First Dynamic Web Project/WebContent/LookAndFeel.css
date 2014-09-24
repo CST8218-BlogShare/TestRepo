@@ -21,6 +21,7 @@ p.ErrorMessageOutput{
 	margin-right:10%;
 	background-color:lightgrey;
 	text-align:center;
+	color:black;
 }
 
 input{

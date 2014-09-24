@@ -24,8 +24,8 @@ public class Login {
             conn = DriverManager  
                     .getConnection(url + dbName, userName, password);  
   
-            pst = conn  
-                    .prepareStatement("select * from user where username=? and password=?");  
+            pst = conn.prepareStatement("select * from user where username=? and password=?"); 
+            
             pst.setString(1, name);  
             pst.setString(2, pass);  
   

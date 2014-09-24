@@ -26,16 +26,16 @@
 			<table style="width:80%;  margin-left:10%; marin-right:10%;">
 				<tr>
 					<td style="width:40%;">
-						<form name="RegisterForm" action="RegisterServlet" method="post">
+						<form name="RegisterForm" action="registerServlet" method="post">
 							<table>
 								<tr> 
 										 <td colspan=2> <font size=6 > <b> Register </b> </font> </td> 
 								</tr>
 								<tr>
-										 <td class="HomeInputTitle"><font>Username</font></td> <td  class="HomeInputContent"><input type=text name=registerUsername maxlength=100/> </td> 
+										 <td class="HomeInputTitle"><font>Username</font></td> <td  class="HomeInputContent"><input type=text name=registerUsername value="" maxlength=100/> </td> 
 								</tr>
 								<tr>
-										 <td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=registerPass  maxlength=100/></td>
+										 <td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=registerUserPass  maxlength=100/></td>
 								</tr>
 								<tr>
 										<td class="HomeInputTitle"><font>Reenter Password</font></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
@@ -54,7 +54,7 @@
 									<td colspan=2> <font size=6> <b> Login </b> </font> </td> 
 								</tr>
 							    <tr>
-									<td class="HomeInputTitle"><font>Username</font></td> <td><input type=text name=loginUsername maxlength=100/> </td> 
+									<td class="HomeInputTitle"><font>Username</font></td> <td><input type=text name=loginUsername value="" maxlength=100/> </td> 
 								</tr>
 								<tr>
 									<td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=loginUserpass  maxlength=100/>   </td> 
@@ -76,7 +76,7 @@
 		<div>
 			<p class="ErrorMessageOutput" id="errorOutput">
 				<br>
-				Error messages go here.<br>
+				Error messages go here<br>
 				<br>
 			</p>
 		</div>

@@ -12,6 +12,16 @@
         <servlet-name>login</servlet-name>  
         <url-pattern>/loginServlet</url-pattern>  
     </servlet-mapping>  
+    
+    <servlet>  
+        <servlet-name>register</servlet-name>  
+        <servlet-class>com.amzi.servlets.RegisterServlet</servlet-class>  
+    </servlet>  
+  
+    <servlet-mapping>  
+        <servlet-name>register</servlet-name>  
+        <url-pattern>/registerServlet</url-pattern>  
+    </servlet-mapping>
   
     <welcome-file-list>  
         <welcome-file>home.jsp</welcome-file>  

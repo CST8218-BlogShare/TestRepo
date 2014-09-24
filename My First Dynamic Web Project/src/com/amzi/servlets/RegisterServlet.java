@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;
 
-import com.amzi.dao.Login; 
+import com.amzi.dao.Register; 
 
 public class RegisterServlet extends HttpServlet {
 
@@ -23,18 +23,21 @@ public class RegisterServlet extends HttpServlet {
 	        PrintWriter out = response.getWriter();    
 	          
 	        String n=request.getParameter("registerUsername");    
-	        String p=request.getParameter("registerUserpass");   
-	          
+	        String p=request.getParameter("registerUserPass");
+	        String p2=request.getParameter("registerReenterPass");
+	            
 	        HttpSession session = request.getSession(false);  
 	        if(session!=null)  
 	        session.setAttribute("name", n);  
 	  
-	        if(Login.validate(n, p)){    
+	        if(Register.validate(n, p, p2)){    
 	            RequestDispatcher rd=request.getRequestDispatcher("welcome.jsp");    
 	            rd.forward(request,response);    
 	        }    
 	        else{    
-	            out.print("<p style=\"color:red\">Sorry username or password error</p>");    
+	            out.print("<p style=\"color:red\">But they really like appearing here <br> Sorry username or password error on registration</p>"); 
+	        	//response.setContentType("text/plaintext");
+	            //out.print("<script> document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\"</script>");
 	            RequestDispatcher rd=request.getRequestDispatcher("home.jsp");    
 	            rd.include(request,response);    
 	        }    
