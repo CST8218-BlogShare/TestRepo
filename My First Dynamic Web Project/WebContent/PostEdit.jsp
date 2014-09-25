@@ -57,9 +57,9 @@
 				<!-- additional posts -->
 				<tr>
 					<td>
-						<p>New Post Title Below</p>
+						<p>Post Title Below</p>
 						<input type=text name=postTitle  maxlength=100/>
-						<p>New Post Content Below</p>
+						<p>NPost Content Below</p>
 						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Editable</textarea>
 					</td>
 				</tr>

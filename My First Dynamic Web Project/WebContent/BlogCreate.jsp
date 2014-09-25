@@ -12,7 +12,7 @@
 			 	<!-- blog title -->
 			 	<tr style="margin-bottom:5%;">
 					<td>
-						<p> Blog Title </p>
+						<p> Enter Blog Title </p>
 						<font size="18"><input type=text name=blogTitle maxlength=100/></font>
 					</td>
 				</tr>
@@ -27,7 +27,7 @@
 				<!-- first post -->
 				<tr>
 						<td>
-							<p>Post Title </p>
+							<p>Enter Post Title </p>
 							<input type=text name=blogTitle  maxlength=100/>	
 						</td>
 				</tr>
@@ -42,7 +42,7 @@
 				
 				<tr>
 						<td>
-							<p>Post Body</p>
+							<p>Enter Post Body</p>
 							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea>
 							<br>
 							<br>
