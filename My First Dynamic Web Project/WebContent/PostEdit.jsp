@@ -64,14 +64,13 @@
 					</td>
 				</tr>
 			 
-<tr>
-						<td>
-							<form action="Blog.jsp">
-	   							<input type="submit" value="Save">
-							</form>
-						<td>
-						</td>
-					</tr>
+				<tr>
+					<td>
+						<form action="Blog.jsp">
+	   						<input type="submit" value="Save">
+						</form>
+					</td>
+				</tr>
 					
 					<!-- creating space -->
 				<tr>
@@ -81,9 +80,6 @@
 						</form>
 					</td>
 				</tr>
-				
-				
-			
 		</table>
 	<body>
 </html>

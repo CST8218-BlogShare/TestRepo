@@ -39,7 +39,7 @@
 					</td>
 					<td>
 						<!-- space for edit logo -->
-						<img src="images/read.jpg" alt="Edit Enabled, click here"> 
+						<a href="BlogEdit.jsp"><img src="images/read.jpg" alt="Edit Enabled, click here"> </a>
 					</td>
 				</tr>
 				
@@ -56,7 +56,7 @@
 							<p> First Post Title </p>
 						</td>
 						<td>
-							<img src="images/read.jpg" alt="Edit Enabled, click here"> 
+							<a href="BlogEdit.jsp"><img src="images/read.jpg" alt="Edit Enabled, click here"></a> 
 						</td>
 				</tr>
 				
@@ -91,7 +91,7 @@
 							<p> Second Post Title </p>
 						</td>
 						<td>
-							<img src="images/edit.jpg" alt="Edit Enabled, click here"> 
+							<a href="BlogEdit.jsp"><img src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
 						</td>
 					</tr>
 					
