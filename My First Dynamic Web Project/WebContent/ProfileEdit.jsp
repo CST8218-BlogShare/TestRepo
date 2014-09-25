@@ -30,8 +30,13 @@
 		 	<input type="text" class="form-control" >
 		</div>
 		<div class="btn-group" style="padding:30px">
+<<<<<<< HEAD
 			 <a href="Profile.jsp"> <button type="button" class="btn btn-default btn-lrg">Submit Changes</button></a>
 			 <a href="Profile.jsp"> <button type="button" class="btn btn-default btn-lrg">Cancel</button></a>
+=======
+			  <a href="Profile.jsp"><button type="button" class="btn btn-default btn-lrg">Submit Changes</button></a>
+			  <a href="Profile.jsp"><button type="button" class="btn btn-default btn-lrg">Cancel</button></a>
+>>>>>>> 78418dccfbc429ea04e2f3fff58f4a8c0aaf05ef
 		</div>
 	</div>
 	<br style="clear:left;"/>
