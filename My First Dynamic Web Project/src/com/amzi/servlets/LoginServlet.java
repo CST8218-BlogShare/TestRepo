@@ -33,10 +33,10 @@ public class LoginServlet extends HttpServlet{
   
         if(Login.validate(n, p)){   
         	HttpSession session = request.getSession(false);  
-              if(session!=null) {
-            	  session.setAttribute("name",n);
-                  session.setAttribute("dateRegistered", Login.dateRegistered);
-              }
+            if(session!=null) {
+            	session.setAttribute("name",n);
+                session.setAttribute("dateRegistered", Login.dateRegistered);
+            }
               
               /*
                * 
