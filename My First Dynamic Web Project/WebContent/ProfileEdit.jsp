@@ -30,8 +30,8 @@
 		 	<input type="text" class="form-control" >
 		</div>
 		<div class="btn-group" style="padding:30px">
-			  <button type="button" class="btn btn-default btn-lrg">Submit Changes</button>
-			  <button type="button" class="btn btn-default btn-lrg">Cancel</button>
+			  <a href="Profile.jsp"><button type="button" class="btn btn-default btn-lrg">Submit Changes</button></a>
+			  <a href="Profile.jsp"><button type="button" class="btn btn-default btn-lrg">Cancel</button></a>
 		</div>
 	</div>
 	<br style="clear:left;"/>
