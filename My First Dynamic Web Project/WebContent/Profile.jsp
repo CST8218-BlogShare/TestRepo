@@ -40,10 +40,14 @@
 		<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("name") %>'s Profile Page</h1>
 		<h3><span class="label label-default">Joined: <%= session.getAttribute("dateRegistered") %></span></h3>
 		<p style="padding:50px">
-			<button type="button" class="btn btn-default btn-lrg" style="width:500px">Edit Profile</button>
+			<form action="editProfile.jsp">
+				<input type="submit" width="wrap_content" value="Edit Profile" class="btn btn-default btn-lrg" style="width:500px">
+			</form>
 			<br style="clear:left;"/>
-			<button type="button" class="btn btn-default btn-lrg" style="width:500px">Create Blog</button>
-		</p>
+			<form action="BlogCreate.jsp">
+   				<input type="submit" width="wrap_content" value="Create Blog" class="btn btn-default btn-lrg" style="width:500px">
+			</form>
+			
 		</div>
 	</body>
 </html>

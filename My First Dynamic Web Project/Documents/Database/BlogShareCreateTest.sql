@@ -11,8 +11,6 @@ where
 
 */
 
-status;
-
 set password for 'root'@'127.0.0.1'=password('rootpass');
 set password for 'root'@'localhost'=password('rootpass');
 set password for 'root'@'::1'=password('rootpass');
