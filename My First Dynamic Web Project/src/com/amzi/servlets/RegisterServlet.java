@@ -46,7 +46,7 @@ public class RegisterServlet extends HttpServlet {
 	        	out.print("</script>");*/
 	       
 	            
-	            RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
+	            RequestDispatcher rd=request.getRequestDispatcher("home.jsp");    
 	            rd.include(request,response);    
 	        }    
 	  
