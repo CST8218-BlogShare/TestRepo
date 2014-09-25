@@ -11,7 +11,7 @@ public class Login {
 	public static String dateRegistered;
 	
     public static boolean validate(String name, String pass) {          
-        boolean status = false;  
+        boolean status = true;  
         Connection conn = null;  
         PreparedStatement pst = null;  
         ResultSet rs = null;  
@@ -36,12 +36,15 @@ public class Login {
   
             rs = pst.executeQuery(); 
             
+            
+            rs.first();
             //if the query works,this should never be null. But do we wanna check just because??
             dateRegistered = rs.getString("DateRegistered");
             
-            status = rs.next();
+            //status = rs.next();
         } catch (Exception e) {  
-            System.out.println(e);  
+            System.out.println(e);
+            status = false;
         } finally {  
             if (conn != null) {  
                 try {  
