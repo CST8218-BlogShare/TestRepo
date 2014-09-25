@@ -61,7 +61,7 @@
 			 
 <tr>
 						<td>
-							<form action="/Blog.jsp">
+							<form action="Blog.jsp">
 	   							<input type="submit" value="Save">
 							</form>
 						<td>
@@ -71,7 +71,7 @@
 					<!-- creating space -->
 				<tr>
 					<td>
-						<form action="/Profile.jsp">
+						<form action="Profile.jsp">
    							<input type="submit" width="wrap_content" value="Cancel">
 						</form>
 					</td>
