@@ -64,10 +64,11 @@
 					</td>
 				</tr>
 			 
-					<tr>
+<tr>
 						<td>
-							<button NAME=save>SAVE</button>
-						</td>
+							<form action="Blog.jsp">
+	   							<input type="submit" value="Save">
+							</form>
 						<td>
 						</td>
 					</tr>
@@ -75,10 +76,12 @@
 					<!-- creating space -->
 				<tr>
 					<td>
-						<button NAME=save>Cancel</button>
-						<button NAME=save>Submit</button>
+						<form action="Profile.jsp">
+   							<input type="submit" width="wrap_content" value="Cancel">
+						</form>
 					</td>
 				</tr>
+				
 				
 			
 		</table>

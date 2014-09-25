@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
 <link rel="stylesheet" href="LookAndFeel.css">
-<title>BlogShare - PostEdit</title>
+<title>BlogShare - PostCreate</title>
 </head>
 		<!--table to hold pages content -->
 		<table style="width:80%;  margin-left:10%; marin-right:10%;">
@@ -66,8 +66,9 @@
 			 
 					<tr>
 						<td>
-							<button NAME=save>SAVE</button>
-						</td>
+							<form action="Blog.jsp">
+	   							<input type="submit" value="Save">
+							</form>
 						<td>
 						</td>
 					</tr>
@@ -75,8 +76,9 @@
 					<!-- creating space -->
 				<tr>
 					<td>
-						<button NAME=save>Cancel</button>
-						<button NAME=save>Submit</button>
+						<form action="Profile.jsp">
+   							<input type="submit" width="wrap_content" value="Cancel">
+						</form>
 					</td>
 				</tr>
 				
