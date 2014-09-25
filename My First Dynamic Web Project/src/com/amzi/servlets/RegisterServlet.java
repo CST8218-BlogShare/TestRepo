@@ -31,13 +31,14 @@ public class RegisterServlet extends HttpServlet {
 	        session.setAttribute("name", n);  
 	  
 	        if(Register.validate(n, p, p2)){    
-	            RequestDispatcher rd=request.getRequestDispatcher("welcome.jsp");    
+	            RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
 	            rd.forward(request,response);    
 	        }    
 	        else{    
 	            out.print("<p style=\"color:red\">But they really like appearing here <br> Sorry username or password error on registration</p>"); 
 	        	response.setContentType("text/plaintext");
-	            //out.print("<% document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\" /%> ");
+	            
+	        	//out.print("<% document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\" /%> ");
 	            
 	        	/*out.print("<script>");
 	        	out.print("function error() { document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\"; }");
@@ -45,7 +46,7 @@ public class RegisterServlet extends HttpServlet {
 	        	out.print("</script>");*/
 	       
 	            
-	            RequestDispatcher rd=request.getRequestDispatcher("home.jsp");    
+	            RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
 	            rd.include(request,response);    
 	        }    
 	  

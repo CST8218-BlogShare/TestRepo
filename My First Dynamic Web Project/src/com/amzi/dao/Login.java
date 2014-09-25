@@ -5,11 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;  
 import java.sql.ResultSet;  
 import java.sql.SQLException;  
-
-import javax.servlet.http.HttpSession;
   
-public class Login {  
-    public static boolean validate(String name, String pass, HttpSession session) {          
+public class Login { 
+	
+	public static String dateRegistered;
+	
+    public static boolean validate(String name, String pass) {          
         boolean status = false;  
         Connection conn = null;  
         PreparedStatement pst = null;  
@@ -18,27 +19,27 @@ public class Login {
         String url = "jdbc:mysql://localhost:3306/";  
         String dbName = "blogsharedatatest";  
         String driver = "com.mysql.jdbc.Driver";  
-        String userName = "root";  
-        String password = "rootpass";
+        String dbUserName = "root";  
+        String dbPassword = "rootpass";
+        
+        
         
         try {  
             Class.forName(driver).newInstance();  
             conn = DriverManager  
-                    .getConnection(url + dbName, userName, password);  
+                    .getConnection(url + dbName, dbUserName, dbPassword);  
   
             pst = conn.prepareStatement("select * from user where username=? and password=?"); 
             
             pst.setString(1, name);  
             pst.setString(2, pass);  
   
-            rs = pst.executeQuery();  
+            rs = pst.executeQuery(); 
+            
+            //if the query works,this should never be null. But do we wanna check just because??
+            dateRegistered = rs.getString("DateRegistered");
             
             status = rs.next();
-            
-            session.setAttribute("dateRegistered", rs.getString("DateRegistered"));
-            
-              
-  
         } catch (Exception e) {  
             System.out.println(e);  
         } finally {  

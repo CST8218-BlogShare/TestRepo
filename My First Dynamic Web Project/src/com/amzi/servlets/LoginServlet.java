@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
   
+
 import com.amzi.dao.Login;  
   
 public class LoginServlet extends HttpServlet{  
@@ -25,18 +26,44 @@ public class LoginServlet extends HttpServlet{
         String n=request.getParameter("loginUsername");    
         String p=request.getParameter("loginUserpass");   
           
-        HttpSession session = request.getSession(false);  
+        /*HttpSession session = request.getSession(false);  
         if(session!=null) {
-        	session.setAttribute("name", n);  
-        }
+        	//if session is null need to throw an error. 
+        }*/
   
-        if(Login.validate(n, p, session)){    
-            RequestDispatcher rd=request.getRequestDispatcher("welcome.jsp");    
+        if(Login.validate(n, p)){   
+        	HttpSession session = request.getSession(false);  
+              if(session!=null) {
+            	  session.setAttribute("name",n);
+                  session.setAttribute("dateRegistered", Login.dateRegistered);
+              }
+              
+              /*
+               * 
+               * 
+               * could use this approach to catch error in event of null.
+               * try{
+               * 
+               * 	if(session == null){
+               * 		throw exception;
+               * 	}
+               * 
+               *  	HttpSession session = request.getSession(false);  
+               *  	session.setAttribute("name",n);
+               *  	session.setAttribute("dateRegistered", Login.dateRegistered);
+               * }catch(Exception e){
+               * 	 System.out.println(e);  
+               *    //load error page once fully implemented
+               * }
+               * 
+               */
+
+            RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
             rd.forward(request,response);    
         }    
         else{    
             out.print("<p style=\"color:red\">But they really like appearing here. <br> Sorry username or password error on login.</p>");    
-            RequestDispatcher rd=request.getRequestDispatcher("home.jsp");    
+            RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
             rd.include(request,response);    
         }    
   

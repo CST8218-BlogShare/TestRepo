@@ -8,19 +8,42 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="LookAndFeel.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 </head>
-
-<body>
-
-<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("name") %>'s Profile Page</h1>
-<h3><span class="label label-default">Joined: <%= session.getAttribute("dateRegistered") %></span></h3>
-<p style="padding:50px">
-	<button type="button" class="btn btn-default btn-lrg" style="width:500px">Edit Profile</button>
-	<br style="clear:left;"/>
-	<button type="button" class="btn btn-default btn-lrg" style="width:500px">Create Blog</button>
-</p>
-</body>
+	<body>
+		<!-- navigation bar -->
+		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
+			<br>
+			<table style="width:90%; margin-right:auto; margin-left:auto;">
+				<tr style="height:50%;">
+					<td><p><h3>BLOGSHARE</h3></td>
+					<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
+					<td style="width:10%"> <input type=checkbox name=navBarBlogCheck  maxlength=100/>Blogs<p>  </td>
+					<td style="width:10%"> <input type=checkbox name=navBarTitleCheck  maxlength=100/>Titles<p> </td>
+					<td style="width:10%"> <input type=checkbox name=navBarReadCheck  maxlength=100/>Read<p></td>
+					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
+				</tr>
+				<tr style="height:50%;">
+					<td>Welcome!</td>
+					<td style="width:13%"> <input type=checkbox name=navBarPostCheck  maxlength=100/>Posts<p> </td>
+					<td style="width:13%"> <input type=checkbox name=navBarContentCheck  maxlength=100/>Content<p> </td>
+					<td style="width:13%"> <input type=checkbox name=navBarTitleCheck  maxlength=100/>Edit<p> </td>
+				</tr>
+			</table>
+			<br>
+		</div>
+		
+		<div>
+		<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("name") %>'s Profile Page</h1>
+		<h3><span class="label label-default">Joined: <%= session.getAttribute("dateRegistered") %></span></h3>
+		<p style="padding:50px">
+			<button type="button" class="btn btn-default btn-lrg" style="width:500px">Edit Profile</button>
+			<br style="clear:left;"/>
+			<button type="button" class="btn btn-default btn-lrg" style="width:500px">Create Blog</button>
+		</p>
+		</div>
+	</body>
 </html>
