@@ -56,7 +56,7 @@
 										<td class="HomeInputTitle"><font>Reenter Password</font></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
 								</tr>
 								<tr>
-										 <td colspan=2><input class=button type=submit value="Register" onClick="error()"/></td>     
+										 <td colspan=2><input class=button type=submit value="Register"/></td>     
 								</tr>
 							</table>
 						</form>
