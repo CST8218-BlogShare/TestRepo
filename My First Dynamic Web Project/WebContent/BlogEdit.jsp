@@ -15,10 +15,6 @@
 						<p> Blog Title </p>
 						<font size="18"><input type=text name=blogTitle maxlength=100/></font>
 					</td>
-					<td>
-						<!-- space for edit logo -->
-						<img src="images/read.jpg" alt="Edit Enabled, click here"> 
-					</td>
 				</tr>
 				
 				<!-- creating space -->
@@ -33,9 +29,6 @@
 						<td>
 							<p>Post Title </p>
 							<input type=text name=blogTitle  maxlength=100/>	
-						</td>
-						<td>
-							<img src="images/read.jpg" alt="Edit Enabled, click here"> 
 						</td>
 				</tr>
 				
@@ -69,9 +62,6 @@
 					<tr>
 						<td>
 							<button NAME=save>SAVE</button>
-						</td>
-						<td>
-							<img src="images/edit.jpg" alt="Edit Enabled, click here"> 
 						</td>
 					</tr>
 					

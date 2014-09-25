@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
 <link rel="stylesheet" href="LookAndFeel.css">
-<title>BlogShare - BlogCreate</title>
+<title>BlogShare - PostEdit</title>
 </head>
 		<!--table to hold pages content -->
 		<table style="width:80%;  margin-left:10%; marin-right:10%;">
@@ -12,8 +12,7 @@
 			 	<!-- blog title -->
 			 	<tr style="margin-bottom:5%;">
 					<td>
-						<p> Blog Title </p>
-						<font size="18"><input type=text name=blogTitle maxlength=100/></font>
+						<label> Blog Title goes in this label </label>
 					</td>
 				</tr>
 				
@@ -27,8 +26,7 @@
 				<!-- first post -->
 				<tr>
 						<td>
-							<p>Post Title </p>
-							<input type=text name=blogTitle  maxlength=100/>	
+							<label> First post Title </label>
 						</td>
 				</tr>
 				
@@ -42,8 +40,7 @@
 				
 				<tr>
 						<td>
-							<p>Post Body</p>
-							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea>
+							<textarea NAME="postBody" READONLY="readonly" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Uneditable</textarea>
 							<br>
 							<br>
 						</td>
@@ -58,10 +55,20 @@
 				
 		
 				<!-- additional posts -->
+				<tr>
+					<td>
+						<p>New Post Title Below</p>
+						<input type=text name=postTitle  maxlength=100/>
+						<p>New Post Content Below</p>
+						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Editable</textarea>
+					</td>
+				</tr>
 			 
 					<tr>
 						<td>
 							<button NAME=save>SAVE</button>
+						</td>
+						<td>
 						</td>
 					</tr>
 					
