@@ -17,10 +17,10 @@ public class Login {
         ResultSet rs = null;  
   
         String url = "jdbc:mysql://localhost:3306/";  
-        String dbName = "blogsharedatatest"; //form 
+        String dbName = "blogsharedatatest";  
         String driver = "com.mysql.jdbc.Driver";  
-        String dbUserName = "root";  
-        String dbPassword = "rootpass"; //Xesatime13
+        String dbUserName = "blogshareuser";  
+        String dbPassword = "password";
         
          try {  
             Class.forName(driver).newInstance();  

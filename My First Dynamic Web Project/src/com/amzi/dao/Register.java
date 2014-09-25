@@ -20,8 +20,8 @@ public class Register {
         String url = "jdbc:mysql://localhost:3306/";  
         String dbName = "blogsharedatatest";  
         String driver = "com.mysql.jdbc.Driver";  
-        String userName = "root";  
-        String password = "rootpass";
+        String dbUserName = "blogshareuser";  
+        String dbPassword = "password";
         
         try {  
            
@@ -51,7 +51,7 @@ public class Register {
         	
         	Class.forName(driver).newInstance();  
             conn = DriverManager  
-                    .getConnection(url + dbName, userName, password);  
+                    .getConnection(url + dbName, dbUserName, dbPassword);  
   
             pst = conn  
                     .prepareStatement("insert into User values(0, '"+name+"','"+pass+"', curdate() );");  
