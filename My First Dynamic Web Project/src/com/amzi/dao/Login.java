@@ -5,9 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;  
 import java.sql.ResultSet;  
 import java.sql.SQLException;  
+
+import javax.servlet.http.HttpSession;
   
 public class Login {  
-    public static boolean validate(String name, String pass) {          
+    public static boolean validate(String name, String pass, HttpSession session) {          
         boolean status = false;  
         Connection conn = null;  
         PreparedStatement pst = null;  
@@ -30,7 +32,12 @@ public class Login {
             pst.setString(2, pass);  
   
             rs = pst.executeQuery();  
-            status = rs.next();  
+            
+            status = rs.next();
+            
+            session.setAttribute("dateRegistered", rs.getString("DateRegistered"));
+            
+              
   
         } catch (Exception e) {  
             System.out.println(e);  

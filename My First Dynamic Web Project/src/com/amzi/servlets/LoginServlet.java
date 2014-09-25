@@ -26,10 +26,11 @@ public class LoginServlet extends HttpServlet{
         String p=request.getParameter("loginUserpass");   
           
         HttpSession session = request.getSession(false);  
-        if(session!=null)  
-        session.setAttribute("name", n);  
+        if(session!=null) {
+        	session.setAttribute("name", n);  
+        }
   
-        if(Login.validate(n, p)){    
+        if(Login.validate(n, p, session)){    
             RequestDispatcher rd=request.getRequestDispatcher("welcome.jsp");    
             rd.forward(request,response);    
         }    
