@@ -24,7 +24,7 @@
 					</td>
 					<td>
 						<!-- space for edit logo -->
-						<p> test </p>
+						<img src="images/read.jpg" alt="Edit Enabled, click here"> 
 					</td>
 				</tr>
 				
@@ -41,7 +41,7 @@
 							<p> First Post Title </p>
 						</td>
 						<td>
-							<p> test </p>
+							<img src="images/read.jpg" alt="Edit Enabled, click here"> 
 						</td>
 				</tr>
 				
@@ -76,7 +76,7 @@
 							<p> Second Post Title </p>
 						</td>
 						<td>
-							<p> test </p>
+							<img src="images/edit.jpg" alt="Edit Enabled, click here"> 
 						</td>
 					</tr>
 					
