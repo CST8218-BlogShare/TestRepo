@@ -22,7 +22,7 @@ public class LoginServlet extends HttpServlet{
     	
     	
     	//If a session has not been created, one will be created by the call to getSession();
-    	HttpSession session = request.getSession(); 
+    	HttpSession userSession = request.getSession(); 
     	
     	response.setContentType("text/html");    
         PrintWriter out = response.getWriter();    
@@ -31,16 +31,16 @@ public class LoginServlet extends HttpServlet{
         String p=request.getParameter("loginUserpass");   
             
         if(Login.validate(n, p)){   
-        	this.getServletContext().setAttribute("errorCode", 0);
-        	session.setAttribute("username",n);
-            session.setAttribute("dateRegistered", Login.dateRegistered);
+        	getServletContext().setAttribute("errorCode", 0);
+        	userSession.setAttribute("username",n);
+            userSession.setAttribute("dateRegistered", Login.dateRegistered);
             
             RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
             rd.forward(request,response);    
         }    
         else{    
-            this.getServletContext().setAttribute("errorCode", 1);
-        	session.setAttribute("errorMessage", Login.errorMessege);
+            getServletContext().setAttribute("errorCode", 1);
+        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
 
             RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
             rd.include(request,response);    

@@ -5,6 +5,7 @@ import java.io.PrintWriter;
   
 
 
+
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
 import javax.servlet.http.HttpServlet;  
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
+import com.amzi.dao.Login;
 import com.amzi.dao.Register; 
 
 public class RegisterServlet extends HttpServlet {
@@ -29,12 +31,12 @@ public class RegisterServlet extends HttpServlet {
 	        String p=request.getParameter("registerUserPass");
 	        String p2=request.getParameter("registerReenterPass");
 	        
-	        HttpSession session = request.getSession();  
+	        HttpSession userSession = request.getSession();  
 	            
 	        if(Register.validate(n, p, p2)){  
-	        	this.getServletContext().setAttribute("errorCode", 0);
-	        	session.setAttribute("username",n);
-	            session.setAttribute("dateRegistered", Register.dateRegistered);
+	        	getServletContext().setAttribute("errorCode", 0);
+	        	userSession.setAttribute("username",n);
+	            userSession.setAttribute("dateRegistered", Register.dateRegistered);
 	           
 	            
 	            /*
@@ -62,8 +64,8 @@ public class RegisterServlet extends HttpServlet {
 	            rd.forward(request,response);    
 	        }    
 	        else{
-	        	this.getServletContext().setAttribute("errorCode", 1);
-	        	session.setAttribute("errorMessage",Register.errorMessage);
+	        	getServletContext().setAttribute("errorCode", 1);
+	        	getServletContext().setAttribute("errorMessage", Register.errorMessege);
 	        	
 	        	RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
 	            rd.include(request,response);    

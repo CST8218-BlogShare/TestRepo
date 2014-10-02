@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 public class Register {  
     
 	public static String dateRegistered = null;
-	public static String errorMessage = null;
+	public static String errorMessege = null;
 	
 	public static boolean validate(String name, String pass, String pass2) {          
         boolean status = true;  
@@ -32,25 +32,25 @@ public class Register {
         	
         	if(name.equals("")){
         		System.out.println("Username was not entered, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. Username was not entered";
+        		errorMessege = "Error with registration. Username was not entered";
         		throw registrationError;
         	}
         	
         	if(pass.equals("")){
         		System.out.println("Password was not entered, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. Password was not entered";
+        		errorMessege = "Error with registration. Password was not entered";
         		throw registrationError;
         	}
         	
         	if(pass2.equals("")){
         		System.out.println("Password was not rentered, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. Password was not reentered";
+        		errorMessege = "Error with registration. Password was not reentered";
         		throw registrationError;
         	}
         	
         	if(!pass.equals(pass2)){
         		System.out.println("The passwords that were entered do not match, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. The passwords that were entered do not match";
+        		errorMessege = "Error with registration. The passwords that were entered do not match";
         		throw registrationError;
         	}
         	
@@ -81,7 +81,7 @@ public class Register {
         } catch (SQLException sqlE) { 
         	System.out.println("Error inserting information of new user into registration table, throwing SQLException.");
         	System.out.println(sqlE);
-       	 	errorMessage = "Error completing registration";
+       	 	errorMessege = "Error completing registration";
        	 	status = false;
         } catch (Exception e) { //might not want to do this and let page server handle error by redirecting to custom page 
             System.out.println(e);

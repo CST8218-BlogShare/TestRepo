@@ -62,9 +62,9 @@ public class Login {
             //status = rs.next();
         } catch (SQLException sqlE) {  
         	System.out.println("The entered username and password do not match registered users, throwing SQLException");
-        	 System.out.println(sqlE);
-        	 errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
-        	 status = false;
+        	System.out.println(sqlE);
+        	errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
+        	status = false;
         }catch(Exception e){//might not want to do this and let page server handle error by redirecting to custom page
         	 System.out.println(e);
              status = false;

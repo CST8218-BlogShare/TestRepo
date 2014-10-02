@@ -10,16 +10,16 @@
 <!-- initialization variables needed for page -->
 <%
 
-if(this.getServletContext().getAttribute("errorCode") == null){
-	this.getServletContext().setAttribute("errorCode",0);
+if(getServletContext().getAttribute("errorCode") == null){
+	getServletContext().setAttribute("errorCode",0);
+}
+
+if(getServletContext().getAttribute("errorMessage") == null){
+	getServletContext().setAttribute("errorMessage","");	
 }
 
 if(session.getAttribute("username") == null){
 	session.setAttribute("username","");
-}
-
-if(session.getAttribute("errorMessage") == null){
-	session.setAttribute("errorMessage","");	
 }
 
 %>
@@ -142,13 +142,13 @@ if(session.getAttribute("errorMessage") == null){
 				
 				<%  
 					//Clearing the previous error
-					if( (int)this.getServletContext().getAttribute("errorCode") == 0)
+					if( (int)getServletContext().getAttribute("errorCode") == 0)
 					{
-						session.setAttribute("errorMessage", "");
+						getServletContext().setAttribute("errorMessage", "");
 					}
 				%>
 				
-				<%= session.getAttribute("errorMessage") %>
+				<%= getServletContext().getAttribute("errorMessage") %>
 				<br>
 				<br>
 			</p>
