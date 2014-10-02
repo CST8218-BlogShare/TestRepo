@@ -24,6 +24,7 @@ public class Login {
         String driver = "com.mysql.jdbc.Driver";  
         String dbUserName = "blogshareuser";  
         String dbPassword = "password";
+        
         Exception loginError = new Exception();
         
          try {  

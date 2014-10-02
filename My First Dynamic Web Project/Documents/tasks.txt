@@ -1,0 +1,20 @@
+Jan
+
+Profile and Profile Edit - finishing and dynamic content
+style buttons in navigation bar
+
+Derek
+
+making connection class
+handling errors in project
+creating queries for data inserting and selection
+searchResults html and dynamic content
+
+Vince
+
+PostCreate
+PostEdit
+BlogCreate
+BlogEdit
+
+
