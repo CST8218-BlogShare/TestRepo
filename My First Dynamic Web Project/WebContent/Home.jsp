@@ -3,8 +3,27 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
-<link rel="stylesheet" href="LookAndFeel.css">
+<link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - Home</title>
+
+
+<!-- initialization variables needed for page -->
+<%
+
+if(this.getServletContext().getAttribute("errorCode") == null){
+	this.getServletContext().setAttribute("errorCode",0);
+}
+
+if(session.getAttribute("username") == null){
+	session.setAttribute("username","");
+}
+
+if(session.getAttribute("errorMessage") == null){
+	session.setAttribute("errorMessage","");	
+}
+
+%>
+
 </head>
 
 	<body>
@@ -14,18 +33,18 @@
 			<br>
 			<table style="width:90%; margin-right:auto; margin-left:auto;">
 				<tr style="height:50%;">
-					<td><p><h3>BLOGSHARE</h3></td>
+					<td><h3>BLOGSHARE</h3></td>
 					<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
-					<td style="width:10%"> <input type=checkbox name=navBarBlogCheck  maxlength=100/>Blogs<p>  </td>
-					<td style="width:10%"> <input type=checkbox name=navBarTitleCheck  maxlength=100/>Titles<p> </td>
-					<td style="width:10%"> <input type=checkbox name=navBarReadCheck  maxlength=100/>Read<p></td>
+					<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
+					<td style="width:10%"> <input type=checkbox name=navBarTitlesCheck checked="checked"/>Titles<p></td>
+					<td style="width:10%"> <input type=checkbox name=navBarUsersCheck checked="checked"/>Users<p> </td>
 					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
 				</tr>
 				<tr style="height:50%;">
-					<td>Welcome!</td>
-					<td style="width:13%"> <input type=checkbox name=navBarPostCheck  maxlength=100/>Posts<p> </td>
-					<td style="width:13%"> <input type=checkbox name=navBarContentCheck  maxlength=100/>Content<p> </td>
-					<td style="width:13%"> <input type=checkbox name=navBarTitleCheck  maxlength=100/>Edit<p> </td>
+					<td> <a href="Profile.jsp"><p>Welcome <%= session.getAttribute("username") %>!</p></a></td>
+					<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
+					<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
+					<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>
 				</tr>
 			</table>
 			<br>
@@ -35,11 +54,39 @@
 		<div class="FillScreenTextCentered" style="margin-bottom:2%;"> 
 			<font size=7>BLOGSHARE </font>
 		</div>
+
+		<!--  A brief explanation of the user's options -->
+		<div class="FillScreenTextCentered">
+			<font size=4>
+				 If this is your first time visiting the site. <br>
+				 Feel free to use the search tools above to explore our public content. <br>
+			</font> 
+				<br>
+				<br>
+				<table style="width:80%;  margin-left:5%; margin-right:5%;">
+					<tr>
+						<td>
+							<font size=4>
+								If you wish to create your own Blogs. <br>
+								Please fill out the registration form below.
+							</font>
+						</td>
+						<td>
+							<font size=4>
+								If you have previously registered <br>
+								Please login below.
+							</font>
+						</td>	
+					</tr>
+				</table>
+		</div>
 	
+		
 		<!-- table containing form for user registration and login-->
-		<div style="margin-bottom:5%;">
-			<table style="width:80%;  margin-left:10%; marin-right:10%;">
+		<div>														   
+			<table style="width:80%;  margin-left:5%; margin-right:5%; border-spacing:0.5in 0.2in; /* 1 in = 1 inch = 2.54 cm  */  border-collapse: separate;">
 				<tr>
+				<!--Registration Form -->
 					<td style="width:40%;">
 						<form name="RegisterForm" action="registerServlet" method="post">
 							<table>
@@ -62,6 +109,7 @@
 						</form>
 					</td>
 						
+					<!--  Login Form -->
 					<td  style="width:40%;">
 						<form name="LoginForm" action="loginServlet" method="post">
 							<table>
@@ -87,11 +135,21 @@
 			</table>
 		</div>
 	
-		<!--  div for output of error messages related to registration and login -->
+		<!--Output area for error messages related to registration and login -->
 		<div>
 			<p class="ErrorMessageOutput" id="errorOutput">
 				<br>
-				Error messages go here<br>
+				
+				<%  
+					//Clearing the previous error
+					if( (int)this.getServletContext().getAttribute("errorCode") == 0)
+					{
+						session.setAttribute("errorMessage", "");
+					}
+				%>
+				
+				<%= session.getAttribute("errorMessage") %>
+				<br>
 				<br>
 			</p>
 		</div>	

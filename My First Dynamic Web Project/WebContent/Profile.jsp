@@ -13,29 +13,29 @@
 <body>
 
 
-<!-- navigation bar -->
+	<!-- navigation bar -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
-			<table style="width:90%; margin-right:auto; margin-left:auto; cellspacing:1%">
+			<table style="width:90%; margin-right:auto; margin-left:auto;">
 				<tr style="height:50%;">
-					<td><p><h3>BLOGSHARE</h3></td>
+					<td><a href="Home.jsp"><h3>BLOGSHARE</h3></a></td>
 					<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
-					<td style="width:10%"> <input type=checkbox name=navBarBlogCheck  maxlength=100/>Blogs<p>  </td>
-					<td style="width:10%"> <input type=checkbox name=navBarTitleCheck  maxlength=100/>Titles<p> </td>
-					<td style="width:10%"> <input type=checkbox name=navBarReadCheck  maxlength=100/>Read<p></td>
+					<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
+					<td style="width:10%"> <input type=checkbox name=navBarTitlesCheck checked="checked"/>Titles<p></td>
+					<td style="width:10%"> <input type=checkbox name=navBarUsersCheck checked="checked"/>Users<p> </td>
 					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
 				</tr>
 				<tr style="height:50%;">
-					<td>Welcome!</td>
-					<td style="width:13%"> <input type=checkbox name=navBarPostCheck  maxlength=100/>Posts<p> </td>
-					<td style="width:13%"> <input type=checkbox name=navBarContentCheck  maxlength=100/>Content<p> </td>
-					<td style="width:13%"> <input type=checkbox name=navBarTitleCheck  maxlength=100/>Edit<p> </td>
+					<td>Welcome <%= session.getAttribute("username") %>!</td>
+					<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
+					<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
+					<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>
 				</tr>
 			</table>
 			<br>
 		</div>
 
-<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("name") %>'s Profile Page</h1>
+<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("username") %>'s Profile Page</h1>
 <h3><span class="label label-default">Joined: <%= session.getAttribute("dateRegistered") %></span></h3>
 <p style="padding:50px">
 	<a href="ProfileEdit.jsp"><button type="button" class="btn btn-default btn-lrg" style="width:500px">Edit Profile</button></a>

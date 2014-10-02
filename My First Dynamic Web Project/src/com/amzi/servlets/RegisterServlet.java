@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.io.PrintWriter;  
   
 
+
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
 import javax.servlet.http.HttpServlet;  
 import javax.servlet.http.HttpServletRequest;  
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.PageContext;
 
 import com.amzi.dao.Register; 
 
@@ -26,13 +28,14 @@ public class RegisterServlet extends HttpServlet {
 	        String n=request.getParameter("registerUsername");    
 	        String p=request.getParameter("registerUserPass");
 	        String p2=request.getParameter("registerReenterPass");
+	        
+	        HttpSession session = request.getSession();  
 	            
-	        if(Register.validate(n, p, p2)){    
-	        	HttpSession session = request.getSession(false);  
-	            if(session!=null) {
-	            	session.setAttribute("name",n);
-	                session.setAttribute("dateRegistered", Register.dateRegistered);
-	            }
+	        if(Register.validate(n, p, p2)){  
+	        	this.getServletContext().setAttribute("errorCode", 0);
+	        	session.setAttribute("username",n);
+	            session.setAttribute("dateRegistered", Register.dateRegistered);
+	           
 	            
 	            /*
 	               * 
@@ -58,19 +61,11 @@ public class RegisterServlet extends HttpServlet {
 	        	RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
 	            rd.forward(request,response);    
 	        }    
-	        else{    
-	            out.print("<p style=\"color:red\">But they really like appearing here <br> Sorry username or password error on registration</p>"); 
-	        	response.setContentType("text/plaintext");
-	            
-	        	//out.print("<% document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\" /%> ");
-	            
-	        	/*out.print("<script>");
-	        	out.print("function error() { document.getElementById(\"errorOutput\").innerHTML = \"Sorry username or password error\"; }");
-	        	out.print("\"error()\";");
-	        	out.print("</script>");*/
-	       
-	            
-	            RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
+	        else{
+	        	this.getServletContext().setAttribute("errorCode", 1);
+	        	session.setAttribute("errorMessage",Register.errorMessage);
+	        	
+	        	RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
 	            rd.include(request,response);    
 	        }    
 	  

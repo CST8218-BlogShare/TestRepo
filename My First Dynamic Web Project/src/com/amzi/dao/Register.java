@@ -8,14 +8,15 @@ import java.sql.ResultSet;
   
 public class Register {  
     
-	public static String dateRegistered;
+	public static String dateRegistered = null;
+	public static String errorMessage = null;
 	
 	public static boolean validate(String name, String pass, String pass2) {          
         boolean status = true;  
         Connection conn = null;  
         PreparedStatement pst = null; 
         ResultSet rs = null;
-        Exception passNonMatch = new Exception();
+        Exception registrationError = new Exception();
   
         String url = "jdbc:mysql://localhost:3306/";  
         String dbName = "blogsharedatatest";  
@@ -30,23 +31,27 @@ public class Register {
         	pass2 = pass2.trim();
         	
         	if(name.equals("")){
-        		System.out.println("No username entered, throwing Java.lang.exception");
-        		throw passNonMatch;
+        		System.out.println("Username was not entered, throwing java.lang.Exception.");
+        		errorMessage = "Error with registration. Username was not entered";
+        		throw registrationError;
         	}
         	
         	if(pass.equals("")){
-        		System.out.println("No password entered, throwing Java.lang.exception");
-        		throw passNonMatch;
+        		System.out.println("Password was not entered, throwing java.lang.Exception.");
+        		errorMessage = "Error with registration. Password was not entered";
+        		throw registrationError;
         	}
         	
         	if(pass2.equals("")){
-        		System.out.println("Password was not rentered, throwing Java.lang.exception");
-        		throw passNonMatch;
+        		System.out.println("Password was not rentered, throwing java.lang.Exception.");
+        		errorMessage = "Error with registration. Password was not reentered";
+        		throw registrationError;
         	}
         	
         	if(!pass.equals(pass2)){
-        		System.out.println("The passwords that were entered do not match, throwing Java.lang.exception");
-        		throw passNonMatch;
+        		System.out.println("The passwords that were entered do not match, throwing java.lang.Exception.");
+        		errorMessage = "Error with registration. The passwords that were entered do not match";
+        		throw registrationError;
         	}
         	
         	Class.forName(driver).newInstance();  
@@ -71,8 +76,15 @@ public class Register {
             //if the query works,this should never be null. But do we wanna check just because??
             dateRegistered = rs.getString("DateRegistered");
   
-        } catch (Exception e) {  
-            System.out.println(e);  
+            
+        // should totally catch this.. com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry 'Derek' for key 'User_Unique_Username'    
+        } catch (SQLException sqlE) { 
+        	System.out.println("Error inserting information of new user into registration table, throwing SQLException.");
+        	System.out.println(sqlE);
+       	 	errorMessage = "Error completing registration";
+       	 	status = false;
+        } catch (Exception e) { //might not want to do this and let page server handle error by redirecting to custom page 
+            System.out.println(e);
             status = false;
         } finally {  
             if (conn != null) {  

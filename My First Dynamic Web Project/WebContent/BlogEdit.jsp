@@ -3,7 +3,7 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
-<link rel="stylesheet" href="LookAndFeel.css">
+<link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - BlogEdit</title>
 </head>
 		<!--table to hold pages content -->
