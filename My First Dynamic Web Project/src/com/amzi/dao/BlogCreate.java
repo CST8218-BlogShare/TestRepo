@@ -7,48 +7,58 @@ import java.sql.SQLException;
   
 public class BlogCreate { 
 	
-	public static String dateRegistered = null;
+	public static String creationDate = null;
 	public static String errorMessege = null;
 	
-    public static boolean validate(String name, String pass) {          
+    public static boolean postBlog(String blogTitle, String postTitle, String postBody) {          
         boolean status = true;  
-        PreparedStatement pst = null;  
-        ResultSet rs = null; 
+        PreparedStatement pst = null; 
+        ResultSet rs = null;
         DbConnection connectionManager = null;
-
-        Exception loginError = new Exception();
         
-         try {  
-           
-        	name = name.trim();
-            pass = pass.trim();
-            
-            if(name == ""){
-            	System.out.println("Username was not entered, throwing java.lang.Exception.");
-            	errorMessege = "Error with previous login attempt. Username was not entered.";
-            	throw loginError;
-            }
-            
-            if(pass == ""){
-            	System.out.println("Password was not entered, throwing java.lang.Exception.");
-            	errorMessege = "Error with previous login attempt. User password was not entered.";
-            	throw loginError;
-            }
-            
-             //gaining access to the shared database connection
-            connectionManager = DbConnection.getInstance();
-            
-            pst = connectionManager.getConnection().prepareStatement("select * from user where username=? and password=?"); 
-            
-            pst.setString(1, name);  
-            pst.setString(2, pass);  
+        Exception postError = new Exception();
+ 
+        try {  
+        	blogTitle = postTitle.trim();
+        	postTitle = postTitle.trim();
+        	postBody = postBody.trim();
+        	
+        	if(blogTitle.equals("")){
+        		System.out.println("Blog Has no tittle, throwing java.lang.Exception.");
+        		errorMessege = "Error with Post. No Post Title was not entered";
+        		throw postError;
+        	}
+        	
+        	if(postTitle.equals("")){
+        		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
+        		errorMessege = "Error with Post. No Post Title was not entered";
+        		throw postError;
+        	}
+        	
+        	if(postBody.equals("")){
+        		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
+        		errorMessege = "Error with Post. No Post Title was not entered";
+        		throw postError;
+        	}
+        	
+        	//gaining access to the shared database connection.
+        	connectionManager = DbConnection.getInstance();
   
-            rs = pst.executeQuery(); 
+            pst = connectionManager.getConnection().prepareStatement("insert into blog values( 0, '"+blogTitle+"', curdate() );");  
+           
+            pst.executeUpdate(); 
             
+            pst.close();
             
-            rs.first();
+            pst = connectionManager.getConnection().prepareStatement("insert into Post values(0, 0, '"+postTitle+"','"+postBody+"', curdate() );");  
+            
+            pst.executeUpdate(); 
+            
+            pst.close();
+            //closing the connection to prepare for the next prepared statement.
+            pst.close();
             //if the query works,this should never be null. But do we wanna check just because..yeaah
-            dateRegistered = rs.getString("DateRegistered");
+            creationDate = rs.getString("CreationDate");
             
             //status = rs.next();
         } catch (SQLException sqlE) {  
@@ -59,7 +69,7 @@ public class BlogCreate {
         		sqlCloseE.printStackTrace();
         	}
         	
-        	System.out.println("The entered username and password do not match registered users, throwing SQLException");
+        	System.out.println("Blog field missing, throwing SQLException");
         	sqlE.printStackTrace();
         	errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
         	
