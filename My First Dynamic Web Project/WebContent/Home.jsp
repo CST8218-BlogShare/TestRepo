@@ -41,7 +41,7 @@ if(session.getAttribute("username") == null){
 					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
 				</tr>
 				<tr style="height:50%;">
-					<td> <a href="Profile.jsp"><p>Welcome <%= session.getAttribute("username") %>!</p></a></td>
+					<td> <a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
 					<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
 					<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
 					<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>

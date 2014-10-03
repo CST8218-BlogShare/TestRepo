@@ -7,15 +7,15 @@
 
 <jsp:include page="BootstrapInclude.html" />
 
-<title> <%= session.getAttribute("name") %>'s Password Edit</title>
+<title> <%= session.getAttribute("username") %>'s Password Edit</title>
 </head>
 <body>
-	<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("name") %>'s Password Edit</h1>
+	<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("username") %>'s Password Edit</h1>
 	<h3><span class="label label-default">Joined: <%= session.getAttribute("dateRegistered") %></span></h3>
 	<div style="padding:30px">	
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Username:</span>
-		 	<input type="text" class="form-control" value="<%=session.getAttribute("name") %>" >
+		 	<input type="text" class="form-control" value="<%=session.getAttribute("username") %>" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Password:</span>

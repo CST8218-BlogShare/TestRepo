@@ -62,7 +62,7 @@
 <tr>
 						<td>
 							<form action="Blog.jsp">
-	   							<input type="submit" value="Save">
+	   							<input type="submit" value="Create Blog">
 							</form>
 						<td>
 						</td>

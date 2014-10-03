@@ -1,7 +1,5 @@
 package com.amzi.dao;  
   
-import java.sql.Connection;  
-import java.sql.DriverManager;  
 import java.sql.PreparedStatement;  
 import java.sql.SQLException;  
 import java.sql.ResultSet;
@@ -13,17 +11,12 @@ public class Register {
 	
 	public static boolean validate(String name, String pass, String pass2) {          
         boolean status = true;  
-        Connection conn = null;  
         PreparedStatement pst = null; 
         ResultSet rs = null;
-        Exception registrationError = new Exception();
-  
-        String url = "jdbc:mysql://localhost:3306/";  
-        String dbName = "blogsharedatatest";  
-        String driver = "com.mysql.jdbc.Driver";  
-        String dbUserName = "blogshareuser";  
-        String dbPassword = "password";
+        DbConnection connectionManager = null;
         
+        Exception registrationError = new Exception();
+ 
         try {  
            
         	name = name.trim();
@@ -54,18 +47,18 @@ public class Register {
         		throw registrationError;
         	}
         	
-        	Class.forName(driver).newInstance();  
-            conn = DriverManager  
-                    .getConnection(url + dbName, dbUserName, dbPassword);  
+        	
+        	//gaining access to the shared database connection.
+        	connectionManager = DbConnection.getInstance();
   
-            pst = conn  
-                    .prepareStatement("insert into User values(0, '"+name+"','"+pass+"', curdate() );");  
+            pst = connectionManager.getConnection().prepareStatement("insert into User values(0, '"+name+"','"+pass+"', curdate() );");  
            
             pst.executeUpdate(); 
             
+            //closing the connection to prepare for the next prepared statement.
             pst.close();
             
-            pst = conn.prepareStatement("select * from user where username=? and password=?"); 
+            pst = connectionManager.getConnection().prepareStatement("select * from user where username=? and password=?"); 
             
             pst.setString(1, name);  
             pst.setString(2, pass);  
@@ -79,33 +72,36 @@ public class Register {
             
         // should totally catch this.. com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry 'Derek' for key 'User_Unique_Username'    
         } catch (SQLException sqlE) { 
+        	
+        	//should have a rollback here
+        	
+        	try{
+        		connectionManager.getConnection().close();
+        	}catch(SQLException sqlCloseE){
+        		sqlCloseE.printStackTrace();
+        	}
+        	
         	System.out.println("Error inserting information of new user into registration table, throwing SQLException.");
-        	System.out.println(sqlE);
+        	sqlE.printStackTrace();
        	 	errorMessege = "Error completing registration";
        	 	status = false;
-        } catch (Exception e) { //might not want to do this and let page server handle error by redirecting to custom page 
-            System.out.println(e);
+       	 	
+        } catch (Exception e) { 
+        	 e.printStackTrace(); //may not be necessary
             status = false;
         } finally {  
-            if (conn != null) {  
-                try {  
-                    conn.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
             if (pst != null) {  
                 try {  
                     pst.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
+                } catch (SQLException sqlE) {  
+                    sqlE.printStackTrace();  
                 }  
             }  
             if (rs != null) {  
                 try {  
                     rs.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
+                } catch (SQLException sqlE) {  
+                    sqlE.printStackTrace();  
                 }  
             }  
         }  

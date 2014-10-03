@@ -1,8 +1,6 @@
 package com.amzi.servlets;  
   
 import java.io.IOException;  
-import java.io.PrintWriter;  
-  
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
 import javax.servlet.http.HttpServlet;  
@@ -18,14 +16,21 @@ public class LoginServlet extends HttpServlet{
     private static final long serialVersionUID = 1L;  
   
     public void doPost(HttpServletRequest request, HttpServletResponse response)    
-            throws ServletException, IOException {   
+            throws ServletException, IOException {   //need handle other exceptions.
     	
     	
-    	//If a session has not been created, one will be created by the call to getSession();
-    	HttpSession userSession = request.getSession(); 
+    	//If a session has not been created, none will be created
+    	HttpSession userSession = request.getSession(false); 
+    	
+    	if(userSession == null){
+    		/*Is this even possible????
+    		  since the page object always contains a session object and we don't explictly set it to null*/
+    	}
+    	
+    	
     	
     	response.setContentType("text/html");    
-        PrintWriter out = response.getWriter();    
+        //PrintWriter out = response.getWriter();    
           
         String n=request.getParameter("loginUsername");    
         String p=request.getParameter("loginUserpass");   
@@ -45,7 +50,6 @@ public class LoginServlet extends HttpServlet{
             RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
             rd.include(request,response);    
         }    
-  
-        out.close();    
+     
     }    
 }   

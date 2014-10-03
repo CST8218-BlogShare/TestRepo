@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> <%= session.getAttribute("name") %>'s Profile Page</title>
+<title> <%= session.getAttribute("username") %>'s Profile Page</title>
 
 <jsp:include page="BootstrapInclude.html" />
 
@@ -13,12 +13,12 @@
 <body>
 
 
-	<!-- navigation bar -->
+	<!-- navigation bar - nav bar is being styled differently, think it has something to do with the external style sheets you are using.  -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
 			<table style="width:90%; margin-right:auto; margin-left:auto;">
 				<tr style="height:50%;">
-					<td><a href="Home.jsp"><h3>BLOGSHARE</h3></a></td>
+					<td><h3><a href="Home.jsp">BLOGSHARE</a></h3></td>
 					<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
 					<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
 					<td style="width:10%"> <input type=checkbox name=navBarTitlesCheck checked="checked"/>Titles<p></td>
