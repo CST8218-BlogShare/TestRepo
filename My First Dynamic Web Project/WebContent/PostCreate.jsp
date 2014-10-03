@@ -7,7 +7,8 @@
 <title>BlogShare - PostCreate</title>
 </head>
 		<!--table to hold pages content -->
-		<table style="width:80%;  margin-left:10%; marin-right:10%;">
+		<form name="postForm" action="postCreateServlet" method=post>
+	   	<table style="width:80%;  margin-left:10%; marin-right:10%;">
 			 	
 			 	<!-- blog title -->
 			 	<tr style="margin-bottom:5%;">
@@ -64,26 +65,12 @@
 						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Editable</textarea>
 					</td>
 				</tr>
-			 
-					<tr>
-						<td>
-							<form name="postForm" action="postCreateServlet" method=post>
-	   							<input type="submit" value="Save">
-							</form>
-						<td>
-						</td>
-					</tr>
-					
-					<!-- creating space -->
-				<tr>
-					<td>
-						<form action="Profile.jsp">
-   							<input type="submit" width="wrap_content" value="Cancel">
-						</form>
-					</td>
-				</tr>
-				
-			
-		</table>
+			</table>
+			<input type="submit" class = button value="Save">
+		</form>
+		
+		<form action="Profile.jsp">
+   			<input type="submit" width="wrap_content" class = button value="Cancel">
+		</form>
 	<body>
 </html>
