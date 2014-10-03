@@ -52,11 +52,12 @@
 						<br>
 					</td>
 				</tr>
-				
-		
 				<!-- additional posts -->
 				<tr>
 					<td>
+					
+				The Title and Post shown above is your previous post to help you continue writing your blog below
+				
 						<p>New Post Title Below</p>
 						<input type=text name=postTitle  maxlength=100/>
 						<p>New Post Content Below</p>
@@ -66,7 +67,7 @@
 			 
 					<tr>
 						<td>
-							<form action="Blog.jsp">
+							<form name="postForm" action="postCreateServlet" method=post>
 	   							<input type="submit" value="Save">
 							</form>
 						<td>
