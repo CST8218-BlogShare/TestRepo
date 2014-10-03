@@ -1,0 +1,100 @@
+Jan
+
+Profile and Profile Edit - finishing and dynamic content
+style buttons in navigation bar
+
+Derek
+
+making connection class - seems to be done. 
+handling errors in project
+
+creating queries for data inserting and selection 
+	create dbQueriesClass.
+	
+	Queries needed
+	
+	For home:
+			
+			insert new user into user table;
+			select * from user where username and password matches;
+			add dateRegistered and userid to session object
+			
+	For profile: None
+	
+	For profileEdit:
+	
+					updating entry in user table for both username and password
+					also have to update username within session. (do this if username changed or always)?? 
+					
+	For blogCreate: 
+			  
+			  insert blog title and creation date
+			  select blogid from blog where title matches
+			  insert blogid and userid into user_blog
+			  insert post title, blogid content, creation date into post table
+			  select postid from post table where blogid and title is the same
+			  insert postid and user id into user_post
+			  
+	For blogEdit:
+	
+				same algorithm as blogEdit as blog Titles cannot be changed....can we do this...id like to.
+	
+	For postCreate:
+				
+				on click of createPost or postEdit 
+				select blogid where unique title matches 
+				
+				blogid will be noted as postedit is accessed.
+				
+				check for match of title with existing posts in the blog to prevent duplicate titles
+				(only way to retrieve postId based on title)
+				
+				insert post title, blogid content, creation date into post table
+			    select postid from post table where blogid and title is the same
+			    insert postid and user id into user_post
+				
+	For postEdit:
+	
+				on click of createPost or postEdit 
+				select blogid where unique title matches 
+				
+				blogid will be noted as postedit is accessed.
+				
+				on save -
+				
+				 note editdatetime.
+				
+				check for match of title with existing posts in the blog to prevent duplicate titles
+				(only way to retrieve postId based on title)
+				
+				update post title, content into post table
+				
+				select postid, content from post table where blogid and title is the same
+				insert into postEdit postId, editDateTime and content into postEdit.
+				select postEditid from post table where postid and editDateTime are the same
+				insert postEditId and userid into user_postEdit table.
+				
+Blog 			
+	    		title will need to be retrieved from createBlog or profile.
+	    		
+	    		select blogid based from blog using title
+	    		
+	    			"select blogid from blog where title = '"+blogTitle+"'";
+	    		
+	    		select postid, title and content for all post from post table based on blogid
+	    		
+	    			
+	    	
+	    	"insert into User values(0, '"+name+"','"+pass+"', curdate() );"
+	    	
+	    		
+	    
+searchResults html and dynamic content
+
+Vince
+
+PostCreate
+PostEdit
+BlogCreate
+BlogEdit
+

@@ -51,6 +51,9 @@ CREATE TABLE Blog
 ALTER TABLE Blog 
     ADD CONSTRAINT Blog_PK PRIMARY KEY ( BlogID ) ;
 
+ALTER TABLE Blog
+ADD CONSTRAINT Blog_Unique_Title UNIQUE(Title); 
+    
 ALTER TABLE Blog MODIFY COLUMN BlogID INT AUTO_INCREMENT;
 
 -- displaying the attributes of  the blog table. 

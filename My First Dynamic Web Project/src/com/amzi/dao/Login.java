@@ -1,8 +1,6 @@
 package com.amzi.dao;  
   
-import java.sql.Connection;  
-import java.sql.DriverManager;  
-import java.sql.PreparedStatement;  
+ import java.sql.PreparedStatement;  
 import java.sql.ResultSet;  
 import java.sql.SQLException;  
 
@@ -14,25 +12,15 @@ public class Login {
 	
     public static boolean validate(String name, String pass) {          
         boolean status = true;  
-        Connection conn = null;  
         PreparedStatement pst = null;  
-        ResultSet rs = null;  
+        ResultSet rs = null; 
+        DbConnection connectionManager = null;
 
-        
-        String url = "jdbc:mysql://localhost:3306/";  
-        String dbName = "blogsharedatatest";  
-        String driver = "com.mysql.jdbc.Driver";  
-        String dbUserName = "blogshareuser";  
-        String dbPassword = "password";
         Exception loginError = new Exception();
         
          try {  
-            Class.forName(driver).newInstance();  
-            
-            conn = DriverManager  
-                    .getConnection(url + dbName, dbUserName, dbPassword);  
-  
-            name = name.trim();
+           
+        	name = name.trim();
             pass = pass.trim();
             
             if(name == ""){
@@ -47,7 +35,10 @@ public class Login {
             	throw loginError;
             }
             
-            pst = conn.prepareStatement("select * from user where username=? and password=?"); 
+             //gaining access to the shared database connection
+            connectionManager = DbConnection.getInstance();
+            
+            pst = connectionManager.getConnection().prepareStatement("select * from user where username=? and password=?"); 
             
             pst.setString(1, name);  
             pst.setString(2, pass);  
@@ -61,22 +52,24 @@ public class Login {
             
             //status = rs.next();
         } catch (SQLException sqlE) {  
+        	
+        	try{
+        		connectionManager.getConnection().close();
+        	}catch(SQLException sqlCloseE){
+        		sqlCloseE.printStackTrace();
+        	}
+        	
         	System.out.println("The entered username and password do not match registered users, throwing SQLException");
-        	System.out.println(sqlE);
+        	sqlE.printStackTrace();
         	errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
+        	
         	status = false;
-        }catch(Exception e){//might not want to do this and let page server handle error by redirecting to custom page
-        	 System.out.println(e);
+        }catch(Exception e){
+        	 e.printStackTrace(); //may not be necessary
              status = false;
         }
-         finally {  
-            if (conn != null) {  
-                try {  
-                    conn.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
+         finally { 
+        	//we now have to manage closing the connection a different way...at logout...
             if (pst != null) {  
                 try {  
                     pst.close();  
