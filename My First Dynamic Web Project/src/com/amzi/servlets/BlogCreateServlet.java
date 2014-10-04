@@ -1,6 +1,7 @@
 package com.amzi.servlets;  
   
 import java.io.IOException;  
+
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
 import javax.servlet.http.HttpServlet;  
@@ -9,7 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  
   
 
+
+
+import com.amzi.dao.BlogCreate;
 import com.amzi.dao.Login;  
+import com.amzi.dao.PostCreate;
   
 public class BlogCreateServlet extends HttpServlet{  
   
@@ -31,23 +36,25 @@ public class BlogCreateServlet extends HttpServlet{
     	
     	response.setContentType("text/html");    
         //PrintWriter out = response.getWriter();    
-          
-        String n=request.getParameter("loginUsername");    
-        String p=request.getParameter("loginUserpass");   
+        
+    	String blogTitle=request.getParameter("blogTitle");    
+        String postTitle=request.getParameter("postTitle");    
+        String body=request.getParameter("postBody");   
             
-        if(Login.validate(n, p)){   
+        if(BlogCreate.postBlog(blogTitle,postTitle, body)){   
         	getServletContext().setAttribute("errorCode", 0);
-        	userSession.setAttribute("username",n);
-            userSession.setAttribute("dateRegistered", Login.dateRegistered);
+        	userSession.setAttribute("title",postTitle);
+        	userSession.setAttribute("content",body);
+            userSession.setAttribute("CreationDate", PostCreate.creationDate);
             
-            RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
+            RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");    
             rd.forward(request,response);    
         }    
         else{    
             getServletContext().setAttribute("errorCode", 1);
         	getServletContext().setAttribute("errorMessage", Login.errorMessege);
 
-            RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
+            RequestDispatcher rd=request.getRequestDispatcher("PostCreate.jsp");    
             rd.include(request,response);    
         }    
      
