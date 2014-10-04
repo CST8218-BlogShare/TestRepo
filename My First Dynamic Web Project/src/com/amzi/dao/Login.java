@@ -7,6 +7,7 @@ import java.sql.SQLException;
   
 public class Login { 
 	
+	public static String userId = null;
 	public static String dateRegistered = null;
 	public static String errorMessege = null;
 	
@@ -24,13 +25,13 @@ public class Login {
             pass = pass.trim();
             
             if(name == ""){
-            	System.out.println("Username was not entered, throwing java.lang.Exception.");
+            	System.out.println("Username was not entered, throwing java.lang.Exception.\n");
             	errorMessege = "Error with previous login attempt. Username was not entered.";
             	throw loginError;
             }
             
             if(pass == ""){
-            	System.out.println("Password was not entered, throwing java.lang.Exception.");
+            	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
             	errorMessege = "Error with previous login attempt. User password was not entered.";
             	throw loginError;
             }
@@ -47,19 +48,17 @@ public class Login {
             
             
             rs.first();
-            //if the query works,this should never be null. But do we wanna check just because..yeaah
+            //if the query does not return any rows. this will throw an SQLException
+            
+            userId = rs.getString("UserId");
             dateRegistered = rs.getString("DateRegistered");
             
             //status = rs.next();
         } catch (SQLException sqlE) {  
         	
-        	try{
-        		connectionManager.getConnection().close();
-        	}catch(SQLException sqlCloseE){
-        		sqlCloseE.printStackTrace();
-        	}
+        	connectionManager.closeConnection();
         	
-        	System.out.println("The entered username and password do not match registered users, throwing SQLException");
+        	System.out.println("The entered username and password do not match registered users, throwing SQLException\n");
         	sqlE.printStackTrace();
         	errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
         	

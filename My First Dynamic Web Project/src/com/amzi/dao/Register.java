@@ -6,6 +6,7 @@ import java.sql.ResultSet;
   
 public class Register {  
     
+	public static String userId = null;
 	public static String dateRegistered = null;
 	public static String errorMessege = null;
 	
@@ -66,7 +67,8 @@ public class Register {
             rs = pst.executeQuery(); 
             
             rs.first();
-            //if the query works,this should never be null. But do we wanna check just because??
+           
+            userId = rs.getString("UserId");
             dateRegistered = rs.getString("DateRegistered");
   
             
@@ -75,11 +77,7 @@ public class Register {
         	
         	//should have a rollback here
         	
-        	try{
-        		connectionManager.getConnection().close();
-        	}catch(SQLException sqlCloseE){
-        		sqlCloseE.printStackTrace();
-        	}
+        	connectionManager.closeConnection();
         	
         	System.out.println("Error inserting information of new user into registration table, throwing SQLException.");
         	sqlE.printStackTrace();

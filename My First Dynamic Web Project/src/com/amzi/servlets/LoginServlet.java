@@ -38,6 +38,7 @@ public class LoginServlet extends HttpServlet{
         if(Login.validate(n, p)){   
         	getServletContext().setAttribute("errorCode", 0);
         	userSession.setAttribute("username",n);
+        	userSession.setAttribute("userId", Login.userId);
             userSession.setAttribute("dateRegistered", Login.dateRegistered);
             
             RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    

@@ -55,6 +55,21 @@ public class DbConnection {
 		return this.conn;
 	}
 	
+	public void closeConnection(){
+		
+		try{
+    		conn.close();
+    		
+    		/*connectionHelper is set to null, since the connection is closed 
+    		 * and the only way to create a new connection is to create a 
+    		 * new instance of DbConnection and instantiate it into connectionHelper*/
+    		connectionHelper = null;
+    		
+    	}catch(SQLException sqlCloseE){
+    		sqlCloseE.printStackTrace();
+    	}
+	}
+	
 	
 	public static synchronized DbConnection getInstance() {
 		if (connectionHelper == null) {
