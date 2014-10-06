@@ -8,12 +8,16 @@
 </head>
 	<body>
 	
+		<script>
+    			document.getElementById("test").innerHTML = "Input Entered";
+		</script>
+	
 		<!-- navigation bar -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
 			<table style="width:90%; margin-right:auto; margin-left:auto;">
 				<tr style="height:50%;">
-					<td><a href="Home.jsp"><h3>BLOGSHARE</h3></a></td>
+					<td><h3><a href="Home.jsp">BLOGSHARE</a></h3></td>
 					<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
 					<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
 					<td style="width:10%"> <input type=checkbox name=navBarTitlesCheck checked="checked"/>Titles<p></td>
@@ -36,7 +40,7 @@
 			 	<!-- blog title -->
 			 	<tr style="margin-bottom:5%;">
 					<td>
-						<p> Blog Title </p>
+						<p> <%= session.getAttribute("blogTitle") %> </p>
 					</td>
 					<td>
 						<!-- space for edit logo -->
@@ -48,7 +52,7 @@
 				
 				<tr>
 					<td>
-						 <a href="Profile.jsp"><h3> Written by "author name" </h3></a>
+						 <h3><a href="Profile.jsp"> Written by <%= session.getAttribute("blogAuthor") %> </a> </h3>
 					</td>
 				</tr>
 				
@@ -63,7 +67,7 @@
 				<!-- first post -->
 				<tr>
 						<td>
-							<p> First Post Title </p>
+							<p><%= session.getAttribute("postTitle") %> </p>
 						</td>
 						<td>
 							<a href="BlogEdit.jsp"><img src="images/read.jpg" alt="Edit Enabled, click here"></a> 
@@ -80,8 +84,9 @@
 				
 				<tr>
 						<td>
-							<textarea NAME="post1Content" READONLY="readonly" WRAP=soft COLS=80 ROWS=10></textarea>
+							<textarea NAME="blogPostContent" READONLY="readonly" WRAP=soft COLS=80 ROWS=10></textarea>
 							<br>
+							<%= session.getAttribute("postContent") %>
 							<br>
 						</td>
 				</tr>
@@ -93,6 +98,10 @@
 					</td>
 				</tr>
 				
+				<div id="test">
+				
+				
+				</div>
 		
 				<!-- additional posts -->
 			 

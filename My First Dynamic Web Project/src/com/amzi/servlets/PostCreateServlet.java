@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  
   
 
-
-import com.amzi.dao.Login;  
 import com.amzi.dao.PostCreate;
   
 public class PostCreateServlet extends HttpServlet{  
@@ -49,7 +47,7 @@ public class PostCreateServlet extends HttpServlet{
         }    
         else{    
             getServletContext().setAttribute("errorCode", 1);
-        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
+        	getServletContext().setAttribute("errorMessage", PostCreate.errorMessege);
 
             RequestDispatcher rd=request.getRequestDispatcher("PostCreate.jsp");    
             rd.include(request,response);    

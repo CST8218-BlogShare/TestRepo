@@ -75,7 +75,7 @@ creating queries for data inserting and selection
 				insert postEditId and userid into user_postEdit table.
 				
 Blog 			
-	    		title will need to be retrieved from createBlog or profile.
+	    		title will need to be retrieved from createBlog or profile 
 	    		
 	    		select blogid based from blog using title
 	    		

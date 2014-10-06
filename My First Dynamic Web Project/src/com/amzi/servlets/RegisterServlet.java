@@ -15,12 +15,12 @@ public class RegisterServlet extends HttpServlet {
 
 	 private static final long serialVersionUID = 1L;  
 	  
-	    public void doPost(HttpServletRequest request, HttpServletResponse response)    
-	            throws ServletException, IOException { //need to handle other exceptions.
+	    public void doPost(HttpServletRequest request, HttpServletResponse response){ 
 	  
-	        response.setContentType("text/html");    
-	        PrintWriter out = response.getWriter();    
-	          
+	    	Register r = new Register();
+	        
+	    	response.setContentType("text/html");    
+	        
 	        String n=request.getParameter("registerUsername");    
 	        String p=request.getParameter("registerUserPass");
 	        String p2=request.getParameter("registerReenterPass");
@@ -32,22 +32,38 @@ public class RegisterServlet extends HttpServlet {
 	    		  since the page object always contains a session object and we don't explictly set it to null*/
 	    	}
 	            
-	        if(Register.validate(n, p, p2)){  
+	        if(r.validate(n, p, p2)){  
 	        	getServletContext().setAttribute("errorCode", 0);
 	        	userSession.setAttribute("username",n);
-	            userSession.setAttribute("dateRegistered", Register.dateRegistered);
+	        	userSession.setAttribute("userId", r.getUserId());
+	            userSession.setAttribute("dateRegistered", r.getDateRegistered());
 	           
 	            RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
-	            rd.forward(request,response);    
+	            try {
+					rd.forward(request,response);
+				} catch (ServletException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}    
 	        }    
 	        else{
 	        	getServletContext().setAttribute("errorCode", 1);
-	        	getServletContext().setAttribute("errorMessage", Register.errorMessege);
+	        	getServletContext().setAttribute("errorMessage", r.getErrorMessage());
 	        	
 	        	RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
-	            rd.include(request,response);    
+	            try {
+					rd.include(request,response);
+				} catch (ServletException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}    
 	        }    
-	  
-	        out.close();    
+	     
 	    }
 }

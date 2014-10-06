@@ -7,11 +7,23 @@ import java.sql.SQLException;
   
 public class Login { 
 	
-	public static String userId = null;
-	public static String dateRegistered = null;
-	public static String errorMessege = null;
+	private int userId = -1;
+	private String dateRegistered = null;
+	private String errorMessage = null;
 	
-    public static boolean validate(String name, String pass) {          
+	public int getUserId(){
+		return userId;
+	}
+	
+	public String getDateRegistered(){
+		return dateRegistered;
+	}
+	
+	public String getErrorMessage(){
+		return errorMessage;
+	}
+	
+    public boolean validate(String name, String pass) {          
         boolean status = true;  
         PreparedStatement pst = null;  
         ResultSet rs = null; 
@@ -26,13 +38,13 @@ public class Login {
             
             if(name == ""){
             	System.out.println("Username was not entered, throwing java.lang.Exception.\n");
-            	errorMessege = "Error with previous login attempt. Username was not entered.";
+            	errorMessage = "Error with previous login attempt. Username was not entered.";
             	throw loginError;
             }
             
             if(pass == ""){
             	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
-            	errorMessege = "Error with previous login attempt. User password was not entered.";
+            	errorMessage = "Error with previous login attempt. User password was not entered.";
             	throw loginError;
             }
             
@@ -40,17 +52,13 @@ public class Login {
             connectionManager = DbConnection.getInstance();
             
             pst = connectionManager.getConnection().prepareStatement("select * from user where username=? and password=?"); 
-            
             pst.setString(1, name);  
             pst.setString(2, pass);  
-  
             rs = pst.executeQuery(); 
-            
             
             rs.first();
             //if the query does not return any rows. this will throw an SQLException
-            
-            userId = rs.getString("UserId");
+            userId = rs.getInt("UserId");
             dateRegistered = rs.getString("DateRegistered");
             
             //status = rs.next();
@@ -60,7 +68,7 @@ public class Login {
         	
         	System.out.println("The entered username and password do not match registered users, throwing SQLException\n");
         	sqlE.printStackTrace();
-        	errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
+        	errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
         	
         	status = false;
         }catch(Exception e){
