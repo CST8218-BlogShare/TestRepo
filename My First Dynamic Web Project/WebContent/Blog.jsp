@@ -31,7 +31,7 @@
 		</div>
 
 		<!--table to hold pages content -->
-		<table style="width:80%;  margin-left:10%; marin-right:10%;">
+		<table style="width:80%;  margin-left:10%; margin-right:10%;">
 			 	
 			 	<!-- blog title -->
 			 	<tr style="margin-bottom:5%;">
@@ -125,7 +125,7 @@
 			
 		</table>
 		
-		<table style="width:80%;  margin-left:10%; marin-right:10%;">
+		<table style="width:80%;  margin-left:10%; margin-right:10%;">
 		
 			<tr>
 				<td>
