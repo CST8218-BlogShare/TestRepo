@@ -6,23 +6,11 @@ import java.sql.ResultSet;
   
 public class Register {  
     
-	private int userId = -1;
-	private String dateRegistered = null;
-	private String errorMessage = null;
+	public static String userId = null;
+	public static String dateRegistered = null;
+	public static String errorMessege = null;
 	
-	public int getUserId(){
-		return userId;
-	}
-	
-	public String getDateRegistered(){
-		return dateRegistered;
-	}
-	
-	public String getErrorMessage(){
-		return errorMessage;
-	}
-	
-	public boolean validate(String name, String pass, String pass2) {          
+	public static boolean validate(String name, String pass, String pass2) {          
         boolean status = true;  
         PreparedStatement pst = null; 
         ResultSet rs = null;
@@ -38,25 +26,25 @@ public class Register {
         	
         	if(name.equals("")){
         		System.out.println("Username was not entered, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. Username was not entered";
+        		errorMessege = "Error with registration. Username was not entered";
         		throw registrationError;
         	}
         	
         	if(pass.equals("")){
         		System.out.println("Password was not entered, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. Password was not entered";
+        		errorMessege = "Error with registration. Password was not entered";
         		throw registrationError;
         	}
         	
         	if(pass2.equals("")){
         		System.out.println("Password was not rentered, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. Password was not reentered";
+        		errorMessege = "Error with registration. Password was not reentered";
         		throw registrationError;
         	}
         	
         	if(!pass.equals(pass2)){
         		System.out.println("The passwords that were entered do not match, throwing java.lang.Exception.");
-        		errorMessage = "Error with registration. The passwords that were entered do not match";
+        		errorMessege = "Error with registration. The passwords that were entered do not match";
         		throw registrationError;
         	}
         	
@@ -80,7 +68,7 @@ public class Register {
             
             rs.first();
            
-            userId = rs.getInt("UserId");
+            userId = rs.getString("UserId");
             dateRegistered = rs.getString("DateRegistered");
   
             
@@ -93,7 +81,7 @@ public class Register {
         	
         	System.out.println("Error inserting information of new user into registration table, throwing SQLException.");
         	sqlE.printStackTrace();
-       	 	errorMessage = "Error completing registration";
+       	 	errorMessege = "Error completing registration";
        	 	status = false;
        	 	
         } catch (Exception e) { 

@@ -8,15 +8,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
   
+
 import com.amzi.dao.Login;  
   
 public class LoginServlet extends HttpServlet{  
   
     private static final long serialVersionUID = 1L;  
   
-    public void doPost(HttpServletRequest request, HttpServletResponse response){
+    public void doPost(HttpServletRequest request, HttpServletResponse response)    
+            throws ServletException, IOException {   //need handle other exceptions.
     	
-    	Login l = new Login();
+    	
     	//If a session has not been created, none will be created
     	HttpSession userSession = request.getSession(false); 
     	
@@ -33,37 +35,21 @@ public class LoginServlet extends HttpServlet{
         String n=request.getParameter("loginUsername");    
         String p=request.getParameter("loginUserpass");   
             
-        if(l.validate(n, p)){   
+        if(Login.validate(n, p)){   
         	getServletContext().setAttribute("errorCode", 0);
         	userSession.setAttribute("username",n);
-        	userSession.setAttribute("userId", l.getUserId());
-            userSession.setAttribute("dateRegistered", l.getDateRegistered());
+        	userSession.setAttribute("userId", Login.userId);
+            userSession.setAttribute("dateRegistered", Login.dateRegistered);
             
             RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
-            try {
-				rd.forward(request,response);
-			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}    
+            rd.forward(request,response);    
         }    
         else{    
             getServletContext().setAttribute("errorCode", 1);
-        	getServletContext().setAttribute("errorMessage", l.getErrorMessage());
+        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
 
             RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
-            try {
-				rd.include(request,response);
-			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}    
+            rd.include(request,response);    
         }    
      
     }    

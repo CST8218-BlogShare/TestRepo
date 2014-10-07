@@ -84,9 +84,13 @@
 				
 				<tr>
 						<td>
-							<textarea NAME="blogPostContent" READONLY="readonly" WRAP=soft COLS=80 ROWS=10></textarea>
+							<textarea NAME="blogPostContent" READONLY="readonly" WRAP=soft COLS=80 ROWS=10>
+								
+								<%= session.getAttribute("postBody") %>
+							
+							</textarea>
 							<br>
-							<%= session.getAttribute("postContent") %>
+							
 							<br>
 						</td>
 				</tr>

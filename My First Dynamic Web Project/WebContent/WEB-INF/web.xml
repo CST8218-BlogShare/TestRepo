@@ -129,6 +129,6 @@ version="2.5">
 	
 	<servlet-mapping>
 		<servlet-name>blogCreate</servlet-name>
-		<url-pattern>/blogCreateServlet</url-pattern>
+		<url-pattern>/blogServlet</url-pattern>
 	</servlet-mapping>
 </web-app> 
