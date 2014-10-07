@@ -12,10 +12,52 @@ public class Blog {
 	
 	private int blogId = -1;
 	private int postCount = 0;
-	private String errorMessage = null;
 	private String author = null; 
+	private String blogTitle = null;
+	private String blogPostTitle = null;
+	private String blogPostBody = null;
     private ArrayList<String> postTitleList = new ArrayList<String>();
-	private ArrayList<String> postContentList = new ArrayList<String>();
+	private ArrayList<String> postBodyList = new ArrayList<String>();
+	
+	private String errorMessage = null;
+	
+	public Blog(){
+		
+	}
+	
+	public Blog(String blogTitle, String blogPostTitle, String blogPostBody){
+		Exception blogCreateError = new Exception();
+		
+		blogTitle = blogTitle.trim();
+    	blogPostTitle = blogPostTitle.trim();
+    	blogPostBody = blogPostBody.trim();
+    	
+    	try{
+	    	if(blogTitle.equals("")){
+	    		System.out.println("Blog Has no tittle, throwing java.lang.Exception.");
+	    		//errorMessage = "Error with Post. No Post Title was not entered";
+	    		throw blogCreateError;
+	    	}
+	    	
+	    	if(blogPostTitle.equals("")){
+	    		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
+	    		//errorMessage = "Error with Post. No Post Title was not entered";
+	    		throw blogCreateError;
+	    	}
+	    	
+	    	if(blogPostBody.equals("")){
+	    		System.out.println("Post body does not contain any text, throwing java.lang.Exception.");
+	    		//errorMessage = "Error with Post. No Post Title was not entered";
+	    		throw blogCreateError;
+	    	}
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	
+    	this.blogTitle = blogTitle;
+    	this.blogPostTitle = blogPostTitle;
+    	this.blogPostBody = blogPostBody;
+	}
 	
 	public int getBlogId(){
 		return blogId;
@@ -33,45 +75,54 @@ public class Blog {
 		return author;
 	}
 	
+	public String getBlogTitle(){
+		return blogTitle;
+	}
+	
+	public String getBlogPostTitle(){
+		return blogPostTitle;
+	}
+	
+	public String getBlogPostBody(){
+		return blogPostBody;
+	}
+	
 	public String getPostTitleAt(int i){
 		return postTitleList.get(i);
 	}
 	
-	public String getPostContentAt(int i){
-		return postContentList.get(i);
+	public String getPostBodyAt(int i){
+		return postBodyList.get(i);
 	}
 	
-    public boolean createBlog(String blogTitle, String postTitle, String postBody, int userid) {          
+    public boolean insertBlogInDatabase(int userId) {          
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
-        Exception postError = new Exception();
+        
         boolean status = true;  
         int postId;
         
- 
+        //the blog object used to call this object needs to have its blogTitle, blogPostTitle and blogPostBody parameters initialized before this function can be called.
+        
+        if(this.blogTitle == null){
+        	return false;
+        }
+        
+        if(this.blogPostTitle == null){
+        	return false;
+        }
+        
+        if(this.blogPostBody == null){
+        	return false;
+        }
+        
+       /* if(userId == -1 ){
+        	return false;
+        }*/
+        
         try {  
-        	blogTitle = blogTitle.trim();
-        	postTitle = postTitle.trim();
-        	postBody = postBody.trim();
         	
-        	if(blogTitle.equals("")){
-        		System.out.println("Blog Has no tittle, throwing java.lang.Exception.");
-        		errorMessage = "Error with Post. No Post Title was not entered";
-        		throw postError;
-        	}
-        	
-        	if(postTitle.equals("")){
-        		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
-        		errorMessage = "Error with Post. No Post Title was not entered";
-        		throw postError;
-        	}
-        	
-        	if(postBody.equals("")){
-        		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
-        		errorMessage = "Error with Post. No Post Title was not entered";
-        		throw postError;
-        	}
         	
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
@@ -101,24 +152,24 @@ public class Blog {
             pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = '"+blogTitle+"' ");
             rs = pst.executeQuery();
             rs.first();
-            blogId = rs.getInt("blogId");
+            this.blogId = rs.getInt("blogId");
             rs.close();
             pst.close();
             
             
             //insert blogid and userid into user_blog table
-            pst = connectionManager.getConnection().prepareStatement("insert into user_blog values('"+userid+"', '"+blogId+"')");
+            pst = connectionManager.getConnection().prepareStatement("insert into user_blog values('"+userId+"', '"+blogId+"')");
             pst.executeUpdate();
             pst.close();
             
             //insert post title, blogid content, creation date into post table
-            pst = connectionManager.getConnection().prepareStatement("insert into Post values(0, '"+blogId+"', '"+postTitle+"','"+postBody+"', curdate() )");  
+            pst = connectionManager.getConnection().prepareStatement("insert into Post values(0, '"+blogId+"', '"+blogPostTitle+"','"+blogPostBody+"', curdate() )");  
             pst.executeUpdate(); 
             pst.close();
             
             //select postid from post table where blogid and title is the same
             
-            pst = connectionManager.getConnection().prepareStatement("select postid from post where blogid = '"+blogId+"' and title = '"+postTitle+"' ");  
+            pst = connectionManager.getConnection().prepareStatement("select postid from post where blogid = '"+blogId+"' and title = '"+blogPostTitle+"' ");  
             rs = pst.executeQuery(); 
             rs.first();
             postId = rs.getInt("postId");
@@ -128,7 +179,7 @@ public class Blog {
   
             //insert postid and user id into user_post table
             
-            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userid+"', '"+postId+"')");
+            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"')");
             pst.executeUpdate();
             pst.close();
            
@@ -138,16 +189,11 @@ public class Blog {
         	
         	
         	connectionManager.closeConnection();
-        	
-        	
         	System.out.println("Blog field missing, throwing SQLException");
         	sqlE.printStackTrace();
         	//errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
         	
         	status = false;
-        }catch(Exception e){
-        	 e.printStackTrace(); //may not be necessary
-             status = false;
         }
          finally { 
         	//we now have to manage closing the connection a different way...at logout...
@@ -169,13 +215,13 @@ public class Blog {
         return status;  
     } 
     
-    public boolean buildBlog(int blogId, String blogTitle, int userid) {          
+    public boolean buildBlog(int userId) {          
         
     	boolean status = true;  
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
-         
+        
         try {  
         	
         	//gaining access to the shared database connection.
@@ -209,19 +255,19 @@ public class Blog {
     		
     		*/
         	
-        	pst = connectionManager.getConnection().prepareStatement("select username from user where userid = '"+userid+"' ");
+        	pst = connectionManager.getConnection().prepareStatement("select username from user where userid = '"+userId+"' ");
         	rs = pst.executeQuery();
         	rs.first();
-        	author = rs.getString("username");
+        	this.author = rs.getString("username");
         	rs.close();
         	pst.close();
         	
-        	if(blogId == -1){
+        	if(this.blogId == -1){
         		
         		pst = connectionManager.getConnection().prepareStatement(" select blogid from blog where title = '"+blogTitle+"' "); 
             	rs = pst.executeQuery();
             	rs.first();
-            	blogId = rs.getInt("blogid");
+            	this.blogId = rs.getInt("blogid");
             	rs.close();
             	pst.close();
         		
@@ -232,15 +278,13 @@ public class Blog {
         	
         	while(rs.next()){
         		postTitleList.add(rs.getString("title"));
-        		postContentList.add(rs.getString("content"));
+        		postBodyList.add(rs.getString("content"));
         		++postCount;
         	}
         	
         	rs.close();
         	pst.close();
         	
-        	
-
         } catch (SQLException sqlE) {  
         	
         	

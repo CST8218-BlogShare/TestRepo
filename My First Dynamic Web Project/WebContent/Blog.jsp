@@ -1,5 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"%>  
+<%@ page language="java" 
+		 contentType="text/html; charset=ISO-8859-1"  
+    	 pageEncoding="ISO-8859-1"
+    	 import="com.amzi.dao.Blog"
+    %>  
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
@@ -7,6 +10,8 @@
 <title>BlogShare - Blog</title>
 </head>
 	<body>
+	
+	<% Blog b = (Blog) getServletContext().getAttribute("currentBlog"); %>
 		
 		<!-- navigation bar -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
@@ -36,7 +41,7 @@
 			 	<!-- blog title -->
 			 	<tr style="margin-bottom:5%;">
 					<td>
-						<p> <%= session.getAttribute("blogTitle") %> </p>
+						<p> <%= b.getBlogTitle() %> </p>
 					</td>
 					<td>
 						<!-- space for edit logo -->
@@ -48,7 +53,7 @@
 				
 				<tr>
 					<td>
-						 <h3><a href="Profile.jsp"> Written by <%= session.getAttribute("blogAuthor") %> </a> </h3>
+						 <h3><a href="Profile.jsp"> Written by <%= b.getAuthor() %> </a> </h3>
 					</td>
 				</tr>
 				
@@ -63,7 +68,7 @@
 				<!-- first post -->
 				<tr>
 						<td>
-							<p><%= session.getAttribute("postTitle") %> </p>
+							<p><%= b.getBlogPostTitle() %> </p>
 						</td>
 						<td>
 							<a href="BlogEdit.jsp"><img src="images/read.jpg" alt="Edit Enabled, click here"></a> 
@@ -82,7 +87,7 @@
 						<td>
 							<textarea NAME="blogPostContent" READONLY="readonly" WRAP=soft COLS=80 ROWS=10>
 								
-								<%= session.getAttribute("postBody") %>
+								<%= b.getBlogPostBody() %>
 							
 							</textarea>
 							<br>
@@ -98,40 +103,55 @@
 					</td>
 				</tr>
 				
-				<!-- additional posts -->
-			 
-				<!--  	<tr>
-						<td>
-							<p> Second Post Title </p>
-						</td>
-						<td>
-							<a href="PostEdit.jsp"><img src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
-						</td>
-					</tr>
-					
-					<!-- creating space 
-				<tr>
-					<td>
-						<br>
-					</td>
-				</tr>
 				
-					
-					<tr>
-						<td>
-							<textarea NAME="post1Content" WRAP=soft  READONLY="readonly" COLS=80 ROWS=10></textarea>
-						</td>
-					</tr>	-->
 			
 		</table>
 		
 		<table style="width:80%;  margin-left:10%; margin-right:10%;">
 		
-			<tr>
+		<%
+		
+		int userId = Integer.parseInt((String)session.getAttribute("userId"));
+		
+		 /*The function buildBlog is called in order to retrieve the author of blog and all
+		 *posts within the blog other than the first post created during blogCreation. */
+		 b.buildBlog(userId);
+		 
+		//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
+		 for(int i = 0; i < b.getPostCount(); ++i ){
+		 	
+			 %>
+			 
+			 <tr>
 				<td>
-					<p> <%= getServletContext().getAttribute("postCount") %> </p>
+					<p> <%= b.getPostTitleAt(i) %> </p>
+				</td>
+				
+				<td>
+					<a href="PostEdit.jsp"><img src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
 				</td>
 			</tr>
+					
+			<!-- creating space -->
+			<tr>
+				<td>
+					<br>
+				</td>
+			</tr>
+				
+					
+			<tr>
+				<td>
+					<textarea NAME="post1Content" WRAP=soft  READONLY="readonly" COLS=80 ROWS=10>
+						<%= b.getPostBodyAt(i) %>
+					</textarea>
+				</td>
+			</tr>	
+			 
+			 <%
+		 }
+
+		%>
 		
 		</table>
 		

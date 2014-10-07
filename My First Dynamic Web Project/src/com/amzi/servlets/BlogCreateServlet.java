@@ -21,12 +21,11 @@ public class BlogCreateServlet extends HttpServlet{
   
 	 private static final long serialVersionUID = 1L;
 	 
-	 
 	 public void doPost(HttpServletRequest request, HttpServletResponse response){
 		 
-		 Blog b = new Blog();
-		 int blogId;
+		 Blog b = null;
 		 PrintWriter out = null;
+		 int userId;
 		 
 		 //If a session has not been created, none will be created
 		 HttpSession userSession = request.getSession(false);
@@ -47,16 +46,40 @@ public class BlogCreateServlet extends HttpServlet{
 		String blogTitle=request.getParameter("blogTitle");
 		String postTitle=request.getParameter("postTitle");
 		String postBody=request.getParameter("postBody");
-		int userId = Integer.parseInt((String) userSession.getAttribute("userId"));
+		
+		b = new Blog(blogTitle, postTitle, postBody);
+		
+		try{
+		
+			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
 		 
-		/*The function createBlog is called to take the contents entered into the
-		 form within blogCreate and insert the info into the database*/
-		 if(b.createBlog(blogTitle,postTitle, postBody, userId)){
+		}catch(NumberFormatException nfE){
+			nfE.printStackTrace();
+			return;
+		}
+		/*The function insertBlogInDatabase() is called to take the contents entered into the
+		 form within blogCreate held within Blog Object b, and insert this info into the database
+		 
+		 This function also initializes the Blog's blogId data member with an integer value.
+		 */
+		 if(b.insertBlogInDatabase(userId)){
 			 //getServletContext().setAttribute("errorCode", 0);
-			 userSession.setAttribute("blogTitle",blogTitle);
-			 userSession.setAttribute("postTitle",postTitle);
-			 userSession.setAttribute("postBody",postBody);
+			 
+			 getServletContext().setAttribute("currentBlog", b);
+			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
+			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
+			 
+			try {
+				rd.include(request,response);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		 }
 		 else{
 			 //getServletContext().setAttribute("errorCode", 1);
@@ -65,52 +88,16 @@ public class BlogCreateServlet extends HttpServlet{
 		 //modify
 		 
 			 try {
-				 rd.include(request,response);
-			 } catch (ServletException | IOException e) {
-				 // TODO Auto-generated catch block
-				 e.printStackTrace();
-			 }
+				rd.include(request,response);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		 }
-			 
-		 blogId = b.getBlogId();
-		 /*The function buildBlog is called in order to retrieve the author of blog and all
-		 *posts within the blog other than the first post created during blogCreation. */
-		 if(b.buildBlog(blogId, blogTitle, userId)){
-			 //getServletContext().setAttribute("errorCode", 0);
-			 userSession.setAttribute("blogAuthor", b.getAuthor());
-			 getServletContext().setAttribute("postCount", b.getPostCount());
-			 
-			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
-		 
-			 try {
-				 rd.forward(request,response);
-			 } catch (ServletException e) {
-				 // TODO Auto-generated catch block
-				 e.printStackTrace();
-			 } catch (IOException e) {
-				 // TODO Auto-generated catch block
-				 e.printStackTrace();
-			 }
-		 }else{
-			 
-			 //getServletContext().setAttribute("errorCode", 1);
-			 //getServletContext().setAttribute("errorMessage", BlogCreate.errorMessege);
-			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
 		
-			 try {
-				 rd.include(request,response);
-			 } catch (ServletException e) {
-				 // TODO Auto-generated catch block
-				 e.printStackTrace();
-			 } catch (IOException e) {
-				 // TODO Auto-generated catch block
-				 e.printStackTrace();
-			 }
-		 }
-		 	//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
-		 	/*for(int i = 0; i < newBlog.getPostCount(); ++i ){
-		 	}*/
-		 
 		 if(out != null){
 		 	out.close();
 		 }
