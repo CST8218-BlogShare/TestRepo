@@ -95,7 +95,11 @@ public class Blog {
 		return postBodyList.get(i);
 	}
 	
+<<<<<<< HEAD
     public boolean insertBlogInDatabase(int userId) {          
+=======
+    public boolean createBlog(String blogTitle, String postTitle, String postBody, String userid) {          
+>>>>>>> 56bd36ee443fd48dbc6b8db2c48ca26277c0fe91
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
@@ -215,7 +219,11 @@ public class Blog {
         return status;  
     } 
     
+<<<<<<< HEAD
     public boolean buildBlog(int userId) {          
+=======
+    public boolean buildBlog(int blogId, String blogTitle, String userId) {          
+>>>>>>> 56bd36ee443fd48dbc6b8db2c48ca26277c0fe91
         
     	boolean status = true;  
         PreparedStatement pst = null; 
@@ -318,6 +326,66 @@ public class Blog {
             }  
         }  
         return status;  
+    }
+    
+    public ArrayList<String[]> getUserBlogs(String userId) {          
+        
+        PreparedStatement pst = null; 
+        ResultSet rs = null;
+        DbConnection connectionManager = null;
+        ArrayList<String[]> userBlogs = null;
+         
+        try {  
+        	
+        	connectionManager = DbConnection.getInstance();
+        	
+        	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u where b.blogid = ub.blogid and u.userid = ub.userid and u.userid = '"+userId+"'");
+        	rs = pst.executeQuery();
+        	
+        	if (rs.next()){
+
+	        	rs.beforeFirst();
+	        	userBlogs = new ArrayList<String[]>();
+	        	
+	        	while (rs.next()){	
+	        		userBlogs.add(
+	        				new String[]{rs.getString("blogid"), rs.getString("title")});
+	        	}
+        	}
+        	rs.close();
+        	pst.close();
+        	
+        } catch (SQLException sqlE) {  
+        	
+        	connectionManager.closeConnection();
+        	userBlogs = null;
+        	
+        }catch(Exception e){
+        	
+        	 e.printStackTrace();
+        	 userBlogs = null;
+             
+        }
+         finally { 
+
+            if (pst != null) {  
+                try {  
+                    pst.close();  
+                } catch (SQLException e) {  
+                    e.printStackTrace();  
+                }  
+            }  
+            if (rs != null) {  
+                try {  
+                    rs.close();  
+                } catch (SQLException e) {  
+                    e.printStackTrace();  
+                }  
+            }  
+        }  
+        
+        return userBlogs;  
+        
     }  
     
 }  

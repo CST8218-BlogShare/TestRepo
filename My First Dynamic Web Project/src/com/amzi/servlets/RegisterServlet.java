@@ -40,7 +40,7 @@ public class RegisterServlet extends HttpServlet {
 	        	userSession.setAttribute("username",n);
 	            userSession.setAttribute("dateRegistered", Register.dateRegistered);
 	           
-	            RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
+	            RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
 	            rd.forward(request,response);    
 	        }    
 	        else{
