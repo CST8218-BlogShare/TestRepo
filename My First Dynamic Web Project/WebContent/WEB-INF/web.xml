@@ -123,12 +123,12 @@ version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>blogCreate</servlet-name>
+		<servlet-name>blog</servlet-name>
 		<servlet-class>com.amzi.servlets.BlogCreateServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>blogCreate</servlet-name>
+		<servlet-name>blog</servlet-name>
 		<url-pattern>/blogServlet</url-pattern>
 	</servlet-mapping>
 </web-app> 

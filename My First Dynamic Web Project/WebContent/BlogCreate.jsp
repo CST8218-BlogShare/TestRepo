@@ -10,7 +10,7 @@
 <body>
  <!--table to hold pages content -->
 <form name="blogCreateForm" action="blogServlet" method="post">
-	<table style="width: 80%; margin-left: 10%; marin-right: 10%;">
+	<table style="width: 80%; margin-left: 10%; margin-right: 10%;">
 
 		<!-- blog title -->
 		<tr style="margin-bottom: 5%;">
@@ -61,7 +61,13 @@
 	</table>
 	</form>
 	<form action="Profile.jsp">
-		<input type="submit" class = button width="wrap_content" value="Cancel">
+		<table style="width: 80%; margin-left: 10%; margin-right: 10%;">
+			<tr>
+				<td>
+					<input type="submit" class = button width="wrap_content" value="Cancel">
+				</td>
+			</tr>
+		</table>
 	</form>
 	</body>
 </html>

@@ -10,19 +10,27 @@ public class Blog {
 	
 	//private String errorMessage = null;
 	
-	public int blogId;
-	public  String errorMessege = null;
+	private int blogId = -1;
+	private int postCount = 0;
+	private String errorMessage = null;
 	private String author = null; 
-    private int postCount = 0;
-	private ArrayList<String> postTitleList = new ArrayList<String>();
+    private ArrayList<String> postTitleList = new ArrayList<String>();
 	private ArrayList<String> postContentList = new ArrayList<String>();
 	
-	public String getAuthor(){
-		return author;
+	public int getBlogId(){
+		return blogId;
 	}
 	
 	public int getPostCount(){
 		return postCount;
+	}
+	
+	public String getErrorMessage(){
+		return errorMessage;
+	}
+	
+	public String getAuthor(){
+		return author;
 	}
 	
 	public String getPostTitleAt(int i){
@@ -49,19 +57,19 @@ public class Blog {
         	
         	if(blogTitle.equals("")){
         		System.out.println("Blog Has no tittle, throwing java.lang.Exception.");
-        		errorMessege = "Error with Post. No Post Title was not entered";
+        		errorMessage = "Error with Post. No Post Title was not entered";
         		throw postError;
         	}
         	
         	if(postTitle.equals("")){
         		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
-        		errorMessege = "Error with Post. No Post Title was not entered";
+        		errorMessage = "Error with Post. No Post Title was not entered";
         		throw postError;
         	}
         	
         	if(postBody.equals("")){
         		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
-        		errorMessege = "Error with Post. No Post Title was not entered";
+        		errorMessage = "Error with Post. No Post Title was not entered";
         		throw postError;
         	}
         	
@@ -134,7 +142,7 @@ public class Blog {
         	
         	System.out.println("Blog field missing, throwing SQLException");
         	sqlE.printStackTrace();
-        	errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
+        	//errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
         	
         	status = false;
         }catch(Exception e){

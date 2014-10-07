@@ -7,11 +7,7 @@
 <title>BlogShare - Blog</title>
 </head>
 	<body>
-	
-		<script>
-    			document.getElementById("test").innerHTML = "Input Entered";
-		</script>
-	
+		
 		<!-- navigation bar -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
@@ -102,14 +98,9 @@
 					</td>
 				</tr>
 				
-				<div id="test">
-				
-				
-				</div>
-		
 				<!-- additional posts -->
 			 
-					<tr>
+				<!--  	<tr>
 						<td>
 							<p> Second Post Title </p>
 						</td>
@@ -118,7 +109,7 @@
 						</td>
 					</tr>
 					
-					<!-- creating space -->
+					<!-- creating space 
 				<tr>
 					<td>
 						<br>
@@ -130,8 +121,19 @@
 						<td>
 							<textarea NAME="post1Content" WRAP=soft  READONLY="readonly" COLS=80 ROWS=10></textarea>
 						</td>
-					</tr>	
+					</tr>	-->
 			
 		</table>
+		
+		<table style="width:80%;  margin-left:10%; marin-right:10%;">
+		
+			<tr>
+				<td>
+					<p> <%= getServletContext().getAttribute("postCount") %> </p>
+				</td>
+			</tr>
+		
+		</table>
+		
 	<body>
 </html>

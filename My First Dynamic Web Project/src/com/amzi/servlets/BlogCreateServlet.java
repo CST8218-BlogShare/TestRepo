@@ -16,16 +16,15 @@ import javax.servlet.http.HttpSession;
 
 
 import com.amzi.dao.Blog;
-import com.amzi.dao.BlogCreate;
-import com.amzi.dao.Login;  
-import com.amzi.dao.PostCreate;
   
 public class BlogCreateServlet extends HttpServlet{  
   
 	 private static final long serialVersionUID = 1L;
-	 private Blog b = new Blog();
+	 
 	 
 	 public void doPost(HttpServletRequest request, HttpServletResponse response){
+		 
+		 Blog b = new Blog();
 		 int blogId;
 		 PrintWriter out = null;
 		 
@@ -73,12 +72,14 @@ public class BlogCreateServlet extends HttpServlet{
 			 }
 		 }
 			 
-		 blogId = b.blogId;
+		 blogId = b.getBlogId();
 		 /*The function buildBlog is called in order to retrieve the author of blog and all
 		 *posts within the blog other than the first post created during blogCreation. */
 		 if(b.buildBlog(blogId, blogTitle, userId)){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 userSession.setAttribute("blogAuthor", b.getAuthor());
+			 getServletContext().setAttribute("postCount", b.getPostCount());
+			 
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 		 
 			 try {
