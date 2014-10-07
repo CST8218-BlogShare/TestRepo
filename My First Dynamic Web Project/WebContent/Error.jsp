@@ -70,9 +70,42 @@
 		            out.println("<p /> An error has occurred <br /><br />");
 		            
 		            switch(ed.getStatusCode()){
+		            	
+		            	case 400:
+		            		errorDescription="Bad Request Error";
+		            		break;
+		          		case 404:
+		            		errorDescription="Page not found";
+		            		break;
+		          		case 405:
+		          			errorDescription="Method not allowed";
+		          			break;
+		          		case 408:
+		          			errorDescription="Request timeout error";
+		          			break;
+		          		case 413:
+		          			errorDescription="Request entity too large error";
+		          			break;
+		          		case 414:
+		          			errorDescription="Request-uri too large error";
+		          			break;
 		            	case 500:
-		            		errorDescription = "Internal Server Error";
-		            		
+		            		errorDescription = "Internal server error";
+		            		break;
+		            	case 501:
+		            		errorDescription = "Not implemented error";
+		            		break;
+		            	case 502:
+		            		errorDescription = "Bad gateway error";
+		            		break;
+		            	case 503:
+		            		errorDescription = "Service unavailable error";
+		            		break;
+		            	case 504:
+		            		errorDescription = "Gateway time-out error";
+		            		break;
+		            	case 505:
+		            		errorDescription = "HTTP version not supported error";
 		            }
 		            
 		            out.println("Description: " + errorDescription);
