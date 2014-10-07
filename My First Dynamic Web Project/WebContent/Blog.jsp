@@ -11,7 +11,17 @@
 </head>
 	<body>
 	
-	<% Blog b = (Blog) getServletContext().getAttribute("currentBlog"); %>
+	<% 
+	
+		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
+	
+		int userId = Integer.parseInt((String)session.getAttribute("userId"));
+	
+	 	/*The function buildBlog is called in order to retrieve the author of blog and all
+	 	*posts within the blog other than the first post created during blogCreation. */
+	 	b.buildBlog(userId);
+	 
+	 %>
 		
 		<!-- navigation bar -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
@@ -111,14 +121,8 @@
 		
 		<%
 		
-		int userId = Integer.parseInt((String)session.getAttribute("userId"));
-		
-		 /*The function buildBlog is called in order to retrieve the author of blog and all
-		 *posts within the blog other than the first post created during blogCreation. */
-		 b.buildBlog(userId);
-		 
 		//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
-		 for(int i = 0; i < b.getPostCount(); ++i ){
+		 for(int i = 1; i < b.getPostCount(); ++i ){
 		 	
 			 %>
 			 

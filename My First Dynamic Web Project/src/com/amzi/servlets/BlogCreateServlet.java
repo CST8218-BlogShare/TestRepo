@@ -29,12 +29,7 @@ public class BlogCreateServlet extends HttpServlet{
 		 
 		 //If a session has not been created, none will be created
 		 HttpSession userSession = request.getSession(false);
-		 
-		 if(userSession == null){
-			 /*Is this even possible????
-		 	since the page object always contains a session object and we don't explicitly set it to null*/
-		 }
-		 
+		
 		 response.setContentType("text/html");
 		 try{
 			 out = response.getWriter();
