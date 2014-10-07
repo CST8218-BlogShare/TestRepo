@@ -31,8 +31,8 @@ public class BlogCreateServlet extends HttpServlet{
 		 HttpSession userSession = request.getSession(false);
 		 
 		 if(userSession == null){
-		 /*Is this even possible????
-		 since the page object always contains a session object and we don't explicitly set it to null*/
+			 /*Is this even possible????
+		 	since the page object always contains a session object and we don't explicitly set it to null*/
 		 }
 		 
 		 response.setContentType("text/html");
@@ -46,23 +46,20 @@ public class BlogCreateServlet extends HttpServlet{
 		String blogTitle=request.getParameter("blogTitle");
 		String postTitle=request.getParameter("postTitle");
 		String postBody=request.getParameter("postBody");
-<<<<<<< HEAD
+
 		
 		b = new Blog(blogTitle, postTitle, postBody);
 		
 		try{
 		
 			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
-		 
+		
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
 			return;
 		}
 		/*The function insertBlogInDatabase() is called to take the contents entered into the
 		 form within blogCreate held within Blog Object b, and insert this info into the database
-=======
-		String userId = userSession.getAttribute("userId").toString();
->>>>>>> 56bd36ee443fd48dbc6b8db2c48ca26277c0fe91
 		 
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */

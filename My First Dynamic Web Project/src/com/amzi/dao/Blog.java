@@ -95,11 +95,8 @@ public class Blog {
 		return postBodyList.get(i);
 	}
 	
-<<<<<<< HEAD
     public boolean insertBlogInDatabase(int userId) {          
-=======
-    public boolean createBlog(String blogTitle, String postTitle, String postBody, String userid) {          
->>>>>>> 56bd36ee443fd48dbc6b8db2c48ca26277c0fe91
+	
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
@@ -219,11 +216,7 @@ public class Blog {
         return status;  
     } 
     
-<<<<<<< HEAD
     public boolean buildBlog(int userId) {          
-=======
-    public boolean buildBlog(int blogId, String blogTitle, String userId) {          
->>>>>>> 56bd36ee443fd48dbc6b8db2c48ca26277c0fe91
         
     	boolean status = true;  
         PreparedStatement pst = null; 
