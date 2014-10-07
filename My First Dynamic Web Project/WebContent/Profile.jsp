@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"
+    import="java.util.ArrayList"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,7 +41,39 @@
 <p style="padding:50px">
 	<a href="ProfileEdit.jsp"><button type="button" class="btn btn-default btn-lrg" style="width:500px">Edit Profile</button></a>
 	<br style="clear:left;"/>
-	<a href="BlogCreate.jsp"><button type="button" class="btn btn-default btn-lrg" style="width:500px">Create Blog</button></a>
+	<a href="BlogCreate.jsp"><button type="button" class="btn btn-default btn-lrg" style="width:500px">Create Blog</button></a>	
 </p>
+
+
+<div class="list-group">
+<% 
+
+ArrayList<String[]> userBlogList = (ArrayList<String[]>) request.getAttribute("userBlogList");
+
+if (userBlogList != null) {
+	for (String[] entry: userBlogList){
+		out.print("<a href=\"#" + entry[0]);
+		out.println( "\" class=\"list-group-item\">"+ entry[1] +"</a>");
+	}
+	
+	request.removeAttribute("userBlogList");
+	
+} else {
+	out.println("<li class=\"list-group-item\">No Blogs Found</li>");
+}
+
+%>	
+</div>
+
+<div class="list-group">
+  <a href="#" class="list-group-item active">
+    Cras justo odio
+  </a>
+  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+  <a href="#" class="list-group-item">Morbi leo risus</a>
+  <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+  <a href="#" class="list-group-item">Vestibulum at eros</a>
+</div>
+
 </body>
 </html>

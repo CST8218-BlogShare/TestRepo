@@ -47,7 +47,7 @@ public class BlogCreateServlet extends HttpServlet{
 		String blogTitle=request.getParameter("blogTitle");
 		String postTitle=request.getParameter("postTitle");
 		String postBody=request.getParameter("postBody");
-		int userId = Integer.parseInt((String) userSession.getAttribute("userId"));
+		String userId = userSession.getAttribute("userId").toString();
 		 
 		/*The function createBlog is called to take the contents entered into the
 		 form within blogCreate and insert the info into the database*/

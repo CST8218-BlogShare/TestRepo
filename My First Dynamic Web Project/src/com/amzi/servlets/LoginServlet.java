@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet{
         	userSession.setAttribute("userId", Login.userId);
             userSession.setAttribute("dateRegistered", Login.dateRegistered);
             
-            RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
+            RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
             rd.forward(request,response);    
         }    
         else{    

@@ -1,134 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-version="2.5">
-
-	<welcome-file-list>
-		<welcome-file>Home.jsp</welcome-file>
-	</welcome-file-list>
-
-
-	<!-- list of error codes found at " ftp://ftp.isi.edu/in-notes/rfc2616.txt " on page 39 and 40. -->
-
-	<!-- bad request error  -->
-	<error-page>
-		<error-code> 400 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-
-	<!-- page not found error -->
-	<error-page>
-		<error-code> 404 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	<!-- page not found error -->
-	<error-page>
-		<error-code> 405 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	<!-- request timeout error -->
-	<error-page>
-		<error-code> 408 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-
-	<!-- request entity too large error -->
-	<error-page>
-		<error-code> 413 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	<!-- request-uri too large error -->
-	<error-page>
-		<error-code> 414 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	<!-- internal server error -->
-	<error-page>
-		<error-code> 500 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	<!-- not implemented error -->
-	<error-page>
-		<error-code> 501 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	<!-- bad gateway error -->
-	<error-page>
-		<error-code> 502 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	
-	<!-- service unavailable error -->
-	<error-page>
-		<error-code> 503 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	
-	<!-- gateway time-out error -->
-	<error-page>
-		<error-code> 504 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-	
-	<!-- HTTP version not supported error -->
-	<error-page>
-		<error-code> 505 </error-code>
-		<location>/Error.jsp</location>
-	</error-page>
-
-<!-- Do we even want to include this...will it prevent handling errors and continuing execution of the program??*/
-	 Define an error handler for java.lang.Throwable 
-    <error-page>
-    	<exception-type>java.lang.Throwable</exception-type>
-        <location>/errorThrowable.jsp</location>
-     </error-page> 
--->
-	<servlet>
-		<servlet-name>login</servlet-name>
-		<servlet-class>com.amzi.servlets.LoginServlet</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>login</servlet-name>
-		<url-pattern>/loginServlet</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>register</servlet-name>
-		<servlet-class>com.amzi.servlets.RegisterServlet</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>register</servlet-name>
-	<url-pattern>/registerServlet</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>postCreate</servlet-name>
-		<servlet-class>com.amzi.servlets.PostCreateServlet</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>postCreate</servlet-name>
-		<url-pattern>/postCreateServlet</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>blog</servlet-name>
-		<servlet-class>com.amzi.servlets.BlogCreateServlet</servlet-class>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>blog</servlet-name>
-		<url-pattern>/blogServlet</url-pattern>
-	</servlet-mapping>
-</web-app> 
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <welcome-file-list>
+    <welcome-file>Home.jsp</welcome-file>
+  </welcome-file-list>
+  <error-page>
+    <error-code>400</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>405</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>408</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>413</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>414</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>501</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>502</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>503</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>504</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>505</error-code>
+    <location>/Error.jsp</location>
+  </error-page>
+  <servlet>
+    <servlet-name>login</servlet-name>
+    <servlet-class>com.amzi.servlets.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>login</servlet-name>
+    <url-pattern>/loginServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>register</servlet-name>
+    <servlet-class>com.amzi.servlets.RegisterServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>register</servlet-name>
+    <url-pattern>/registerServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>postCreate</servlet-name>
+    <servlet-class>com.amzi.servlets.PostCreateServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>postCreate</servlet-name>
+    <url-pattern>/postCreateServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>blog</servlet-name>
+    <servlet-class>com.amzi.servlets.BlogCreateServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>blog</servlet-name>
+    <url-pattern>/blogServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
