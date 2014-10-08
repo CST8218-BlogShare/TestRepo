@@ -19,9 +19,9 @@ public class PostCreateServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response){    
         
     	PostCreate p = null;
-		 PrintWriter out = null;
-		 int userId = -1;
-		 int blogId = -1;
+		PrintWriter out = null;
+		int userId = -1;
+		int blogId = -1;
     	//If a session has not been created, none will be created
     	HttpSession userSession = request.getSession(false); 
 		
@@ -56,7 +56,7 @@ public class PostCreateServlet extends HttpServlet{
 		 if(p.insertPostInDatabase(userId,blogId)){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
-			 getServletContext().setAttribute("currentPost", p);
+			 //getServletContext().setAttribute("currentPost", p);
 			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");

@@ -1,5 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" 
+	contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"
+	import="com.amzi.dao.Blog"
+	%>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <head>
@@ -7,12 +10,19 @@
 <title>BlogShare - PostCreate</title>
 </head>
 <!--table to hold pages content -->
+
+<%
+	Blog b = (Blog) getServletContext().getAttribute("currentBlog");
+
+
+%>
+
 <form name="postForm" action="postCreateServlet" method="post">
 	<table style="width: 80%; margin-left: 10%; marin-right: 10%;">
 
 		<!-- blog title -->
 		<tr style="margin-bottom: 5%;">
-			<td><label> Blog Title goes in this label </label></td>
+			<td><label> <%= b.getBlogTitle() %></label></td>
 		</tr>
 
 		<!-- creating space -->
