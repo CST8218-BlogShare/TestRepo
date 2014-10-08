@@ -50,7 +50,7 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		try{
 		
-			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
+			userId = Integer.parseInt(userSession.getAttribute("userId").toString());
 		
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
@@ -65,7 +65,6 @@ public class BlogCreateServlet extends HttpServlet{
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 getServletContext().setAttribute("currentBlog", b);
-			 userSession.setAttribute("blogId", b.getBlogId());
 			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");

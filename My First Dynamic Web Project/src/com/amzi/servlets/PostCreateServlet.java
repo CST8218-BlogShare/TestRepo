@@ -9,7 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;  
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
-   
+  
+
+
+
+
+import com.amzi.dao.Blog;
+import com.amzi.dao.Login;  
 import com.amzi.dao.PostCreate;
   
 public class PostCreateServlet extends HttpServlet{  
@@ -20,8 +26,7 @@ public class PostCreateServlet extends HttpServlet{
         
     	PostCreate p = null;
 		 PrintWriter out = null;
-		 int userId = -1;
-		 int blogId = -1;
+		 int userId;
     	//If a session has not been created, none will be created
     	HttpSession userSession = request.getSession(false); 
 		
@@ -42,7 +47,6 @@ public class PostCreateServlet extends HttpServlet{
 		try{
 		
 			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
-			blogId = (int) userSession.getAttribute("blogId");
 		
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
@@ -53,7 +57,7 @@ public class PostCreateServlet extends HttpServlet{
 		 
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */
-		 if(p.insertPostInDatabase(userId,blogId)){
+		 if(p.insertPostInDatabase(userId)){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 getServletContext().setAttribute("currentPost", p);
