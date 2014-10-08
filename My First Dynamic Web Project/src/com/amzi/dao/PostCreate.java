@@ -69,7 +69,7 @@ public class PostCreate {
 	public String getPostBody(){
 		return postBody;
 	}
-	 public boolean insertPostInDatabase(int userId) {          
+	 public boolean insertPostInDatabase(int userId, int blogId) {          
 			
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
@@ -104,23 +104,22 @@ public class PostCreate {
 	        	 */
 	        	
 	        	//*insert post title, blogid content, creation date into post table
-	            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, 'blogId','postTitle','postBody', curdate() )");  
+	            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', curdate() )");  
 	            pst.executeUpdate(); 
 	            //closing the connection to prepare for the next prepared statement.
 	            pst.close();
 	            
 	            //select postid from post table where blogid and title is the same
-	            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = 'blogId' && postTitle = 'postTitle' ");
+	            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
 	            rs = pst.executeQuery();
 	            rs.first();
-	            this.blogId = rs.getInt("blogId");
 	            this.postId = rs.getInt("postId");
 	            rs.close();
 	            pst.close();
 	            
 	            
 	            //insert postid and user id into user_post
-	            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('userId', 'postId')");
+	            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
 	            pst.executeUpdate();
 	            pst.close();
 	            
