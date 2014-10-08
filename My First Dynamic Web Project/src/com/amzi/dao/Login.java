@@ -7,7 +7,7 @@ import java.sql.SQLException;
   
 public class Login { 
 	
-	public static String userId = null;
+	public static int userId = -1;
 	public static String dateRegistered = null;
 	public static String errorMessege = null;
 	
@@ -50,7 +50,7 @@ public class Login {
             rs.first();
             //if the query does not return any rows. this will throw an SQLException
             
-            userId = rs.getString("UserId");
+            userId = rs.getInt("UserId");
             dateRegistered = rs.getString("DateRegistered");
             
             //status = rs.next();
@@ -86,4 +86,71 @@ public class Login {
         }  
         return status;  
     }  
+    
+    public boolean changePass(String newPass) {
+    	boolean status = false;
+    	
+    	PreparedStatement pst = null;  
+        DbConnection connectionManager = null;
+
+        Exception Error = new Exception();
+        
+         try {  
+           
+        	newPass = newPass.trim();
+            
+            if(newPass == ""){
+            	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
+            	errorMessege = "Error with password edit attempt. Password was not entered.";
+            	throw Error;
+            }
+            if (userId < 0) {
+            	System.out.println("Login class was not initialized before calling changePass().\n");
+            	errorMessege = "Error with password edit attempt. Login.userId is null.";
+            	throw Error;
+            }
+            
+             //gaining access to the shared database connection
+            connectionManager = DbConnection.getInstance();
+            
+            pst = connectionManager.getConnection().prepareStatement("update user set Password=? where userID=?"); 
+            
+            pst.setString(1, newPass);  
+            pst.setString(2, Integer.toString(userId));  
+  
+            if (pst.executeUpdate() == 1)
+            	status = true;
+            else {
+            	status = false;        
+            	System.out.println("Password change affected multiple rows of user table.\n");
+            	errorMessege = "Error with password edit attempt. Useer table may have errors.";
+            	throw Error;
+            }
+            
+        } catch (SQLException sqlE) {  
+        	
+        	connectionManager.closeConnection();
+        	
+        	System.out.println("\n");
+        	sqlE.printStackTrace();
+        	errorMessege = "SQL Error";
+        	
+        	status = false;
+        }catch(Exception e){
+        	 e.printStackTrace(); //may not be necessary
+             status = false;
+        }
+         finally { 
+        	//we now have to manage closing the connection a different way...at logout...
+            if (pst != null) {  
+                try {  
+                    pst.close();  
+                } catch (SQLException e) {  
+                    e.printStackTrace();  
+                }  
+            }  
+        }  	
+    	
+    	return status;
+    }
 }  
