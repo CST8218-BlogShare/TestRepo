@@ -1,72 +1,57 @@
-package com.amzi.servlets;  
-  
-import java.io.IOException;  
+package com.amzi.servlets;
+
+import java.io.IOException;
 import java.io.PrintWriter;
-
-import javax.servlet.RequestDispatcher;  
-import javax.servlet.ServletException;  
-import javax.servlet.http.HttpServlet;  
-import javax.servlet.http.HttpServletRequest;  
-import javax.servlet.http.HttpServletResponse;  
-import javax.servlet.http.HttpSession;  
-  
-
-
-
-
-import com.amzi.dao.Blog;
-import com.amzi.dao.Login;  
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import com.amzi.dao.PostCreate;
-  
-public class PostCreateServlet extends HttpServlet{  
-  
-    private static final long serialVersionUID = 1L;  
-  
-    public void doPost(HttpServletRequest request, HttpServletResponse response){    
-        
-    	PostCreate p = null;
-		 PrintWriter out = null;
-		 int userId;
-    	//If a session has not been created, none will be created
-    	HttpSession userSession = request.getSession(false); 
-		
-		 response.setContentType("text/html");
-		 try{
-			 out = response.getWriter();
-		 }catch(IOException ioE){
-			 ioE.printStackTrace();
-			 return;
-		 }
-		
-		String postTitle=request.getParameter("postTitle");
-		String postBody=request.getParameter("postBody");
 
-		
+public class PostCreateServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response) {
+		PostCreate p = null;
+		PrintWriter out = null;
+		int userId = -1;
+		int blogId = -1;
+		// If a session has not been created, none will be created
+		HttpSession userSession = request.getSession(false);
+		response.setContentType("text/html");
+		try {
+			out = response.getWriter();
+		} catch (IOException ioE) {
+			ioE.printStackTrace();
+			return;
+		}
+		String postTitle = request.getParameter("postTitle");
+		String postBody = request.getParameter("postBody");
 		p = new PostCreate(postTitle, postBody);
-		
-		try{
-		
-			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
-		
-		}catch(NumberFormatException nfE){
+		try {
+			userId = Integer.parseInt((String) userSession
+					.getAttribute("userId"));
+			blogId = (int) userSession.getAttribute("blogId");
+		} catch (NumberFormatException nfE) {
 			nfE.printStackTrace();
 			return;
 		}
-		/*The function insertBlogInDatabase() is called to take the contents entered into the
-		 form within blogCreate held within Blog Object b, and insert this info into the database
-		 
-		 This function also initializes the Blog's blogId data member with an integer value.
+		/*
+		 * The function insertBlogInDatabase() is called to take the contents
+		 * entered into the form within blogCreate held within Blog Object b,
+		 * and insert this info into the database This function also initializes
+		 * the Blog's blogId data member with an integer value.
 		 */
-		 if(p.insertPostInDatabase(userId)){
-			 //getServletContext().setAttribute("errorCode", 0);
-			 
-			 getServletContext().setAttribute("currentPost", p);
-			 
-			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
-			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
-			 
+		if (p.insertPostInDatabase(userId, blogId)) {
+			// getServletContext().setAttribute("errorCode", 0);
+			getServletContext().setAttribute("currentPost", p);
+			// userSession.setAttribute("CreationDate",
+			// BlogCreate.creationDate);
+			RequestDispatcher rd = request.getRequestDispatcher("Blog.jsp");
 			try {
-				rd.include(request,response);
+				rd.include(request, response);
 			} catch (ServletException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -74,16 +59,15 @@ public class PostCreateServlet extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-		 }
-		 else{
-			 //getServletContext().setAttribute("errorCode", 1);
-			 //getServletContext().setAttribute("errorMessage", BlogCreate.errorMessege);
-			 RequestDispatcher rd=request.getRequestDispatcher("PostCreate.jsp");
-		 //modify
-		 
-			 try {
-				rd.include(request,response);
+		} else {
+			// getServletContext().setAttribute("errorCode", 1);
+			// getServletContext().setAttribute("errorMessage",
+			// BlogCreate.errorMessege);
+			RequestDispatcher rd = request
+					.getRequestDispatcher("PostCreate.jsp");
+			// modify
+			try {
+				rd.include(request, response);
 			} catch (ServletException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -91,9 +75,9 @@ public class PostCreateServlet extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		 }
-		
-		 if(out != null){
-		 	out.close();
-		 }
-}   }
+		}
+		if (out != null) {
+			out.close();
+		}
+	}
+}
