@@ -9,8 +9,7 @@
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - Blog</title>
 </head>
-	<body>
-	
+	<body>	
 	<% 
 	
 		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
@@ -49,7 +48,7 @@
 		<table style="width:80%;  margin-left:10%; margin-right:10%;">
 			 	
 			 	<!-- blog title -->
-			 	<tr style="margin-bottom:5%;">
+			 	<tr>
 					<td>
 						<p> <%= b.getBlogTitle() %> </p>
 					</td>
@@ -67,7 +66,7 @@
 					</td>
 				</tr>
 				
-				<!-- creating space -->
+				<!-- creating space  --> 
 				<tr>
 					<td>
 						<br>
@@ -75,10 +74,10 @@
 				</tr>
 				
 				
-				<!-- first post -->
+				<!-- first post belonging to author of the blog -->
 				<tr>
 						<td>
-							<p><%= b.getBlogPostTitle() %> </p>
+							<p> <%= b.getBlogPostTitle() %> </p>
 						</td>
 						<td>
 							<a href="BlogEdit.jsp"><img src="images/read.jpg" alt="Edit Enabled, click here"></a> 
@@ -90,19 +89,12 @@
 					<td>
 						<br>
 					</td>
-				</tr>
+				</tr> 
 				
 				
 				<tr>
-						<td>
-							<textarea NAME="blogPostContent" READONLY="readonly" WRAP=soft COLS=80 ROWS=10>
-								
-								<%= b.getBlogPostBody() %>
-							
-							</textarea>
-							<br>
-							
-							<br>
+						<td style="background:white; text-align:left;">								
+							<p style="margin:5% "><%= b.getBlogPostBody() %></p> 
 						</td>
 				</tr>
 				
@@ -111,18 +103,14 @@
 					<td>
 						<br>
 					</td>
-				</tr>
+				</tr> 
 				
-				
-			
-		</table>
-		
-		<table style="width:80%;  margin-left:10%; margin-right:10%;">
-		
+	
 		<%
 		
+		if(b.getPostsShown() == false){
 		//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
-		 for(int i = 1; i < b.getPostCount(); ++i ){
+		  for(int i = 1; i < b.getPostCount(); ++i ){
 		 	
 			 %>
 			 
@@ -136,7 +124,7 @@
 				</td>
 			</tr>
 					
-			<!-- creating space -->
+			<!-- creating space  -->
 			<tr>
 				<td>
 					<br>
@@ -145,19 +133,33 @@
 				
 					
 			<tr>
-				<td>
-					<textarea NAME="post1Content" WRAP=soft  READONLY="readonly" COLS=80 ROWS=10>
-						<%= b.getPostBodyAt(i) %>
-					</textarea>
+				<td style="background:white; text-align:left;">	
+					<p style="margin:5%"><%= b.getPostBodyAt(i) %></p>
 				</td>
 			</tr>	
 			 
 			 <%
-		 }
+		  }
+			b.setPostsShown(true);
+		}
 
 		%>
 		
 		</table>
+		
+		<form action="PostCreate.jsp">
+			<table style="width:80%; margin-left: 10%; margin-right: 10%;">
+				<tr>
+					<td style="width:80%;">
+						<input type="submit" class=button value="Create New Post">
+					</td>
+					
+					<td style="width:20%;">
+					</td>
+					
+				</tr>
+			</table>
+		</form>
 		
 	<body>
 </html>

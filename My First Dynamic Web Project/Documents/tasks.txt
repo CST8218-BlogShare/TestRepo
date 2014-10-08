@@ -41,24 +41,24 @@ creating queries for data inserting and selection
 	
 	For postCreate:
 				
-				on click of createPost or postEdit 
-				select blogid where unique title matches 
 				
-				blogid will be noted as postedit is accessed.
 				
-				check for match of title with existing posts in the blog to prevent duplicate titles
+				when coming from blog, blogid will be known. 
+				
+				check for match of post title with existing posts in the blog to prevent duplicate titles
 				(only way to retrieve postId based on title)
 				
 				insert post title, blogid content, creation date into post table
-			    select postid from post table where blogid and title is the same
+			    select postid from post table where blogid and post title is the same
 			    insert postid and user id into user_post
 				
 	For postEdit:
 	
-				on click of createPost or postEdit 
-				select blogid where unique title matches 
+				when coming from blog, blogId will be already known
 				
-				blogid will be noted as postedit is accessed.
+				when coming from profile,
+				
+				select blogid where unique post title matches 
 				
 				on save -
 				
@@ -69,7 +69,7 @@ creating queries for data inserting and selection
 				
 				update post title, content into post table
 				
-				select postid, content from post table where blogid and title is the same
+				select postid, content from post table where blogid and  post title is the same
 				insert into postEdit postId, editDateTime and content into postEdit.
 				select postEditid from post table where postid and editDateTime are the same
 				insert postEditId and userid into user_postEdit table.

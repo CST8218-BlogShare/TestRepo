@@ -10,6 +10,7 @@ public class Blog {
 	
 	//private String errorMessage = null;
 	
+	private boolean postsShown = false;
 	private int blogId = -1;
 	private int postCount = 0;
 	private String author = null; 
@@ -57,6 +58,14 @@ public class Blog {
     	this.blogTitle = blogTitle;
     	this.blogPostTitle = blogPostTitle;
     	this.blogPostBody = blogPostBody;
+	}
+	
+	public void setPostsShown(boolean postsShown){
+		this.postsShown = postsShown;
+	}
+	
+	public boolean getPostsShown(){
+		return postsShown;
 	}
 	
 	public int getBlogId(){
