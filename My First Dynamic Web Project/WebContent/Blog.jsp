@@ -11,7 +11,6 @@
 </head>
 	<body>	
 	<% 
-	
 		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
 	
 		int userId = Integer.parseInt((String)session.getAttribute("userId"));
@@ -45,16 +44,16 @@
 		</div>
 
 		<!--table to hold pages content -->
-		<table style="width:80%;  margin-left:10%; margin-right:10%;">
+		<table style="width:80%;  margin-bottom:2%; margin-left:10%; margin-right:10%;">
 			 	
 			 	<!-- blog title -->
 			 	<tr>
 					<td>
-						<p> <%= b.getBlogTitle() %> </p>
+						<p title="Blog Title"> <%= b.getBlogTitle() %> </p>
 					</td>
 					<td>
 						<!-- space for edit logo -->
-						<a href="BlogEdit.jsp"><img src="images/read.jpg" alt="Edit Enabled, click here"> </a>
+						<a href="BlogEdit.jsp"><img title="Read Only Element - User Cannot Edit" src="images/read.jpg" alt="Read Only"> </a>
 					</td>
 				</tr>
 				
@@ -62,7 +61,7 @@
 				
 				<tr>
 					<td>
-						 <h3><a href="Profile.jsp"> Written by <%= b.getAuthor() %> </a> </h3>
+						 <h3 title="Author of Blog"> <a href="Profile.jsp"> Written by <%= b.getAuthor() %>  </a> </h3> 
 					</td>
 				</tr>
 				
@@ -77,10 +76,10 @@
 				<!-- first post belonging to author of the blog -->
 				<tr>
 						<td>
-							<p> <%= b.getBlogPostTitle() %> </p>
+							<p title="Post Title - Owned By Author Of Blog "> <%= b.getBlogPostTitle() %> </p>
 						</td>
 						<td>
-							<a href="BlogEdit.jsp"><img src="images/read.jpg" alt="Edit Enabled, click here"></a> 
+							<a href="BlogEdit.jsp"><img title="Read Only Element - User Cannot Edit" src="images/read.jpg" alt="Read Only"></a> 
 						</td>
 				</tr>
 				
@@ -94,7 +93,7 @@
 				
 				<tr>
 						<td style="background:white; text-align:left;">								
-							<p style="margin:5% "><%= b.getBlogPostBody() %></p> 
+							<p title="Content Of Post - Owned By Author Of Blog" style="margin:5%"><%= b.getBlogPostBody() %></p> 
 						</td>
 				</tr>
 				
@@ -116,11 +115,11 @@
 			 
 			 <tr>
 				<td>
-					<p> <%= b.getPostTitleAt(i) %> </p>
+					<p title="Title Of Post - Owned by Author Of Post"> <%= b.getPostTitleAt(i) %> </p>
 				</td>
 				
 				<td>
-					<a href="PostEdit.jsp"><img src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
+					<a href="PostEdit.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
 				</td>
 			</tr>
 					
@@ -134,9 +133,17 @@
 					
 			<tr>
 				<td style="background:white; text-align:left;">	
-					<p style="margin:5%"><%= b.getPostBodyAt(i) %></p>
+					<p title="Content Of Post - Owned by Author Of Post" style="margin:5%"><%= b.getPostBodyAt(i) %></p>
 				</td>
 			</tr>	
+			 
+			 
+			 <!-- creating space -->
+				<tr>
+					<td>
+						<br>
+					</td>
+				</tr> 
 			 
 			 <%
 		  }
