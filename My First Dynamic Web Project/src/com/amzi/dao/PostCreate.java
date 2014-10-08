@@ -3,9 +3,6 @@ package com.amzi.dao;
 import java.sql.PreparedStatement;  
 import java.sql.SQLException;  
 import java.sql.ResultSet;
-import java.util.ArrayList;
-
-import javax.servlet.RequestDispatcher;
   
 public class PostCreate {  
     
@@ -26,7 +23,6 @@ public class PostCreate {
 	public PostCreate(String postTitle, String postBody) {          
 		Exception postCreateError = new Exception();
         
-        Exception postError = new Exception();
  
         try {  
            
@@ -80,7 +76,6 @@ public class PostCreate {
 	        DbConnection connectionManager = null;
 	        
 	        boolean status = true;  
-	        int postId;
 	        
 	        //the blog object used to call this object needs to have its blogTitle, blogPostTitle and blogPostBody parameters initialized before this function can be called.
 	        
@@ -109,7 +104,7 @@ public class PostCreate {
 	        	 */
 	        	
 	        	//*insert post title, blogid content, creation date into post table
-	            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+postTitle+"', curdate() )");  
+	            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, 'blogId','postTitle','postBody', curdate() )");  
 	            pst.executeUpdate(); 
 	            //closing the connection to prepare for the next prepared statement.
 	            pst.close();

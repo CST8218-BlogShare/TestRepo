@@ -1,6 +1,7 @@
 package com.amzi.servlets;  
   
 import java.io.IOException;  
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
@@ -11,6 +12,9 @@ import javax.servlet.http.HttpSession;
   
 
 
+
+
+import com.amzi.dao.Blog;
 import com.amzi.dao.Login;  
 import com.amzi.dao.PostCreate;
   
@@ -18,42 +22,78 @@ public class PostCreateServlet extends HttpServlet{
   
     private static final long serialVersionUID = 1L;  
   
-    public void doPost(HttpServletRequest request, HttpServletResponse response)    
-            throws ServletException, IOException {   //need handle other exceptions.
-    	
-    	
+    public void doPost(HttpServletRequest request, HttpServletResponse response){    
+        
+    	PostCreate p = null;
+		 PrintWriter out = null;
+		 int userId;
     	//If a session has not been created, none will be created
     	HttpSession userSession = request.getSession(false); 
-    	
-    	if(userSession == null){
-    		/*Is this even possible????
-    		  since the page object always contains a session object and we don't explictly set it to null*/
-    	}
-    	
-    	
-    	
-    	response.setContentType("text/html");    
-        //PrintWriter out = response.getWriter();    
-          
-        String title=request.getParameter("postTitle");    
-        String body=request.getParameter("postBody");   
-            
-        if(PostCreate.PostCreate(title, body)){   
-        	getServletContext().setAttribute("errorCode", 0);
-        	userSession.setAttribute("title",title);
-        	userSession.setAttribute("content",body);
-            userSession.setAttribute("CreationDate", PostCreate.creationDate);
-            
-            RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");    
-            rd.forward(request,response);    
-        }    
-        else{    
-            getServletContext().setAttribute("errorCode", 1);
-        	getServletContext().setAttribute("errorMessage", PostCreate.errorMessege);
+		
+		 response.setContentType("text/html");
+		 try{
+			 out = response.getWriter();
+		 }catch(IOException ioE){
+			 ioE.printStackTrace();
+			 return;
+		 }
+		
+		String postTitle=request.getParameter("postTitle");
+		String postBody=request.getParameter("postBody");
 
-            RequestDispatcher rd=request.getRequestDispatcher("PostCreate.jsp");    
-            rd.include(request,response);    
-        }    
-     
-    }    
-}   
+		
+		p = new PostCreate(postTitle, postBody);
+		
+		try{
+		
+			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
+		
+		}catch(NumberFormatException nfE){
+			nfE.printStackTrace();
+			return;
+		}
+		/*The function insertBlogInDatabase() is called to take the contents entered into the
+		 form within blogCreate held within Blog Object b, and insert this info into the database
+		 
+		 This function also initializes the Blog's blogId data member with an integer value.
+		 */
+		 if(p.insertPostInDatabase(userId)){
+			 //getServletContext().setAttribute("errorCode", 0);
+			 
+			 getServletContext().setAttribute("currentPost", p);
+			 
+			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
+			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
+			 
+			try {
+				rd.include(request,response);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		 }
+		 else{
+			 //getServletContext().setAttribute("errorCode", 1);
+			 //getServletContext().setAttribute("errorMessage", BlogCreate.errorMessege);
+			 RequestDispatcher rd=request.getRequestDispatcher("PostCreate.jsp");
+		 //modify
+		 
+			 try {
+				rd.include(request,response);
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 }
+		
+		 if(out != null){
+		 	out.close();
+		 }
+}   }
