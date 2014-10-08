@@ -27,7 +27,7 @@ public class LoadProfileServlet extends HttpServlet {
 		if (userSession == null) {
 		}
 				
-		ArrayList<String[]> userBlogList = blog.getUserBlogs(userSession.getAttribute("userId").toString());
+		ArrayList<String[]> userBlogList = blog.getUserBlogs(Integer.parseInt(userSession.getAttribute("userId").toString()));
 		
 		request.setAttribute("userBlogList", userBlogList);
 		

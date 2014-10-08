@@ -330,7 +330,7 @@ public class Blog {
         return status;  
     }
     
-    public ArrayList<String[]> getUserBlogs(String userId) {          
+    public ArrayList<String[]> getUserBlogs(int userId) {          
         
         PreparedStatement pst = null; 
         ResultSet rs = null;
@@ -341,7 +341,8 @@ public class Blog {
         	
         	connectionManager = DbConnection.getInstance();
         	
-        	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u where b.blogid = ub.blogid and u.userid = ub.userid and u.userid = '"+userId+"'");
+        	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u where b.blogid = ub.blogid and u.userid = ub.userid and u.userid =?");
+        	pst.setString(1, Integer.toString(userId));
         	rs = pst.executeQuery();
         	
         	if (rs.next()){

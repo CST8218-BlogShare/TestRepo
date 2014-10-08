@@ -6,7 +6,7 @@ import java.sql.ResultSet;
   
 public class Register {  
     
-	public static String userId = null;
+	public static int userId = -1;
 	public static String dateRegistered = null;
 	public static String errorMessege = null;
 	
@@ -68,7 +68,7 @@ public class Register {
             
             rs.first();
            
-            userId = rs.getString("UserId");
+            userId = rs.getInt("UserId");
             dateRegistered = rs.getString("DateRegistered");
   
             

@@ -13,26 +13,28 @@
 	<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("username") %>'s Password Edit</h1>
 	<h3><span class="label label-default">Joined: <%= session.getAttribute("dateRegistered") %></span></h3>
 	<div style="padding:30px">	
+		<form name="editPassForm" action="EditUserServlet" method="post">
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Username:</span>
-		 	<input type="text" class="form-control" value="<%=session.getAttribute("username") %>" >
+		 	<input name="loginUsername" type="text" class="form-control" value="<%=session.getAttribute("username") %>" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Password:</span>
-		 	<input type="text" class="form-control" >
+		 	<input name="loginPassword" type="text" class="form-control" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">New Password:</span>
-		 	<input type="text" class="form-control" >
+		 	<input name="newPass" type="text" class="form-control" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Repeat New Password: </span>
-		 	<input type="text" class="form-control" >
+		 	<input name="newPassConfirm" type="text" class="form-control" >
 		</div>
 		<div class="btn-group" style="padding:30px">
-			 <a href="Profile.jsp"> <button type="button" class="btn btn-default btn-lrg">Submit Changes</button></a>
+			 <button type="submit" class="btn btn-default btn-lrg">Submit Changes</button>
 			 <a href="Profile.jsp"> <button type="button" class="btn btn-default btn-lrg">Cancel</button></a>
 		</div>
+		</form>
 	</div>
 	<br style="clear:left;"/>
 

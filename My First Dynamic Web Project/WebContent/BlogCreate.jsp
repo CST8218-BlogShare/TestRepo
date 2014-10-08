@@ -19,7 +19,7 @@
 		</div>
 		
 		 <!--table to hold pages content -->
-		<form name="blogCreateForm" action="blogServlet" method="post">
+		<form name="blogCreateForm" action="BlogCreateServlet" method="post">
 			<table style="width: 80%; margin-left: 10%; margin-right: 10%;">
 		
 				<!-- blog title -->
