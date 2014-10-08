@@ -38,7 +38,7 @@ public class PostCreateServlet extends HttpServlet{
         String title=request.getParameter("postTitle");    
         String body=request.getParameter("postBody");   
             
-        if(PostCreate.post(title, body)){   
+        if(PostCreate.PostCreate(title, body)){   
         	getServletContext().setAttribute("errorCode", 0);
         	userSession.setAttribute("title",title);
         	userSession.setAttribute("content",body);
@@ -49,7 +49,7 @@ public class PostCreateServlet extends HttpServlet{
         }    
         else{    
             getServletContext().setAttribute("errorCode", 1);
-        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
+        	getServletContext().setAttribute("errorMessage", PostCreate.errorMessege);
 
             RequestDispatcher rd=request.getRequestDispatcher("PostCreate.jsp");    
             rd.include(request,response);    
