@@ -8,8 +8,7 @@ import java.util.ArrayList;
   
 public class Blog { 
 	
-	//private String errorMessage = null;
-	
+
 	private int blogId = -1;
 	private int postCount = 0;
 	private String author = null; 
