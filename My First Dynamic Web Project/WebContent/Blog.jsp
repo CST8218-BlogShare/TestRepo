@@ -112,6 +112,9 @@
 			 %>
 			 
 			 <tr>
+			 	<td>
+					<p title="PostNumber"> <%= i %> </p>
+				</td>
 				<td>
 					<p title="Title Of Post - Owned by Author Of Post"> <%= b.getPostTitleAt(i) %> </p>
 				</td>

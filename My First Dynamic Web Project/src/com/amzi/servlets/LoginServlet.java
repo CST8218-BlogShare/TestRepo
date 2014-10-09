@@ -43,9 +43,9 @@ public class LoginServlet extends HttpServlet{
         	
         	userSession.setAttribute("currentUser", u);
         	
-        	/*userSession.setAttribute("userId", Login.userId);
+        	userSession.setAttribute("userId", Login.userId);
         	userSession.setAttribute("username",name);
-        	userSession.setAttribute("dateRegistered", Login.dateRegistered);*/
+        	//userSession.setAttribute("dateRegistered", Login.dateRegistered);
         	
             RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
             rd.forward(request,response);    
