@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.Login;
 import com.amzi.dao.Register; 
+import com.amzi.dao.User;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -23,9 +24,9 @@ public class RegisterServlet extends HttpServlet {
 	        response.setContentType("text/html");    
 	        PrintWriter out = response.getWriter();    
 	          
-	        String n=request.getParameter("registerUsername");    
-	        String p=request.getParameter("registerUserPass");
-	        String p2=request.getParameter("registerReenterPass");
+	        String name=request.getParameter("registerUsername");    
+	        String pass=request.getParameter("registerUserPass");
+	        String pass2=request.getParameter("registerReenterPass");
 	        
 	        HttpSession userSession = request.getSession();  
 	        
@@ -34,11 +35,16 @@ public class RegisterServlet extends HttpServlet {
 	    		  since the page object always contains a session object and we don't explictly set it to null*/
 	    	}
 	            
-	        if(Register.validate(n, p, p2)){  
+	        if(Register.validate(name, pass, pass2)){  
 	        	getServletContext().setAttribute("errorCode", 0);
-	        	userSession.setAttribute("userId", Register.userId);
+	        	
+	        	
+	        	User u = new User(Register.userId,name,pass,Login.dateRegistered);
+	        	
+	        	userSession.setAttribute("currentUser", u);
+	        	/*userSession.setAttribute("userId", Register.userId);
 	        	userSession.setAttribute("username",n);
-	            userSession.setAttribute("dateRegistered", Register.dateRegistered);
+	            userSession.setAttribute("dateRegistered", Register.dateRegistered);*/
 	           
 	            RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
 	            rd.forward(request,response);    

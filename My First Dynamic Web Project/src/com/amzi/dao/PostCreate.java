@@ -16,6 +16,7 @@ public class PostCreate {
 	private String author = null;
 	private String postTitle = null;
 	private String postBody = null;
+	
 	private Blog b = null;
 
 	public PostCreate() {

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.amzi.dao.Blog;
+import com.amzi.dao.User;
 
 
 
@@ -22,14 +22,15 @@ public class LoadProfileServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession userSession = request.getSession(false);
-		Blog blog = new Blog();
+		User u = (User) userSession.getAttribute("currentUser");
 
-		if (userSession == null) {
-		}
+		/*if (userSession == null) {
+			
+		}*/
 				
-		ArrayList<String[]> userBlogList = blog.getUserBlogs(Integer.parseInt(userSession.getAttribute("userId").toString()));
+		ArrayList<String[]> userBlogList = u.getUserBlogs(u.getUserId());
 		
-		request.setAttribute("userBlogList", userBlogList);
+		getServletContext().setAttribute("userBlogList", userBlogList);
 		
 		try {
 			request.getRequestDispatcher("Profile.jsp").forward(request, response); 
