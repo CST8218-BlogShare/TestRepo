@@ -55,7 +55,7 @@
 
 ArrayList<String[]> userBlogList = (ArrayList<String[]>) getServletContext().getAttribute("userBlogList");
 
-if (userBlogList != null) {
+if (!userBlogList.isEmpty()) {
 	for (String[] entry: userBlogList){
 		out.print("<a href=\"#" + entry[0]);
 		out.println( "\" class=\"list-group-item\">"+ entry[1] +"</a>");

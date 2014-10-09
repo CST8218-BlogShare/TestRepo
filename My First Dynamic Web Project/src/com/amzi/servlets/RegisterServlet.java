@@ -39,7 +39,7 @@ public class RegisterServlet extends HttpServlet {
 	        	getServletContext().setAttribute("errorCode", 0);
 	        	
 	        	
-	        	User u = new User(Register.userId,name,pass,Login.dateRegistered);
+	        	User u = new User(Register.userId,name,pass,Register.dateRegistered);
 	        	
 	        	userSession.setAttribute("currentUser", u);
 	        	//added for use in postCreate.jsp, since only the single value from user is needed there

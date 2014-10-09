@@ -61,7 +61,7 @@ public ArrayList<String[]> getUserBlogs(int userId) {
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
-        ArrayList<String[]> userBlogs = null;
+        ArrayList<String[]> userBlogs = new ArrayList<String[]>();
          
         try {  
         	
@@ -74,7 +74,6 @@ public ArrayList<String[]> getUserBlogs(int userId) {
         	if (rs.next()){
 
 	        	rs.beforeFirst();
-	        	userBlogs = new ArrayList<String[]>();
 	        	
 	        	while (rs.next()){	
 	        		userBlogs.add(

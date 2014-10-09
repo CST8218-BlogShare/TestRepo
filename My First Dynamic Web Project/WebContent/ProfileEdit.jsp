@@ -12,7 +12,7 @@
 
 <jsp:include page="BootstrapInclude.html" />
 
-<title> <%= session.getAttribute("username") %>'s Password Edit</title>
+<title> <%= u.getUsername() %>'s Password Edit</title>
 </head>
 <body>
 	<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= u.getUsername() %>'s Profile Edit</h1>
@@ -24,16 +24,20 @@
 		 	<input name="loginUsername" type="text" class="form-control" value="<%= u.getUsername() %>" >
 		</div>
 		<div class="input-group">
+		  	<span class="input-group-addon" style="min-width:200px">New Username:</span>
+		 	<input name="newUsername" type="text" class="form-control">
+		</div>
+		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Password:</span>
-		 	<input name="loginPassword" type="text" class="form-control" >
+		 	<input name="loginPassword" type="password" class="form-control" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">New Password:</span>
-		 	<input name="newPass" type="text" class="form-control" >
+		 	<input name="newPass" type="password" class="form-control" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Repeat New Password: </span>
-		 	<input name="newPassConfirm" type="text" class="form-control" >
+		 	<input name="newPassConfirm" type="password" class="form-control" >
 		</div>
 		<div class="btn-group" style="padding:30px">
 			 <button type="submit" class="btn btn-default btn-lrg">Submit Changes</button>

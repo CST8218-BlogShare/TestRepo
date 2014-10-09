@@ -59,7 +59,7 @@
 					<td>
 						<p>Post Title Below</p>
 						<input type=text name=postTitle  maxlength=100/>
-						<p>NPost Content Below</p>
+						<p>Post Content Below</p>
 						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Editable</textarea>
 					</td>
 				</tr>

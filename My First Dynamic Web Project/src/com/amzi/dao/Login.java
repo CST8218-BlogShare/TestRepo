@@ -87,7 +87,7 @@ public class Login {
         return status;  
     }  
     
-    public boolean changePass(String newPass) {
+    public boolean changePass(String newUsername, String newPass) {
     	boolean status = false;
     	
     	PreparedStatement pst = null;  
@@ -104,6 +104,13 @@ public class Login {
             	errorMessege = "Error with password edit attempt. Password was not entered.";
             	throw Error;
             }
+            
+            if(newUsername == ""){
+            	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
+            	errorMessege = "Error with password edit attempt. Password was not entered.";
+            	throw Error;
+            }
+            
             if (userId < 0) {
             	System.out.println("Login class was not initialized before calling changePass().\n");
             	errorMessege = "Error with password edit attempt. Login.userId is null.";
@@ -113,17 +120,18 @@ public class Login {
              //gaining access to the shared database connection
             connectionManager = DbConnection.getInstance();
             
-            pst = connectionManager.getConnection().prepareStatement("update user set Password=? where userID=?"); 
+            pst = connectionManager.getConnection().prepareStatement("update user set Username=?, Password=? where userID=?"); 
             
-            pst.setString(1, newPass);  
-            pst.setString(2, Integer.toString(userId));  
+            pst.setString(1, newUsername);  
+            pst.setString(2, newPass); 
+            pst.setString(3, Integer.toString(userId));  
   
             if (pst.executeUpdate() == 1)
             	status = true;
             else {
             	status = false;        
             	System.out.println("Password change affected multiple rows of user table.\n");
-            	errorMessege = "Error with password edit attempt. Useer table may have errors.";
+            	errorMessege = "Error with password edit attempt. User table may have errors.";
             	throw Error;
             }
             

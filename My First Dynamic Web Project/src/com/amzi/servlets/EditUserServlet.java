@@ -27,11 +27,12 @@ public class EditUserServlet extends HttpServlet {
         String name=request.getParameter("loginUsername");    
         String pass=request.getParameter("loginPassword");
         String newPass=request.getParameter("newPass");
+        String newUsername = request.getParameter("newUsername");
         
         Login userToEdit = new Login();
         
         if(userToEdit.validate(name, pass)){   
-        	if(userToEdit.changePass(newPass)){   
+        	if(userToEdit.changePass(newUsername, newPass)){   
             	
                 RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
                 rd.forward(request,response);    

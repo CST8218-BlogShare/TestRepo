@@ -68,8 +68,13 @@ public class BlogCreateServlet extends HttpServlet{
 			 //Get the current users bloglist from Context
 			 //Add the new blog to the list and load it back into the context
 			 ArrayList<String[]> userBlogList =(ArrayList<String[]>) getServletContext().getAttribute("userBlogList");
-			 userBlogList.add(new String[]{"1", b.getBlogTitle()});
-			 getServletContext().setAttribute("userBlogList", userBlogList);
+			
+			 if(userBlogList != null){
+				 userBlogList.add(new String[]{"1", b.getBlogTitle()});
+				 getServletContext().setAttribute("userBlogList", userBlogList); 
+			 }
+			 
+			
 			 
 			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
