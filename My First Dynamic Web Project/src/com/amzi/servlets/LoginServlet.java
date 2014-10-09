@@ -42,13 +42,14 @@ public class LoginServlet extends HttpServlet{
         	User u = new User(Login.userId,name,pass,Login.dateRegistered);
         	
         	userSession.setAttribute("currentUser", u);
+        	
         	//added for use in postCreate.jsp, since only the single value from user is needed there
         	userSession.setAttribute("userId", u.getUserId());
+        	
         	//added for use in home.jsp, since only the single value from user is needed there
         	userSession.setAttribute("username",name);
 
-        	
-            RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
+        	RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
             rd.forward(request,response);    
         }    
         else{    

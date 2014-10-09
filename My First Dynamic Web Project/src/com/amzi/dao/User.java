@@ -55,8 +55,85 @@ public class User {
 	public String getDateRegistered(){
 		return dateRegistered;
 	}
+
+	public boolean changePass(String newUsername, String newPass) {
+		boolean status = false;
+		
+		PreparedStatement pst = null;  
+	    DbConnection connectionManager = null;
+
+	    Exception Error = new Exception();
+	    
+	     try {  
+	       
+	    	newPass = newPass.trim();
+	        
+	    	if (userId < 0) {
+	        	System.out.println("Login class was not initialized before calling changePass().\n");
+	        	//errorMessege = "Error with password edit attempt. Login.userId is null.";
+	        	throw Error;
+	        }
+	    	
+	    	if(newPass == ""){
+	        	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
+	        	//errorMessege = "Error with password edit attempt. Password was not entered.";
+	        	throw Error;
+	        }
+	        
+	        if(newUsername == ""){
+	        	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
+	        	//errorMessege = "Error with password edit attempt. Password was not entered.";
+	        	throw Error;
+	        }
+	        
+	         //gaining access to the shared database connection
+	        connectionManager = DbConnection.getInstance();
+	        
+	        pst = connectionManager.getConnection().prepareStatement("update user set Username=?, Password=? where userID=?"); 
+	        
+	        pst.setString(1, newUsername);  
+	        pst.setString(2, newPass); 
+	        pst.setString(3, Integer.toString(userId));  
+
+	        if (pst.executeUpdate() == 1){
+	        	this.username = newUsername;
+	        	this.password = newPass;
+	        	status = true;
+	        } else {
+	        	status = false;        
+	        	System.out.println("Password change affected multiple rows of user table.\n");
+	        	//errorMessege = "Error with password edit attempt. User table may have errors.";
+	        	throw Error;
+	        }
+	        
+	    } catch (SQLException sqlE) {  
+	    	
+	    	connectionManager.closeConnection();
+	    	
+	    	System.out.println("\n");
+	    	sqlE.printStackTrace();
+	    	//errorMessege = "SQL Error";
+	    	
+	    	status = false;
+	    }catch(Exception e){
+	    	 e.printStackTrace(); //may not be necessary
+	         status = false;
+	    }
+	     finally { 
+	    	//we now have to manage closing the connection a different way...at logout...
+	        if (pst != null) {  
+	            try {  
+	                pst.close();  
+	            } catch (SQLException e) {  
+	                e.printStackTrace();  
+	            }  
+	        }  
+	    }  	
+		
+		return status;
+	}
 	
-public ArrayList<String[]> getUserBlogs(int userId) {          
+	public ArrayList<String[]> getUserBlogs(int userId) {          
         
         PreparedStatement pst = null; 
         ResultSet rs = null;
@@ -114,6 +191,5 @@ public ArrayList<String[]> getUserBlogs(int userId) {
         
         return userBlogs;  
         
-    }  
-
+    } 
 }
