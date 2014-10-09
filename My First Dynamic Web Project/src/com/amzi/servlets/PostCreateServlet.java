@@ -73,8 +73,7 @@ public class PostCreateServlet extends HttpServlet {
 			// getServletContext().setAttribute("errorCode", 1);
 			// getServletContext().setAttribute("errorMessage",
 			// BlogCreate.errorMessege);
-			RequestDispatcher rd = request
-					.getRequestDispatcher("PostCreate.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
 			// modify
 			try {
 				rd.include(request, response);

@@ -1,8 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" 
+		contentType="text/html; charset=ISO-8859-1"
+    	pageEncoding="ISO-8859-1"
+    	import="com.amzi.dao.User"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
+<% User u = (User) session.getAttribute("currentUser"); %>
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 <jsp:include page="BootstrapInclude.html" />
@@ -10,13 +15,13 @@
 <title> <%= session.getAttribute("username") %>'s Password Edit</title>
 </head>
 <body>
-	<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= session.getAttribute("username") %>'s Password Edit</h1>
-	<h3><span class="label label-default">Joined: <%= session.getAttribute("dateRegistered") %></span></h3>
+	<h1><span class="glyphicon glyphicon-user" style="fontSize:50px"></span> <%= u.getUsername() %>'s Profile Edit</h1>
+	<h3><span class="label label-default">Joined: <%= u.getDateRegistered() %></span></h3>
 	<div style="padding:30px">	
 		<form name="editPassForm" action="EditUserServlet" method="post">
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Username:</span>
-		 	<input name="loginUsername" type="text" class="form-control" value="<%=session.getAttribute("username") %>" >
+		 	<input name="loginUsername" type="text" class="form-control" value="<%= u.getUsername() %>" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Password:</span>

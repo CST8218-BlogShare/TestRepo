@@ -1,7 +1,7 @@
 <%@ page language="java" 
 		 contentType="text/html; charset=ISO-8859-1"  
     	 pageEncoding="ISO-8859-1"
-    	 import="com.amzi.dao.Blog"
+    	 import="com.amzi.dao.Blog, com.amzi.dao.User"
     %>  
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
@@ -12,15 +12,15 @@
 	<body>	
 	<% 
 		
+		User u = (User) session.getAttribute("currentUser");
 		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
-	
+			
 
-		int userId = (int) session.getAttribute("userId");
 
 	 	/*The function buildBlog is called in order to retrieve the author of blog and all
 	 	*posts within the blog other than the first post created during blogCreation. */
 	 	
-	 	b.buildBlog(userId);
+	 	b.buildBlog(u.getUserId());
 
 	 %>
 		
@@ -37,7 +37,7 @@
 					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
 				</tr>
 				<tr style="height:50%;">
-					<td><a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
+					<td><a href="Profile.jsp">Welcome <%= u.getUsername() %>!</a></td>
 					<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
 					<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
 					<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>
