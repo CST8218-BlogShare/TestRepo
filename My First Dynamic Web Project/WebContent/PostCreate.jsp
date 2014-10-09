@@ -32,7 +32,7 @@
 
 
 		<tr>
-			<td><textarea NAME="postBodyUn" READONLY="readonly" WRAP=soft
+			<td><textarea NAME="prevPostBody" READONLY="readonly" WRAP=soft
 					COLS=80 ROWS=10>Post Content Goes Here Uneditable</textarea> <br>
 				<br></td>
 		</tr>
