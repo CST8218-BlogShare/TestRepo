@@ -1,18 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"%>  
+    pageEncoding="ISO-8859-1"
+    import="com.amzi.dao.Blog"
+    %>  
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - PostEdit</title>
 </head>
+
+<%
+	Blog b = (Blog) getServletContext().getAttribute("currentBlog");
+
+
+%>
 		<!--table to hold pages content -->
 		<table style="width:80%;  margin-left:10%; marin-right:10%;">
 			 	
 			 	<!-- blog title -->
 			 	<tr style="margin-bottom:5%;">
 					<td>
-						<label> Blog Title goes in this label </label>
+						<label> <%= b.getBlogTitle() %> </label>
 					</td>
 				</tr>
 				
@@ -26,7 +34,7 @@
 				<!-- first post -->
 				<tr>
 						<td>
-							<label> First post Title </label>
+							<label> <%= b.getBlogPostTitle() %></label>
 						</td>
 				</tr>
 				
@@ -40,7 +48,7 @@
 				
 				<tr>
 						<td>
-							<textarea NAME="postBody" READONLY="readonly" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Uneditable</textarea>
+							<textarea NAME="postBody" READONLY="readonly" WRAP=soft COLS=80 ROWS=10> <%= b.getBlogPostBody() %></textarea>
 							<br>
 							<br>
 						</td>
@@ -58,7 +66,8 @@
 				<tr>
 					<td>
 						<p>Post Title Below</p>
-						<input type=text name=postTitle  maxlength=100/>
+
+						<input type=text name=postTitle value="<%= b.getPostTitleAt(Integer.parseInt(request.getParameter("postNumber"))) %>"  maxlength=100/>
 						<p>Post Content Below</p>
 						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Editable</textarea>
 					</td>

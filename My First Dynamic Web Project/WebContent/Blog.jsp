@@ -112,12 +112,15 @@
 			 %>
 			 
 			 <tr>
+			 	<td>
+					<label title="postNumber"> <%= i %> </label>
+				</td>
 				<td>
 					<p title="Title Of Post - Owned by Author Of Post"> <%= b.getPostTitleAt(i) %> </p>
 				</td>
 				
 				<td>
-					<a href="PostEdit.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
+					<a href="PostEdit.jsp?postNumber=${i}"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
 				</td>
 			</tr>
 					
