@@ -2,6 +2,7 @@ package com.amzi.servlets;
   
 import java.io.IOException;  
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
   
+
 import com.amzi.dao.Blog;
   
 public class BlogCreateServlet extends HttpServlet{  
@@ -62,6 +64,13 @@ public class BlogCreateServlet extends HttpServlet{
 			 
 			 getServletContext().setAttribute("currentBlog", b);
 			 userSession.setAttribute("blogId", b.getBlogId());
+			 
+			 //Get the current users bloglist from Context
+			 //Add the new blog to the list and load it back into the context
+			 ArrayList<String[]> userBlogList =(ArrayList<String[]>) getServletContext().getAttribute("userBlogList");
+			 userBlogList.add(new String[]{"1", b.getBlogTitle()});
+			 getServletContext().setAttribute("userBlogList", userBlogList);
+			 
 			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
