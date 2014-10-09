@@ -18,7 +18,7 @@
 %>
 
 <form name="postForm" action="postCreateServlet" method="post">
-	<table style="width: 80%; margin-left: 10%; marin-right: 10%;">
+	<table  class="centered80W">
 
 		<!-- blog title -->
 		<tr style="margin-bottom: 5%;">
@@ -32,7 +32,7 @@
 
 		<!-- first post -->
 		<tr>
-			<td><label> First post Title </label></td>
+			<td><label> <%= b.getBlogPostTitle() %> </label></td>
 		</tr>
 
 		<!-- creating space -->
@@ -43,7 +43,7 @@
 
 		<tr>
 			<td><textarea NAME="postBodyUn" READONLY="readonly" WRAP=soft
-					COLS=80 ROWS=10>Post Content Goes Here Uneditable</textarea> <br>
+					COLS=80 ROWS=10><%= b.getBlogPostBody() %></textarea> <br>
 				<br></td>
 		</tr>
 
@@ -51,23 +51,37 @@
 		<tr>
 			<td><br></td>
 		</tr>
-		<!-- additional posts -->
+		
+		<!-- post to be added -->
 		<tr>
 			<td>The Title and Post shown above is your previous post to help
 				you continue writing your blog below
 
-				<p>New Post Title Below</p> <input type=text name=postTitle
-				maxlength=100 />
-				<p>New Post Content Below</p> <textarea NAME="postBody" WRAP=soft
-					COLS=80 ROWS=10>Post Content Goes Here Editable</textarea>
+				<p>New Post Title Below</p>
+				<input type=text name=postTitle maxlength=100 />
+				
+				<p>New Post Content Below</p> 
+				<textarea NAME="postBody" WRAP=soft
+					COLS=80 ROWS=10>
+				</textarea>
 			</td>
 		</tr>
+		
+		<!-- creating space -->
+		<tr>
+			<td><br></td>
+		</tr>
+		
+	<tr>
+		<td>
+			<input type="submit" class=button value="Save">
+		</td>
+	</tr>
 	</table>
-	<input type="submit" class=button value="Save">
 </form>
 
 <form action="Profile.jsp">
-	<input type="submit" width="wrap_content" class=button value="Cancel">
+	<input class="centered80W" type="submit" width="wrap_content" value="Cancel" style="font-size:18px;">
 </form>
 <body>
 </html>

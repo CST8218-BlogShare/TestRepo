@@ -19,7 +19,7 @@
 		</div>
 		
 		 <!--table to hold pages content -->
-		<form name="blogCreateForm" action="BlogCreateServlet" method="post">
+		<form name="blogCreateForm" action="blogServlet" method="post">
 			<table style="width: 80%; margin-left: 10%; margin-right: 10%;">
 		
 				<!-- blog title -->
@@ -27,7 +27,6 @@
 					<td>
 						<font size="5"> 
 							   Enter Blog Title<br>
-							   <br>
 						 </font>
 						 <font size="18"><input type=text name=blogTitle maxlength=100 /></font>
 					</td>
@@ -54,7 +53,6 @@
 					<td>
 						<font size="5">
 							Enter Post Title<br>
-							<br>
 						</font>
 						
 						<input type=text name=postTitle maxlength=100 />
@@ -65,13 +63,12 @@
 				<tr>
 					<td><br></td>
 				</tr>
-		
+				
 		
 				<tr>
 					<td>
 						<font size="5">
 							Enter Post Body<br>
-							<br>
 						</font>
 						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea> <br> <br>
 					</td>
@@ -83,7 +80,7 @@
 							<font size=4>
 								The title of your Blog<br>
 								and the title and content of your first Post<br> 
-								are editable only by YOU, the author of the Blog.<br>
+								are editable only by you, the author of the Blog.<br>
 							</font> 
 						</div>
 					<td>
@@ -103,7 +100,7 @@
 			</table>
 		</form>
 		<form action="Profile.jsp">
-			<table style="width: 80%; margin-left: 10%; margin-right: 10%;">
+			<table style="width:80%;  margin-left:10%; margin-right:10%;">
 				<tr>
 					<td>
 						<input type="submit" class = button width="wrap_content" value="Cancel">

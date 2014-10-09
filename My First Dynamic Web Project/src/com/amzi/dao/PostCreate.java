@@ -3,6 +3,8 @@ package com.amzi.dao;
 import java.sql.PreparedStatement;  
 import java.sql.SQLException;  
 import java.sql.ResultSet;
+
+import com.amzi.dao.Blog;
   
 public class PostCreate {  
     
@@ -15,6 +17,7 @@ public class PostCreate {
 	private String author = null; 
 	private String postTitle = null;
 	private String postBody = null;
+	private Blog b = null;
 
 	public PostCreate(){
 		
@@ -69,22 +72,35 @@ public class PostCreate {
 	public String getPostBody(){
 		return postBody;
 	}
-	 public boolean insertPostInDatabase(int userId, int blogId) {          
+	 public boolean insertPostInDatabase(int userId, Blog b) {          
 			
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
 	        DbConnection connectionManager = null;
 	        
 	        boolean status = true;  
-	        
-	        //the blog object used to call this object needs to have its blogTitle, blogPostTitle and blogPostBody parameters initialized before this function can be called.
+	       
+	        /*
+	         * The post object used to call this function needs to call the appropriate constructor to have its
+	           postTitle and postBody data members initialized before calling the insertPostInDatabase function.
+	        */
 	        
 	        if(this.postTitle == null){
-	        	return false;
+	        	try {
+					throw new Exception();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	        }
 	        
 	        if(this.postBody == null){
-	        	return false;
+	        	try {
+					throw new Exception();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	        }
 	        
 	        try {  
@@ -104,13 +120,13 @@ public class PostCreate {
 	        	 */
 	        	
 	        	//*insert post title, blogid content, creation date into post table
-	            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', curdate() )");  
+	            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+b.getBlogId()+"','"+postTitle+"','"+postBody+"', curdate() )");  
 	            pst.executeUpdate(); 
 	            //closing the connection to prepare for the next prepared statement.
 	            pst.close();
 	            
 	            //select postid from post table where blogid and title is the same
-	            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
+	            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+b.getBlogId()+"' AND title = '"+postTitle+"' ");
 	            rs = pst.executeQuery();
 	            rs.first();
 	            this.postId = rs.getInt("postId");
@@ -123,7 +139,7 @@ public class PostCreate {
 	            pst.executeUpdate();
 	            pst.close();
 	            
-	     
+	            b.setNewPost(true);
 	            //status = rs.next();
 	        } catch (SQLException sqlE) {  
 	        	

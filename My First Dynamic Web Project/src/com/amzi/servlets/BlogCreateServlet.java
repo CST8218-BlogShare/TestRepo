@@ -42,7 +42,7 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		try{
 		
-			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
+			userId = (int) userSession.getAttribute("userId");
 		
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
@@ -55,6 +55,10 @@ public class BlogCreateServlet extends HttpServlet{
 		 */
 		 if(b.insertBlogInDatabase(userId)){
 			 //getServletContext().setAttribute("errorCode", 0);
+			 
+			 
+			 /*Adding the newly created blog object to the ServletContext object, 
+			   allowing it and it's data members to be retrieved within Blog.jsp*/
 			 
 			 getServletContext().setAttribute("currentBlog", b);
 			 userSession.setAttribute("blogId", b.getBlogId());
@@ -77,7 +81,6 @@ public class BlogCreateServlet extends HttpServlet{
 			 //getServletContext().setAttribute("errorCode", 1);
 			 //getServletContext().setAttribute("errorMessage", BlogCreate.errorMessege);
 			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
-		 //modify
 		 
 			 try {
 				rd.include(request,response);

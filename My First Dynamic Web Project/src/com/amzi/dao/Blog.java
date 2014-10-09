@@ -10,7 +10,7 @@ public class Blog {
 	
 	//private String errorMessage = null;
 	
-	private boolean postsShown = false;
+	private boolean newPost = false;
 	private int blogId = -1;
 	private int postCount = 0;
 	private String author = null; 
@@ -60,12 +60,12 @@ public class Blog {
     	this.blogPostBody = blogPostBody;
 	}
 	
-	public void setPostsShown(boolean postsShown){
-		this.postsShown = postsShown;
+	public void setNewPost(boolean b){
+		this.newPost=b;
 	}
 	
-	public boolean getPostsShown(){
-		return postsShown;
+	public boolean getNewPost(){
+		return newPost;
 	}
 	
 	public int getBlogId(){
@@ -113,7 +113,10 @@ public class Blog {
         boolean status = true;  
         int postId;
         
-        //the blog object used to call this object needs to have its blogTitle, blogPostTitle and blogPostBody parameters initialized before this function can be called.
+        /*
+         * The blog object used to call this function needs to call the appropriate constructor to have its
+           blogTitle, blogPostTitle and blogPostBody parameters data members' before calling the insertBlogInDatabase function.
+        */
         
         if(this.blogTitle == null){
         	return false;
@@ -187,13 +190,12 @@ public class Blog {
             pst.close();
             
   
-            //insert postid and user id into user_post table
+            //insert postid and userid into user_post table
             
             pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"')");
             pst.executeUpdate();
             pst.close();
            
-            
             //status = rs.next();
         } catch (SQLException sqlE) {  
         	
@@ -231,6 +233,10 @@ public class Blog {
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
+        
+        /* The value of i is used within the loop dedicated to filling the lists
+         * that hold the contents of the posts within this specific blog */
+        int i = 0;
         
         try {  
         	
@@ -286,12 +292,17 @@ public class Blog {
         	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
         	
+        	
         	while(rs.next()){
+        		if(i < postCount){
+        			++i;
+        			continue;
+        		}
         		postTitleList.add(rs.getString("title"));
         		postBodyList.add(rs.getString("content"));
-        		++postCount;
         	}
         	
+        	++postCount;
         	rs.close();
         	pst.close();
         	

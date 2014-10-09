@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  
    
 import com.amzi.dao.PostCreate;
+import com.amzi.dao.Blog;
   
 public class PostCreateServlet extends HttpServlet{  
   
@@ -21,7 +22,7 @@ public class PostCreateServlet extends HttpServlet{
     	PostCreate p = null;
 		PrintWriter out = null;
 		int userId = -1;
-		int blogId = -1;
+		Blog b = null;
     	//If a session has not been created, none will be created
     	HttpSession userSession = request.getSession(false); 
 		
@@ -41,8 +42,8 @@ public class PostCreateServlet extends HttpServlet{
 		
 		try{
 		
-			userId = Integer.parseInt((String) userSession.getAttribute("userId"));
-			blogId = (int) userSession.getAttribute("blogId");
+			userId = (int) userSession.getAttribute("userId");
+			b = (Blog) getServletContext().getAttribute("currentBlog");
 		
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
@@ -52,8 +53,10 @@ public class PostCreateServlet extends HttpServlet{
 		 form within blogCreate held within Blog Object b, and insert this info into the database
 		 
 		 This function also initializes the Blog's blogId data member with an integer value.
+		 and sets the newPost data member within Blog to true. Setting the boolean to 
+		 true allows the newPost to be added to the pages content within Blog.jsp
 		 */
-		 if(p.insertPostInDatabase(userId,blogId)){
+		 if(p.insertPostInDatabase(userId, b)){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 //getServletContext().setAttribute("currentPost", p);
