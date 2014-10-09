@@ -66,7 +66,7 @@
 				<tr>
 					<td>
 						<p>Post Title Below</p>
-						<input type=text name=postTitle value="<%= b.getBlogPostTitle() %>"  maxlength=100/>
+						<input type=text name=postTitle value="<%= b.getPostTitleAt(Integer.parseInt(request.getParameter("postNumber"))) %>"  maxlength=100/>
 						<p>Post Content Below</p>
 						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>Post Content Goes Here Editable</textarea>
 					</td>
