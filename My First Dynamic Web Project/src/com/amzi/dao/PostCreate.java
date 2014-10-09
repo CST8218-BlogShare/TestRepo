@@ -1,77 +1,77 @@
-package com.amzi.dao;  
-  
-import java.sql.PreparedStatement;  
-import java.sql.SQLException;  
+package com.amzi.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.ResultSet;
 
+
 import com.amzi.dao.Blog;
-  
-public class PostCreate {  
-    
+
+public class PostCreate {
 	public static String creationDate = null;
 	private String errorMessage = null;
-	
 	private int blogId = -1;
 	private int postId = -1;
 	private int postCount = 0;
-	private String author = null; 
+	private String author = null;
 	private String postTitle = null;
 	private String postBody = null;
 	private Blog b = null;
 
-	public PostCreate(){
+	public PostCreate() {
 		
 	}
-	
-	public PostCreate(String postTitle, String postBody) {          
+
+	public PostCreate(String postTitle, String postBody) {
 		Exception postCreateError = new Exception();
-        
- 
-        try {  
-           
-        	postTitle = postTitle.trim();
-        	postBody = postBody.trim();
-        	if(postTitle.equals("")){
-        		System.out.println("Post Has no tittle, throwing java.lang.Exception.");
-	    		throw postCreateError;
-        	}
-        	
-        	if(postBody.equals("")){
-        		System.out.println("Post Has no body, throwing java.lang.Exception.");
-        		throw postCreateError;
-        	}
-        }catch(Exception e){
-    		e.printStackTrace();
-    	}
-        this.postTitle = postTitle;
-    	this.postBody = postBody;
+		try {
+			postTitle = postTitle.trim();
+			postBody = postBody.trim();
+			if (postTitle.equals("")) {
+				System.out
+						.println("Post Has no tittle, throwing java.lang.Exception.");
+				throw postCreateError;
+			}
+			if (postBody.equals("")) {
+				System.out
+						.println("Post Has no body, throwing java.lang.Exception.");
+				throw postCreateError;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.postTitle = postTitle;
+		this.postBody = postBody;
 	}
-	public int getBlogId(){
+
+	public int getBlogId() {
 		return blogId;
 	}
-	public int getPostId(){
+
+	public int getPostId() {
 		return postId;
 	}
-	
-	public int getPostCount(){
+
+	public int getPostCount() {
 		return postCount;
 	}
-	
-	public String getErrorMessage(){
+
+	public String getErrorMessage() {
 		return errorMessage;
 	}
-	
-	public String getAuthor(){
+
+	public String getAuthor() {
 		return author;
 	}
-	
-	public String getPostTitle(){
+
+	public String getPostTitle() {
 		return postTitle;
 	}
-	
-	public String getPostBody(){
+
+	public String getPostBody() {
 		return postBody;
 	}
+	
 	 public boolean insertPostInDatabase(int userId, Blog b) {          
 			
 	        PreparedStatement pst = null; 
@@ -171,3 +171,4 @@ public class PostCreate {
 	        return status;  
 	    } 
 }  
+

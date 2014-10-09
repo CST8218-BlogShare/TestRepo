@@ -43,7 +43,7 @@ public class BlogCreateServlet extends HttpServlet{
 		try{
 		
 			userId = (int) userSession.getAttribute("userId");
-		
+
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
 			return;

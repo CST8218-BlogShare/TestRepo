@@ -14,8 +14,9 @@
 		
 		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
 	
+
 		int userId = (int) session.getAttribute("userId");
-	
+
 	 	/*The function buildBlog is called in order to retrieve the author of blog and all
 	 	*posts within the blog other than the first post created during blogCreation. */
 	 	

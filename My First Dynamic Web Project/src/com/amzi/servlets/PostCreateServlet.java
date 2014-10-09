@@ -1,43 +1,39 @@
-package com.amzi.servlets;  
-  
-import java.io.IOException;  
+package com.amzi.servlets;
+
+import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import javax.servlet.RequestDispatcher;  
-import javax.servlet.ServletException;  
-import javax.servlet.http.HttpServlet;  
-import javax.servlet.http.HttpServletRequest;  
-import javax.servlet.http.HttpServletResponse;  
-import javax.servlet.http.HttpSession;  
-   
-import com.amzi.dao.PostCreate;
 import com.amzi.dao.Blog;
+import com.amzi.dao.PostCreate;
   
-public class PostCreateServlet extends HttpServlet{  
-  
-    private static final long serialVersionUID = 1L;  
-  
-    public void doPost(HttpServletRequest request, HttpServletResponse response){    
-        
-    	PostCreate p = null;
-		PrintWriter out = null;
-		int userId = -1;
-		Blog b = null;
-    	//If a session has not been created, none will be created
-    	HttpSession userSession = request.getSession(false); 
-		
-		 response.setContentType("text/html");
-		 try{
-			 out = response.getWriter();
-		 }catch(IOException ioE){
-			 ioE.printStackTrace();
-			 return;
-		 }
-		
-		String postTitle=request.getParameter("postTitle");
-		String postBody=request.getParameter("postBody");
+public class PostCreateServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
+	public void doPost(HttpServletRequest request, HttpServletResponse response) {
+		PostCreate p = null;
+		PrintWriter out = null;
+		Blog b = null; 
+		int userId = -1;
 		
+		// If a session has not been created, none will be created
+		HttpSession userSession = request.getSession(false);
+		response.setContentType("text/html");
+		
+		
+		try {
+			out = response.getWriter();
+		} catch (IOException ioE) {
+			ioE.printStackTrace();
+			return;
+		}
+		String postTitle = request.getParameter("postTitle");
+		String postBody = request.getParameter("postBody");
 		p = new PostCreate(postTitle, postBody);
 		
 		try{
@@ -65,7 +61,7 @@ public class PostCreateServlet extends HttpServlet{
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 
 			try {
-				rd.include(request,response);
+				rd.include(request, response);
 			} catch (ServletException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -73,16 +69,15 @@ public class PostCreateServlet extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-		 }
-		 else{
-			 //getServletContext().setAttribute("errorCode", 1);
-			 //getServletContext().setAttribute("errorMessage", BlogCreate.errorMessege);
-			 RequestDispatcher rd=request.getRequestDispatcher("PostCreate.jsp");
-		 //modify
-		 
-			 try {
-				rd.include(request,response);
+		} else {
+			// getServletContext().setAttribute("errorCode", 1);
+			// getServletContext().setAttribute("errorMessage",
+			// BlogCreate.errorMessege);
+			RequestDispatcher rd = request
+					.getRequestDispatcher("PostCreate.jsp");
+			// modify
+			try {
+				rd.include(request, response);
 			} catch (ServletException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -90,9 +85,9 @@ public class PostCreateServlet extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		 }
-		
-		 if(out != null){
-		 	out.close();
-		 }
-}   }
+		}
+		if (out != null) {
+			out.close();
+		}
+	}
+}
