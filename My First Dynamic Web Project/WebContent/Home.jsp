@@ -84,7 +84,7 @@ if(session.getAttribute("username") == null){
 		
 		<!-- table containing form for user registration and login-->
 		<div>														   
-			<table style="width:80%;  margin-left:5%; margin-right:5%; border-spacing:0.5in 0.2in; /* 1 in = 1 inch = 2.54 cm  */  border-collapse: separate;">
+			<table class="centered80W" style="border-spacing:0.5in 0.2in; /* 1 in = 1 inch = 2.54 cm  */  border-collapse: separate;">
 				<tr>
 				<!--Registration Form -->
 					<td style="width:40%;">
@@ -114,7 +114,7 @@ if(session.getAttribute("username") == null){
 						<form name="LoginForm" action="loginServlet" method="post">
 							<table>
 								<tr>
-									<td colspan=2> <font size=6> <b> Login </b> </font> </td> 
+									<td colspan=2> <font size=6> <b>Login</b> </font> </td> 
 								</tr>
 							    <tr>
 									<td class="HomeInputTitle"><font>Username</font></td> <td><input type=text name=loginUsername value="" maxlength=100/> </td> 

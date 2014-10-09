@@ -11,14 +11,17 @@
 </head>
 	<body>	
 	<% 
+		
 		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
 	
-		int userId = Integer.parseInt(session.getAttribute("userId").toString());
-	
+
+		int userId = (int) session.getAttribute("userId");
+
 	 	/*The function buildBlog is called in order to retrieve the author of blog and all
 	 	*posts within the blog other than the first post created during blogCreation. */
+	 	
 	 	b.buildBlog(userId);
-	 
+
 	 %>
 		
 		<!-- navigation bar -->
@@ -34,7 +37,7 @@
 					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
 				</tr>
 				<tr style="height:50%;">
-					<td>Welcome <%= session.getAttribute("username") %>!</td>
+					<td><a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
 					<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
 					<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
 					<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>
@@ -44,7 +47,7 @@
 		</div>
 
 		<!--table to hold pages content -->
-		<table style="width:80%;  margin-bottom:2%; margin-left:10%; margin-right:10%;">
+		<table class="centered80W" style="margin-bottom:2%;">
 			 	
 			 	<!-- blog title -->
 			 	<tr>
@@ -83,14 +86,6 @@
 						</td>
 				</tr>
 				
-				<!-- creating space -->
-				<tr>
-					<td>
-						<br>
-					</td>
-				</tr> 
-				
-				
 				<tr>
 						<td style="background:white; text-align:left;">								
 							<p title="Content Of Post - Owned By Author Of Blog" style="margin:5%"><%= b.getBlogPostBody() %></p> 
@@ -107,9 +102,12 @@
 	
 		<%
 		
-		if(b.getPostsShown() == false){
-		//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
-		  for(int i = 1; i < b.getPostCount(); ++i ){
+		if(b.getNewPost() == true){
+			int i;
+			//i is started at 1 in order to skip first post, which is already on page.
+			for(i = 1 ; i < b.getPostCount(); ++i){
+			
+			//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
 		 	
 			 %>
 			 
@@ -122,14 +120,6 @@
 					<a href="PostEdit.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
 				</td>
 			</tr>
-					
-			<!-- creating space  -->
-			<tr>
-				<td>
-					<br>
-				</td>
-			</tr>
-				
 					
 			<tr>
 				<td style="background:white; text-align:left;">	
@@ -146,16 +136,17 @@
 				</tr> 
 			 
 			 <%
+			 }
+			 b.setNewPost(false);
 		  }
-			b.setPostsShown(true);
-		}
+			
 
 		%>
 		
 		</table>
 		
 		<form action="PostCreate.jsp">
-			<table style="width:80%; margin-left: 10%; margin-right: 10%;">
+			<table class="centered80W">
 				<tr>
 					<td style="width:80%;">
 						<input type="submit" class=button value="Create New Post">

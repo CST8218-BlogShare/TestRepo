@@ -5,21 +5,13 @@ import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;  
 import javax.servlet.http.HttpServletRequest;  
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
   
-
-
-
-
-
-
 import com.amzi.dao.Blog;
   
-@WebServlet("/BlogCreateServlet")
 public class BlogCreateServlet extends HttpServlet{  
   
 	 private static final long serialVersionUID = 1L;
@@ -50,8 +42,8 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		try{
 		
-			userId = Integer.parseInt(userSession.getAttribute("userId").toString());
-		
+			userId = (int) userSession.getAttribute("userId");
+
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
 			return;
@@ -63,6 +55,10 @@ public class BlogCreateServlet extends HttpServlet{
 		 */
 		 if(b.insertBlogInDatabase(userId)){
 			 //getServletContext().setAttribute("errorCode", 0);
+			 
+			 
+			 /*Adding the newly created blog object to the ServletContext object, 
+			   allowing it and it's data members to be retrieved within Blog.jsp*/
 			 
 			 getServletContext().setAttribute("currentBlog", b);
 			 userSession.setAttribute("blogId", b.getBlogId());
@@ -85,7 +81,6 @@ public class BlogCreateServlet extends HttpServlet{
 			 //getServletContext().setAttribute("errorCode", 1);
 			 //getServletContext().setAttribute("errorMessage", BlogCreate.errorMessege);
 			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
-		 //modify
 		 
 			 try {
 				rd.include(request,response);
