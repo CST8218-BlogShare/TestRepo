@@ -27,7 +27,6 @@
 			Need to make null checks for these sessionState variables and throw appropriate exception.
 		*/
 		
-		
 		User u = (User) session.getAttribute("currentUser");
 		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
 			
