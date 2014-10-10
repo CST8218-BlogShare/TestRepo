@@ -127,27 +127,53 @@ public class PostCreate {
 				    insert postid and user id into user_post
 	        	 */
 	        	
-	        	//*insert post title, blogid content, creation date into post table
-	            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+b.getBlogId()+"','"+postTitle+"','"+postBody+"', curdate() )");  
-	            pst.executeUpdate(); 
-	            //closing the connection to prepare for the next prepared statement.
-	            pst.close();
-	            
-	            //select postid from post table where blogid and title is the same
-	            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+b.getBlogId()+"' AND title = '"+postTitle+"' ");
-	            rs = pst.executeQuery();
-	            rs.first();
-	            this.postId = rs.getInt("postId");
-	            rs.close();
-	            pst.close();
-	            
-	            
-	            //insert postid and user id into user_post
-	            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
-	            pst.executeUpdate();
-	            pst.close();
-	            
-	            b.setNewPost(true);
+	        	if(b.getEditMode() == false){
+		        	//*insert post title, blogid content, creation date into post table
+		            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+b.getBlogId()+"','"+postTitle+"','"+postBody+"', curdate() )");  
+		            pst.executeUpdate(); 
+		            //closing the connection to prepare for the next prepared statement.
+		            pst.close();
+		            
+		            //select postid from post table where blogid and title is the same
+		            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+b.getBlogId()+"' AND title = '"+postTitle+"' ");
+		            rs = pst.executeQuery();
+		            rs.first();
+		            this.postId = rs.getInt("postId");
+		            rs.close();
+		            pst.close();
+		            
+		            
+		            //insert postid and user id into user_post
+		            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
+		            pst.executeUpdate();
+		            pst.close();
+		            
+		            b.setNewPost(true);
+	        	}
+	        	//Code below to be in the next iteration. Now that we are repopulating the fields for edit we need to update the table. First queary is being worked on
+	        	/*else if( b.getEditMode() == true){
+	        		//*insert post title, blogid content, creation date into post table
+		            pst = connectionManager.getConnection().prepareStatement("update  post set title = '"+postTitle+"', content = '"+postBody+"' where blogId = '"+b.getBlogId()+"' )");  
+		            pst.executeUpdate(); 
+		            //closing the connection to prepare for the next prepared statement.
+		            pst.close();
+		            
+		            //select postid from post table where blogid and title is the same
+		            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+b.getBlogId()+"' AND title = '"+postTitle+"' ");
+		            rs = pst.executeQuery();
+		            rs.first();
+		            this.postId = rs.getInt("postId");
+		            rs.close();
+		            pst.close();
+		            
+		            
+		            //insert postid and user id into user_post
+		            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
+		            pst.executeUpdate();
+		            pst.close();
+		            
+		            b.setNewPost(true);
+	        	}*/
 	            //status = rs.next();
 	        } catch (SQLException sqlE) {  
 	        	
