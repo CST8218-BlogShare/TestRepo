@@ -13,7 +13,10 @@
 
 <%
 	Blog b = (Blog) getServletContext().getAttribute("currentBlog");
-
+try{
+	boolean isEditMode = b.getEditMode();
+	int toEdit = b.getToEdit();
+}catch(Exception e){}
 
 %>
 
@@ -58,12 +61,30 @@
 				you continue writing your blog below
 
 				<p>New Post Title Below</p>
-				<input type=text name=postTitle maxlength=100 />
+				<%
+					if( b.getEditMode() == false){
+				%>
+				<input type=text name=postTitle maxlength=100/>	
 				
 				<p>New Post Content Below</p> 
 				<textarea NAME="postBody" WRAP=soft
 					COLS=80 ROWS=10>
 				</textarea>
+				<%
+					}else if(b.getEditMode() == true){
+				%>
+				<input type=text name=postTitle maxlength=100 value="<%=b.getPostTitleAt(b.getToEdit()) %>"/>
+				
+				<p>New Post Content Below</p> 
+				<textarea NAME="postBody" WRAP=soft
+					COLS=80 ROWS=10>
+					<%=
+					b.getPostBodyAt(b.getToEdit())
+					%>
+				</textarea>
+				<%
+					}
+				%>
 			</td>
 		</tr>
 		

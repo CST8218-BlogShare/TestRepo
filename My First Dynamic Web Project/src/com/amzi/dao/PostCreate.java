@@ -5,7 +5,12 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 
 
+
+
+import org.apache.catalina.connector.Request;
+
 import com.amzi.dao.Blog;
+import com.sun.xml.internal.ws.client.RequestContext;
 
 public class PostCreate {
 	public static String creationDate = null;
@@ -16,6 +21,8 @@ public class PostCreate {
 	private String author = null;
 	private String postTitle = null;
 	private String postBody = null;
+	private boolean isEditableMode = false;
+	private int toEdit = 0;
 	
 	private Blog b = null;
 
@@ -48,7 +55,7 @@ public class PostCreate {
 	public int getBlogId() {
 		return blogId;
 	}
-
+	
 	public int getPostId() {
 		return postId;
 	}
@@ -74,7 +81,7 @@ public class PostCreate {
 	}
 	
 	 public boolean insertPostInDatabase(int userId, Blog b) {          
-			
+		 
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
 	        DbConnection connectionManager = null;
