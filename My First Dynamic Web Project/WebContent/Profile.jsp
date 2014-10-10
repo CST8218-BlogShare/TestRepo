@@ -67,7 +67,9 @@
 	<p style="padding: 50px">
 		<a href="ProfileEdit.jsp"><button type="button"
 				class="btn btn-default btn-lrg" style="width: 500px">Edit
-				Profile</button></a> <br style="clear: left;" /> <a href="BlogCreate.jsp"><button
+				Profile</button></a> <br style="clear: left;" />
+				
+	 <a href="BlogCreate.jsp"><button
 				type="button" class="btn btn-default btn-lrg" style="width: 500px">Create
 				Blog</button></a>
 	</p>

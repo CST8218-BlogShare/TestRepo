@@ -140,6 +140,7 @@ public class PostCreate {
 	            pst.executeUpdate();
 	            pst.close();
 	            
+	            b.setPostCount(b.getPostCount()+1);
 	            b.setNewPost(true);
 	            //status = rs.next();
 	        } catch (SQLException sqlE) {  

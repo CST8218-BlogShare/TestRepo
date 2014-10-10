@@ -95,6 +95,7 @@ public class User {
 	        pst.setString(2, newPass); 
 	        pst.setString(3, Integer.toString(userId));  
 
+	        //returns the row count or 0 if nothing was updated 
 	        if (pst.executeUpdate() == 1){
 	        	this.username = newUsername;
 	        	this.password = newPass;

@@ -21,6 +21,7 @@ public class GetBlogServlet extends HttpServlet {
 		
 		if (b.buildBlogFromTitle(blogTitle)){
 			
+			b.setNewPost(true);
 			getServletContext().setAttribute("currentBlog", b);
 			try {
 				request.getRequestDispatcher("Blog.jsp").forward(request, response); 

@@ -68,12 +68,16 @@ public class Blog {
 		return newPost;
 	}
 	
-	public int getBlogId(){
-		return blogId;
+	public void setPostCount(int count){
+		this.postCount = count;
 	}
 	
 	public int getPostCount(){
 		return postCount;
+	}
+	
+	public int getBlogId(){
+		return blogId;
 	}
 	
 	public String getErrorMessage(){
@@ -195,6 +199,10 @@ public class Blog {
             pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"')");
             pst.executeUpdate();
             pst.close();
+            
+            
+            //Now that the post has been added successfully to the database, the total of posts can be increased.
+            ++postCount;
            
             //status = rs.next();
         } catch (SQLException sqlE) {  
@@ -291,18 +299,20 @@ public class Blog {
         	
         	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
-        	
-        	
+        	rs.last();
+            postCount = rs.getRow();
+            rs.beforeFirst();
+            
         	while(rs.next()){
-        		if(i < postCount){
-        			++i;
-        			continue;
+        		
+        		if(postTitleList.size() < postCount ){ 
+        			postTitleList.add(rs.getString("title")); 
+        		};
+        		
+        		if(postBodyList.size() < postCount){
+        			postBodyList.add(rs.getString("content"));
         		}
-        		postTitleList.add(rs.getString("title"));
-        		postBodyList.add(rs.getString("content"));
         	}
-        	
-        	++postCount;
         	rs.close();
         	pst.close();
         	
@@ -366,22 +376,23 @@ public class Blog {
         		
         	}
         	
-        	//get the blog's posts and their bodies fromt he blogid
+        	//get the blog's posts and their bodies from the database using the blogid
         	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
-        	
-        	int i = 0;
-        	
+        	rs.last();
+            postCount = rs.getRow();
+            rs.beforeFirst();
+    
         	while(rs.next()){
-        		if(i < postCount){
-        			++i;
-        			continue;
+        		
+        		if(postTitleList.size() < postCount ){ 
+        			postTitleList.add(rs.getString("title")); 
+        		};
+        		
+        		if(postBodyList.size() < postCount){
+        			postBodyList.add(rs.getString("content"));
         		}
-        		postTitleList.add(rs.getString("title"));
-        		postBodyList.add(rs.getString("content"));
         	}
-        	
-        	++postCount;
         	rs.close();
         	pst.close();
         	
