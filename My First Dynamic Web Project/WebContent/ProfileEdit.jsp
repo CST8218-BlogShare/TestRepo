@@ -21,7 +21,7 @@
 		<form name="editPassForm" action="EditUserServlet" method="post">
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">Username:</span>
-		 	<input name="loginUsername" type="text" class="form-control" value="<%= u.getUsername() %>" >
+		 	<input name="loginUsername" type="text" class="form-control" readonly="true" value="<%= u.getUsername() %>" >
 		</div>
 		<div class="input-group">
 		  	<span class="input-group-addon" style="min-width:200px">New Username:</span>
