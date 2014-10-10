@@ -1,7 +1,6 @@
 package com.amzi.servlets;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +12,8 @@ import com.amzi.dao.Blog;
 @WebServlet("/GetBlogServlet")
 public class GetBlogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    
+	//load the requested blog into the session and forward to blog.jsp
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		Blog b = new Blog();

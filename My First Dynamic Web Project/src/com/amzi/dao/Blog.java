@@ -341,7 +341,8 @@ public class Blog {
         return status;  
     }
     
-public boolean buildBlogFromTitle(String blogTitle) {          
+    //load the blog's id, author and posts from the database from the blogs unique title
+    public boolean buildBlogFromTitle(String blogTitle) {          
         
     	boolean status = true;  
         PreparedStatement pst = null; 
@@ -353,6 +354,7 @@ public boolean buildBlogFromTitle(String blogTitle) {
         try { 	
         	if(this.blogId == -1){
         		
+        		//get the blog's id with the title
         		pst = connectionManager.getConnection().prepareStatement(" select blogid from blog where title = ?");
         		pst.setString(1, blogTitle);
             	rs = pst.executeQuery();
@@ -364,6 +366,7 @@ public boolean buildBlogFromTitle(String blogTitle) {
         		
         	}
         	
+        	//get the blog's posts and their bodies fromt he blogid
         	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
         	

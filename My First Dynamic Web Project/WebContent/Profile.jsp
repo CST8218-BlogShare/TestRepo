@@ -72,37 +72,36 @@
 				Blog</button></a>
 	</p>
 
+	<!-- the dynamic list of user blogs is generated here -->
 	<div class="list-group">
 		<%
 			ArrayList<String> userBlogList = (ArrayList<String>) getServletContext().getAttribute("userBlogList");
 
-				if (userBlogList != null) {
-			for (String blogTitle: userBlogList){
-				out.print("<li");
-				out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>");
-			}
-			
-			//request.removeAttribute("userBlogList");
-			
-				} else {
+			if (userBlogList != null) {
+				for (String blogTitle: userBlogList){
+					out.print("<li");
+					out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>");
+				}		
+			} else {
 			out.println("<li class=\"list-group-item\">No Blogs Found</li>");
-				}
+			}
 		%>
 	</div>
 
+	<!-- form used to request a blog by title from getblogservlet -->
 	<form id="goToBlog" action="GetBlogServlet" method="post">
-		<input type="hidden" id="goToBlogName" name="blogTitle" value="4">
-		<button type="submit" value="submit"></button>
+		<input type="hidden" id="goToBlogName" name="blogTitle" value="">
 	</form>
 
-
+	<!-- Attach an onclick event to list elements with class blog-link -->
+	<!-- this event gets the list item's blogTitle attribute and places it into the input with id gotoblog -->
+	<!-- it then submits the gotoblog form -->
 	<script>
 	$('li.blog-link').click(function(){
 		
 		$('input#goToBlogName').val($(this).attr('blogTitle'));
 		$('form#goToBlog').submit();
 		$(this).toggleClass('active');
-		//$('#goToBlog').submit();
 	});
 
 	</script>
