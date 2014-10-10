@@ -133,6 +133,7 @@ public class User {
 		return status;
 	}
 	
+	//get a list of the titles of a particular user's blogs
 	public ArrayList<String> getUserBlogs(int userId) {          
         
         PreparedStatement pst = null; 

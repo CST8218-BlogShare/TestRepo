@@ -4,6 +4,14 @@
     	 import="com.amzi.dao.Blog, com.amzi.dao.User"
     %>  
 <html>
+<!-- The page used to display all Blogs created within BLOGSHARE
+	
+	Only a single blog is shown at a time,
+	The content of the blog is retrieved from the Blog object created 
+	from the functionality linked with CreateBlog.jsp or Profile.jsp.
+	
+-->
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
@@ -12,13 +20,21 @@
 	<body>	
 	<% 
 		
+		/* 
+			Retrieving the user and blog objects accociated with the 
+			currently logged in user and the blog to be displayed.
+			
+			Need to make null checks for these sessionState variables and throw appropriate exception.
+		*/
+		
 		User u = (User) session.getAttribute("currentUser");
 		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
 			
-
-
-	 	/*The function buildBlog is called in order to retrieve the author of blog and all
-	 	*posts within the blog other than the first post created during blogCreation. */
+	 	/*
+	 	  The function buildBlog is called in order to retrieve the author of blog and all
+	 	  posts within the blog other than the first post created during blogCreation. 
+	 	 
+	 	*/
 	 	
 	 	b.buildBlog(u.getUserId());
 
@@ -76,7 +92,14 @@
 				</tr>
 				
 				
-				<!-- first post belonging to author of the blog -->
+				<!-- first post belonging to author of the blog, 
+					
+					This post is kept separate from the loop below that is dedicated to
+					creating additional posts, since a different title is used on the content. 
+					
+					Could be changed once permissions are implemented since it would 
+					be possible to dynamically retrieve the author of each post. Might happen, might not.
+					 -->
 				<tr>
 						<td>
 							<p title="Post Title - Owned By Author Of Blog "> <%= b.getBlogPostTitle() %> </p>
@@ -100,6 +123,8 @@
 				</tr> 
 				
 	
+	
+		<!-- Displaying additional posts, either created by the author or by another user -->
 		<%
 		
 		if(b.getNewPost() == true){
@@ -145,6 +170,7 @@
 		
 		</table>
 		
+		<!--  Button to create a new post, when pressed the user is linked to PostCreate.jsp -->
 		<form action="PostCreate.jsp">
 			<table class="centered80W">
 				<tr>

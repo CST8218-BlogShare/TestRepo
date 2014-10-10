@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
     pageEncoding="ISO-8859-1"%>  
 <html>
+
+<!-- The home page of BLOGSHARE, the user is brought here when the site is accessed. -->
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
