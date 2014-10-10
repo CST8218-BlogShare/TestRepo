@@ -19,6 +19,8 @@ public class Blog {
 	private String blogPostBody = null;
     private ArrayList<String> postTitleList = new ArrayList<String>();
 	private ArrayList<String> postBodyList = new ArrayList<String>();
+	private boolean isEditableMode = false;
+	private int toEdit = 0;
 	
 	private String errorMessage = null;
 	
@@ -62,6 +64,19 @@ public class Blog {
 	
 	public void setNewPost(boolean b){
 		this.newPost=b;
+	}
+	
+	public boolean setEditMode(boolean mode , int toEditP) {
+		toEdit = toEditP;
+		return isEditableMode = mode;
+	}
+
+	public boolean getEditMode() {
+		return isEditableMode;
+	}
+	
+	public int getToEdit() {
+		return toEdit;
 	}
 	
 	public boolean getNewPost(){
