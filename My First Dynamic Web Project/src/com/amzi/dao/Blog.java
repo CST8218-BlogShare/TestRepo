@@ -341,5 +341,84 @@ public class Blog {
         return status;  
     }
     
+public boolean buildBlogFromTitle(String blogTitle) {          
+        
+    	boolean status = true;  
+        PreparedStatement pst = null; 
+        ResultSet rs = null;
+        DbConnection connectionManager = null;
+        
+        	//gaining access to the shared database connection.
+        	connectionManager = DbConnection.getInstance();
+        try { 	
+        	if(this.blogId == -1){
+        		
+        		pst = connectionManager.getConnection().prepareStatement(" select blogid from blog where title = ?");
+        		pst.setString(1, blogTitle);
+            	rs = pst.executeQuery();
+            	rs.first();
+            	this.blogId = rs.getInt("blogid");
+            	this.blogTitle = blogTitle;
+            	rs.close();
+            	pst.close();
+        		
+        	}
+        	
+        	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
+        	rs = pst.executeQuery();
+        	
+        	int i = 0;
+        	
+        	while(rs.next()){
+        		if(i < postCount){
+        			++i;
+        			continue;
+        		}
+        		postTitleList.add(rs.getString("title"));
+        		postBodyList.add(rs.getString("content"));
+        	}
+        	
+        	++postCount;
+        	rs.close();
+        	pst.close();
+        	
+        	this.blogPostTitle = postTitleList.get(0);
+        	this.blogPostBody = postBodyList.get(0);
+        	
+        } catch (SQLException sqlE) {  
+        	
+        	
+        	connectionManager.closeConnection();
+        	
+        	
+        	/*System.out.println("Blog field missing, throwing SQLException");
+        	sqlE.printStackTrace();
+        	setErrorMessage("Error with previous login attempt. Incorrect Username and Password.");*/
+        	
+        	status = false;
+        }catch(Exception e){
+        	 e.printStackTrace(); //may not be necessary
+             status = false;
+        }
+         finally { 
+        	//we now have to manage closing the connection a different way...at logout...
+            if (pst != null) {  
+                try {  
+                    pst.close();  
+                } catch (SQLException e) {  
+                    e.printStackTrace();  
+                }  
+            }  
+            if (rs != null) {  
+                try {  
+                    rs.close();  
+                } catch (SQLException e) {  
+                    e.printStackTrace();  
+                }  
+            }  
+        }  
+        return status;  
+    }
+    
 }  
 

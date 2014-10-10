@@ -133,12 +133,12 @@ public class User {
 		return status;
 	}
 	
-	public ArrayList<String[]> getUserBlogs(int userId) {          
+	public ArrayList<String> getUserBlogs(int userId) {          
         
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
-        ArrayList<String[]> userBlogs = new ArrayList<String[]>();
+        ArrayList<String> userBlogs = null;
          
         try {  
         	
@@ -151,10 +151,10 @@ public class User {
         	if (rs.next()){
 
 	        	rs.beforeFirst();
+	        	userBlogs = new ArrayList<String>();
 	        	
 	        	while (rs.next()){	
-	        		userBlogs.add(
-	        				new String[]{rs.getString("blogid"), rs.getString("title")});
+	        		userBlogs.add(rs.getString("title"));
 	        	}
         	}
         	rs.close();
@@ -191,5 +191,5 @@ public class User {
         
         return userBlogs;  
         
-    } 
+    }  
 }
