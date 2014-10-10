@@ -24,8 +24,6 @@ public class PostCreate {
 	private boolean isEditableMode = false;
 	private int toEdit = 0;
 	
-	private Blog b = null;
-
 	public PostCreate() {
 		
 	}

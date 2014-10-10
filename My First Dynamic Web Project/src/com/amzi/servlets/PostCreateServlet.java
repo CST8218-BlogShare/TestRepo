@@ -58,6 +58,7 @@ public class PostCreateServlet extends HttpServlet {
 			 //getServletContext().setAttribute("currentPost", p);
 			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
+			 getServletContext().setAttribute("currentBlog", b);
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 
 			try {

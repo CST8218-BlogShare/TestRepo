@@ -36,8 +36,9 @@
 	 	 
 	 	*/
 	 	
+	if(b.getIsBuilt() == false){
 	 	b.buildBlog(u.getUserId());
-
+	 }
 	 %>
 		
 		<!-- navigation bar -->

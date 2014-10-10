@@ -11,6 +11,7 @@ public class Blog {
 	//private String errorMessage = null;
 	
 	private boolean newPost = false;
+	private boolean isBuilt = false;
 	private int blogId = -1;
 	private int postCount = 0;
 	private String author = null; 
@@ -66,6 +67,20 @@ public class Blog {
 		this.newPost=b;
 	}
 	
+
+	public boolean getNewPost(){
+		return newPost;
+	}
+	
+	public void setIsBuilt(boolean b){
+		this.isBuilt = b;
+	}
+	
+	
+	public boolean getIsBuilt(){
+		return isBuilt;
+	}
+	
 	public boolean setEditMode(boolean mode , int toEditP) {
 		toEdit = toEditP;
 		return isEditableMode = mode;
@@ -73,14 +88,6 @@ public class Blog {
 
 	public boolean getEditMode() {
 		return isEditableMode;
-	}
-	
-	public int getToEdit() {
-		return toEdit;
-	}
-	
-	public boolean getNewPost(){
-		return newPost;
 	}
 	
 	public void setPostCount(int count){
@@ -93,6 +100,10 @@ public class Blog {
 	
 	public int getBlogId(){
 		return blogId;
+	}
+	
+	public int getToEdit() {
+		return toEdit;
 	}
 	
 	public String getErrorMessage(){
@@ -301,33 +312,14 @@ public class Blog {
         	rs.close();
         	pst.close();
         	
-        	if(this.blogId == -1){
-        		
-        		pst = connectionManager.getConnection().prepareStatement(" select blogid from blog where title = '"+blogTitle+"' "); 
-            	rs = pst.executeQuery();
-            	rs.first();
-            	this.blogId = rs.getInt("blogid");
-            	rs.close();
-            	pst.close();
-        		
-        	}
-        	
         	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
-        	rs.last();
-            postCount = rs.getRow();
-            rs.beforeFirst();
-            
+       
         	while(rs.next()){
-        		
-        		if(postTitleList.size() < postCount ){ 
-        			postTitleList.add(rs.getString("title")); 
-        		};
-        		
-        		if(postBodyList.size() < postCount){
-        			postBodyList.add(rs.getString("content"));
-        		}
+        		postTitleList.add(rs.getString("title")); 
+        		postBodyList.add(rs.getString("content"));
         	}
+
         	rs.close();
         	pst.close();
         	
@@ -395,18 +387,18 @@ public class Blog {
         	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
         	rs.last();
-            postCount = rs.getRow();
-            rs.beforeFirst();
+        	postCount = rs.getRow();
+        	rs.beforeFirst();
+        	
     
         	while(rs.next()){
         		
-        		if(postTitleList.size() < postCount ){ 
-        			postTitleList.add(rs.getString("title")); 
-        		};
         		
-        		if(postBodyList.size() < postCount){
+        			postTitleList.add(rs.getString("title")); 
+
+        		
+        	
         			postBodyList.add(rs.getString("content"));
-        		}
         	}
         	rs.close();
         	pst.close();
