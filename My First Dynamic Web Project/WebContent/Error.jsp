@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
     pageEncoding="ISO-8859-1"%>  
 <html>
+
+<!-- Displays a custom error message when a http error occurs  -->
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
@@ -9,7 +12,6 @@
 	<body>
 	
 		<!-- Allows the page to identify itself as an error page for handling errors produced by TomCat -->
-			
 		<%@ page isErrorPage="true" %>
 		
 		<!-- navigation bar -->
@@ -42,7 +44,11 @@
 		<br>
 		<br>
 		
-		<!-- Adapted implementation for errors from  information and code sample found at 
+		<!--
+		 	
+		 	 Gathering and displaying the information on the HTTP error
+		 	 
+		 	 Adapted implementation from information and code sample found at 
 		     http://wiki.metawerx.net/wiki/CustomErrorPagesInTomcat  -->	
 		
 		<%
@@ -64,13 +70,9 @@
 		
 		        // Display error details for the user
 		        if(ed != null) {
-		    
-		            // Output details about the HTTP error
-		            // (this should show error code 404, and the name of the missing page)
 		            out.println("<p /> An error has occurred <br /><br />");
 		            
 		            switch(ed.getStatusCode()){
-		            	
 		            	case 400:
 		            		errorDescription="Bad Request Error";
 		            		break;
