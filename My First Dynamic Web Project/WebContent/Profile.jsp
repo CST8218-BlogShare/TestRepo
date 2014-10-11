@@ -77,7 +77,7 @@
 	<!-- the dynamic list of user blogs is generated here -->
 	<div class="list-group">
 		<%
-			ArrayList<String> userBlogList = (ArrayList<String>) getServletContext().getAttribute("userBlogList");
+			ArrayList<String> userBlogList = (ArrayList<String>) session.getAttribute("userBlogList");
 
 			if (userBlogList != null) {
 				for (String blogTitle: userBlogList){

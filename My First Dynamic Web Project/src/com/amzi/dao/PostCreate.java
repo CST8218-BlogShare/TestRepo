@@ -3,21 +3,13 @@ package com.amzi.dao;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-
-
-
-
-import org.apache.catalina.connector.Request;
-
 import com.amzi.dao.Blog;
-import com.sun.xml.internal.ws.client.RequestContext;
 
 public class PostCreate {
 	public static String creationDate = null;
 	private String errorMessage = null;
 	private int blogId = -1;
 	private int postId = -1;
-	private int postCount = 0;
 	private String author = null;
 	private String postTitle = null;
 	private String postBody = null;
@@ -33,12 +25,12 @@ public class PostCreate {
 			postBody = postBody.trim();
 			if (postTitle.equals("")) {
 				System.out
-						.println("Post Has no tittle, throwing java.lang.Exception.");
+						.println("Post has no tittle, throwing java.lang.Exception.");
 				throw postCreateError;
 			}
 			if (postBody.equals("")) {
 				System.out
-						.println("Post Has no body, throwing java.lang.Exception.");
+						.println("Post has no body, throwing java.lang.Exception.");
 				throw postCreateError;
 			}
 		} catch (Exception e) {
@@ -54,10 +46,6 @@ public class PostCreate {
 	
 	public int getPostId() {
 		return postId;
-	}
-
-	public int getPostCount() {
-		return postCount;
 	}
 
 	public String getErrorMessage() {
@@ -113,6 +101,17 @@ public class PostCreate {
 	        	//gaining access to the shared database connection.
 	        	connectionManager = DbConnection.getInstance();
 	  
+	        	blogId = b.getBlogId();
+	        	
+	        	if(blogId == -1){
+	        		try {
+						throw new Exception();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	        	}
+	        	
 	        	/*
 	        	 *  
 	        	 *  
@@ -122,15 +121,15 @@ public class PostCreate {
 				    select postid from post table where blogid and title is the same
 				    insert postid and user id into user_post
 	        	 */
-	        	if(b.getEditMode() == false){
+	        	//if(b.getEditMode() == false){
 		        	//*insert post title, blogid content, creation date into post table
-		            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+b.getBlogId()+"','"+postTitle+"','"+postBody+"', curdate() )");  
+		            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', curdate() )");  
 		            pst.executeUpdate(); 
 		            //closing the connection to prepare for the next prepared statement.
 		            pst.close();
 		            
 		            //select postid from post table where blogid and title is the same
-		            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+b.getBlogId()+"' AND title = '"+postTitle+"' ");
+		            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
 		            rs = pst.executeQuery();
 		            rs.first();
 		            this.postId = rs.getInt("postId");
@@ -142,10 +141,12 @@ public class PostCreate {
 		            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
 		            pst.executeUpdate();
 		            pst.close();
-		            
+		           
+		            b.addPost(postTitle,postBody);
 		            b.setPostCount(b.getPostCount()+1);
-		            b.setNewPost(true);
-	        	}
+		           
+		            // b.setIsBuilt(false);
+	        	//}
 	        	//Code below to be in the next iteration. Now that we are repopulating the fields for edit we need to update the table. First queary is being worked on
 	        	/*else if( b.getEditMode() == true){
 	        		//*insert post title, blogid content, creation date into post table

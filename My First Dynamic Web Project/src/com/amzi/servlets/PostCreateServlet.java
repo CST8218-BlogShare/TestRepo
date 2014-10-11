@@ -39,26 +39,19 @@ public class PostCreateServlet extends HttpServlet {
 		try{
 		
 			userId = (int) userSession.getAttribute("userId");
-			b = (Blog) getServletContext().getAttribute("currentBlog");
+			b = (Blog) userSession.getAttribute("currentBlog");
 		
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
 			return;
 		}
-		/*The function insertBlogInDatabase() is called to take the contents entered into the
-		 form within blogCreate held within Blog Object b, and insert this info into the database
-		 
-		 This function also initializes the Blog's blogId data member with an integer value.
-		 and sets the newPost data member within Blog to true. Setting the boolean to 
-		 true allows the newPost to be added to the pages content within Blog.jsp
-		 */
+		
 		 if(p.insertPostInDatabase(userId, b)){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 //getServletContext().setAttribute("currentPost", p);
 			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
-			 getServletContext().setAttribute("currentBlog", b);
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 
 			try {
