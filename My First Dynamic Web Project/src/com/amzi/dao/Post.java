@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import com.amzi.dao.Blog;
 
-public class PostCreate {
+public class Post {
 	public static String creationDate = null;
 	private String errorMessage = null;
 	private int blogId = -1;
@@ -14,11 +14,11 @@ public class PostCreate {
 	private String postTitle = null;
 	private String postBody = null;
 	
-	public PostCreate() {
+	public Post() {
 		
 	}
 
-	public PostCreate(String postTitle, String postBody) {
+	public Post(String postTitle, String postBody) {
 		Exception postCreateError = new Exception();
 		try {
 			postTitle = postTitle.trim();

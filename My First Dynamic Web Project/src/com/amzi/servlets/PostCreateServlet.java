@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.Blog;
-import com.amzi.dao.PostCreate;
+import com.amzi.dao.Post;
   
 public class PostCreateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
-		PostCreate p = null;
+		Post p = null;
 		PrintWriter out = null;
 		Blog b = null; 
 		int userId = -1;
@@ -34,7 +34,7 @@ public class PostCreateServlet extends HttpServlet {
 		}
 		String postTitle = request.getParameter("postTitle");
 		String postBody = request.getParameter("postBody");
-		p = new PostCreate(postTitle, postBody);
+		p = new Post(postTitle, postBody);
 		
 		try{
 		
@@ -47,11 +47,7 @@ public class PostCreateServlet extends HttpServlet {
 		}
 		
 		 if(p.insertPostInDatabase(userId, b)){
-			 //getServletContext().setAttribute("errorCode", 0);
-			 
-			 //getServletContext().setAttribute("currentPost", p);
-			 
-			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
+			
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 
 			try {
@@ -64,10 +60,8 @@ public class PostCreateServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		} else {
-			// getServletContext().setAttribute("errorCode", 1);
-			// getServletContext().setAttribute("errorMessage",
-			// BlogCreate.errorMessege);
 			RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
+			
 			// modify
 			try {
 				rd.include(request, response);

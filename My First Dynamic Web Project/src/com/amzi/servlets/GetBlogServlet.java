@@ -17,8 +17,7 @@ public class GetBlogServlet extends HttpServlet {
     
 	//load the requested blog into the session and forward to blog.jsp
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
-		
-		Blog b = new Blog();
+		Blog b = null;
 		
 		HttpSession userSession = request.getSession(false);
 		
@@ -27,24 +26,28 @@ public class GetBlogServlet extends HttpServlet {
 			return;
 		}
 		
+		b = (Blog) userSession.getAttribute("currentBlog");
+		
 		String blogTitle = request.getParameter("blogTitle");
 		
-		if (b.buildBlogFromTitle(blogTitle)){
+		if(b == null || b.getBlogTitle().contentEquals(blogTitle) == false){
 			
-			userSession.setAttribute("currentBlog", b);
-			try {
-				request.getRequestDispatcher("Blog.jsp").forward(request, response); 
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}    
+			b = new Blog();
 			
-		} else {
-			
+			if (b.buildBlogFromTitle(blogTitle)){
+				userSession.setAttribute("currentBlog", b);  
+			}else{
+				//throw some error
+				return;
+			}
 		}
 		
-		
+		try {
+			request.getRequestDispatcher("Blog.jsp").forward(request, response); 
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}  
 	}
-
 }

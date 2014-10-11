@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
   
 
 import com.amzi.dao.Blog;
-import com.amzi.dao.PostCreate;
+import com.amzi.dao.Post;
   
 public class BlogCreateServlet extends HttpServlet{  
   
@@ -22,7 +22,7 @@ public class BlogCreateServlet extends HttpServlet{
 	 public void doPost(HttpServletRequest request, HttpServletResponse response){
 		 
 		 Blog b = null;
-		 PostCreate p = null;
+		 Post p = null;
 		 PrintWriter out = null;
 		 int userId;
 		 
@@ -43,7 +43,7 @@ public class BlogCreateServlet extends HttpServlet{
 
 		
 		b = new Blog(blogTitle);
-		p = new PostCreate(postTitle,postBody);
+		p = new Post(postTitle,postBody);
 		
 		try{
 		
