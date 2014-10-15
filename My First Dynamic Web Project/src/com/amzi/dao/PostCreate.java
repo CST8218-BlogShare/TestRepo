@@ -151,7 +151,7 @@ public class PostCreate {
 		            b.setNewPost(true);
 	        	}
 	        	//Code below to be in the next iteration. Now that we are repopulating the fields for edit we need to update the table. First queary is being worked on
-	        	/*else if( b.getEditMode() == true){
+	        	else if( b.getEditMode() == true){
 	        		//*insert post title, blogid content, creation date into post table
 		            pst = connectionManager.getConnection().prepareStatement("update  post set title = '"+postTitle+"', content = '"+postBody+"' where blogId = '"+b.getBlogId()+"' )");  
 		            pst.executeUpdate(); 
@@ -172,8 +172,9 @@ public class PostCreate {
 		            pst.executeUpdate();
 		            pst.close();
 		            
-		            b.setNewPost(true);
-	        	}*/
+		            b.setNewPost(false);
+		            
+	        	}
 	            //status = rs.next();
 	        } catch (SQLException sqlE) {  
 	        	
