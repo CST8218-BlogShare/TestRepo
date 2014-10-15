@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
   
 
 import com.amzi.dao.Blog;
+import com.amzi.dao.Post;
   
 public class BlogCreateServlet extends HttpServlet{  
   
@@ -21,6 +22,7 @@ public class BlogCreateServlet extends HttpServlet{
 	 public void doPost(HttpServletRequest request, HttpServletResponse response){
 		 
 		 Blog b = null;
+		 Post p = null;
 		 PrintWriter out = null;
 		 int userId;
 		 
@@ -40,7 +42,8 @@ public class BlogCreateServlet extends HttpServlet{
 		String postBody=request.getParameter("postBody");
 
 		
-		b = new Blog(blogTitle, postTitle, postBody);
+		b = new Blog(blogTitle);
+		p = new Post(postTitle,postBody);
 		
 		try{
 		
@@ -55,28 +58,29 @@ public class BlogCreateServlet extends HttpServlet{
 		 
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */
-		 if(b.insertBlogInDatabase(userId)){
+		
+		 if(b.insertBlogInDatabase(userId) && p.insertPostInDatabase(userId, b)){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 
 			 /*Adding the newly created blog object to the ServletContext object, 
 			   allowing it and it's data members to be retrieved within Blog.jsp*/
 			 
-			 getServletContext().setAttribute("currentBlog", b);
-			 userSession.setAttribute("blogId", b.getBlogId());
+			 userSession.setAttribute("currentBlog", b);
+			 userSession.setAttribute("blogId", b.getBlogId());//may not need to re-add
 			 
 			 //Get the current users bloglist from Context
 			 //Add the new blog to the list and load it back into the context
-			 ArrayList<String> userBlogList =(ArrayList<String>) getServletContext().getAttribute("userBlogList");
+			 ArrayList<String> userBlogList = (ArrayList<String>) userSession.getAttribute("userBlogList");
 			
 			 if(userBlogList != null){
 				 userBlogList.add(b.getBlogTitle());
-				 getServletContext().setAttribute("userBlogList", userBlogList); 
+				 //userSession.setAttribute("userBlogList", userBlogList);
+				 	//Adding userSession back into the session is uneeded as userBlogList has the same reference id as the object stored in the userSession.
 			 }
+		 
 			 
 			
-			 
-			 
 			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 

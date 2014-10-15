@@ -12,11 +12,15 @@
 <!--table to hold pages content -->
 
 <%
-	Blog b = (Blog) getServletContext().getAttribute("currentBlog");
-try{
-	boolean isEditMode = b.getEditMode();
-	int toEdit = b.getToEdit();
-}catch(Exception e){}
+	final int firstPostIndex = 0;
+	Blog b = (Blog) session.getAttribute("currentBlog");
+
+	try{
+		boolean isEditMode = b.getEditMode();
+		int toEdit = b.getToEdit();
+	}catch(Exception e){
+		
+	}
 
 %>
 
@@ -35,7 +39,7 @@ try{
 
 		<!-- first post -->
 		<tr>
-			<td><label> <%= b.getBlogPostTitle() %> </label></td>
+			<td><label> <%= b.getPostTitleAt(firstPostIndex) %> </label></td>
 		</tr>
 
 		<!-- creating space -->
@@ -45,9 +49,9 @@ try{
 
 
 		<tr>
-			<td><textarea NAME="postBodyUn" READONLY="readonly" WRAP=soft
-					COLS=80 ROWS=10><%= b.getBlogPostBody() %></textarea> <br>
-				<br></td>
+			<td style="background:white; text-align:left;">	
+					<p title="Content Of Post - Owned by Author Of Post" style="margin:5%"><%= b.getPostBodyAt(firstPostIndex) %></p>
+			</td>
 		</tr>
 
 		<!-- creating space -->
@@ -64,24 +68,21 @@ try{
 				<%
 					if( b.getEditMode() == false){
 				%>
-				<input type=text name=postTitle maxlength=100/>	
+						<input type=text name=postTitle maxlength=100/>	
 				
-				<p>New Post Content Below</p> 
-				<textarea NAME="postBody" WRAP=soft
-					COLS=80 ROWS=10>
-				</textarea>
+						<p>New Post Content Below</p> 
+						
+						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>
+						</textarea>
 				<%
 					}else if(b.getEditMode() == true){
 				%>
-				<input type=text name=postTitle maxlength=100 value="<%=b.getPostTitleAt(b.getToEdit()) %>"/>
+						<input type=text name=postTitle maxlength=100 value="<%=b.getPostTitleAt(b.getToEdit()) %>"/>
 				
-				<p>New Post Content Below</p> 
-				<textarea NAME="postBody" WRAP=soft
-					COLS=80 ROWS=10>
-					<%=
-					b.getPostBodyAt(b.getToEdit())
-					%>
-				</textarea>
+						<p>New Post Content Below</p> 
+						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>
+							<%=b.getPostBodyAt(b.getToEdit())%>
+						</textarea>
 				<%
 					}
 				%>

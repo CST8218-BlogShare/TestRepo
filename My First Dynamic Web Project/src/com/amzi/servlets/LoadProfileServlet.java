@@ -30,7 +30,7 @@ public class LoadProfileServlet extends HttpServlet {
 				
 		ArrayList<String> userBlogList = u.getUserBlogs(u.getUserId());
 		
-		getServletContext().setAttribute("userBlogList", userBlogList);
+		userSession.setAttribute("userBlogList", userBlogList);
 		
 		try {
 			request.getRequestDispatcher("Profile.jsp").forward(request, response); 

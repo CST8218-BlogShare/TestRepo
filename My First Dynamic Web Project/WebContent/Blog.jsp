@@ -28,17 +28,12 @@
 		*/
 		
 		User u = (User) session.getAttribute("currentUser");
-		Blog b = (Blog) getServletContext().getAttribute("currentBlog");
+		Blog b = (Blog) session.getAttribute("currentBlog");
 			
-	 	/*
-	 	  The function buildBlog is called in order to retrieve the author of blog and all
-	 	  posts within the blog other than the first post created during blogCreation. 
-	 	 
-	 	*/
-	 	
-	 	b.buildBlog(u.getUserId());
-
-	 %>
+	 	if(b.getAuthor() == null){
+	 		b.setAuthor(u.getUserId());
+	 	}
+   %>
 		
 		<!-- navigation bar -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
@@ -91,50 +86,17 @@
 					</td>
 				</tr>
 				
-				
-				<!-- first post belonging to author of the blog, 
-					
-					This post is kept separate from the loop below that is dedicated to
-					creating additional posts, since a different title is used on the content. 
-					
-					Could be changed once permissions are implemented since it would 
-					be possible to dynamically retrieve the author of each post. Might happen, might not.
-					 -->
-				<tr>
-						<td>
-							<p title="Post Title - Owned By Author Of Blog "> <%= b.getBlogPostTitle() %> </p>
-						</td>
-						<td>
-							<a href="BlogEdit.jsp"><img title="Read Only Element - User Cannot Edit" src="images/read.jpg" alt="Read Only"></a> 
-						</td>
-				</tr>
-				
-				<tr>
-						<td style="background:white; text-align:left;">								
-							<p title="Content Of Post - Owned By Author Of Blog" style="margin:5%"><%= b.getBlogPostBody() %></p> 
-						</td>
-				</tr>
-				
-				<!-- creating space -->
-				<tr>
-					<td>
-						<br>
-					</td>
-				</tr> 
-				
 	
 	
-		<!-- Displaying additional posts, either created by the author or by another user -->
+		<!-- Displaying posts, either created by the author or by another user -->
 		<%
 		
-		if(b.getNewPost() == true){
-			int i;
 			//i is started at 1 in order to skip first post, which is already on page.
-			for(i = 1 ; i < b.getPostCount(); ++i){
+			for(int i = 0 ; i < b.getPostCount(); ++i){
 			
 			//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
 		 	
-			 %>
+		 %>
 			 
 			 <tr>
 				<td>
@@ -142,7 +104,7 @@
 				</td>
 				
 				<td>
-					<a href="PostCreate.jsp"><%b.setEditMode(true, i); %><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
+					<a href="PostCreate.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
 				</td>
 			</tr>
 					
@@ -160,10 +122,8 @@
 					</td>
 				</tr> 
 			 
-			 <%
+		<%
 			 }
-			 b.setNewPost(false);
-		  }
 			
 
 		%>
@@ -186,4 +146,37 @@
 		</form>
 		
 	<body>
+	
+	
+	<!-- first post belonging to author of the blog, 
+					
+					This post is kept separate from the loop below that is dedicated to
+					creating additional posts, since a different title is used on the content. 
+					
+					Could be changed once permissions are implemented since it would 
+					be possible to dynamically retrieve the author of each post. Might happen, might not.
+					 
+				<tr>
+						<td>
+							<p title="Post Title - Owned By Author Of Blog ">  b.getBlogPostTitle()  </p>
+						</td>
+						<td>
+							<a href="BlogEdit.jsp"><img title="Read Only Element - User Cannot Edit" src="images/read.jpg" alt="Read Only"></a> 
+						</td>
+				</tr>
+				
+				<tr>
+						<td style="background:white; text-align:left;">								
+							<p title="Content Of Post - Owned By Author Of Blog" style="margin:5%"> b.getBlogPostBody() </p> 
+						</td>
+				</tr>
+				
+				<!-- creating space 
+				<tr>
+					<td>
+						<br>
+					</td>
+				</tr> -->
+				
+	
 </html>
