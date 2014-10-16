@@ -74,7 +74,7 @@ public class BlogCreateServlet extends HttpServlet{
 			 ArrayList<String> userBlogList = (ArrayList<String>) userSession.getAttribute("userBlogList");
 			
 			 if(userBlogList != null){
-				 userBlogList.add(b.getBlogTitle());
+				 userBlogList.add(0,b.getBlogTitle());
 				 //userSession.setAttribute("userBlogList", userBlogList);
 				 	//Adding userSession back into the session is uneeded as userBlogList has the same reference id as the object stored in the userSession.
 			 }

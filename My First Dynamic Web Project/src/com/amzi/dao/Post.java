@@ -127,7 +127,7 @@ public class Post {
 	        		pst = connectionManager.getConnection().prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
 	        		rs = pst.executeQuery();
 	        		
-	        		//if a match with the post to be created is not found.
+	        		//if the result set is empty, meaning that a match with the title of the post to be created is not found.
 	        		if(rs.next() == false){
 	        			//closing the connection to prepare for the next prepared statement.
 	        			rs.close();
@@ -155,8 +155,6 @@ public class Post {
 			            b.addPost(postTitle,postBody);
 			            b.setPostCount(b.getPostCount()+1);
 	        		}
-		           
-		            // b.setIsBuilt(false);
 	        	//}
 		            
 		            

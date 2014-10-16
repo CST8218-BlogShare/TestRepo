@@ -5,8 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class User {
+public class User{
 
 	private int userId = -1;
 	private String username = null;
@@ -146,11 +147,11 @@ public class User {
         	
         	connectionManager = DbConnection.getInstance();
         	
-        	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u where b.blogid = ub.blogid and u.userid = ub.userid and u.userid =?");
+        	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u where b.blogid = ub.blogid and u.userid = ub.userid and u.userid =? order by b.creationDateTime desc");
         	pst.setString(1, Integer.toString(userId));
         	rs = pst.executeQuery();
         	
-        	if (rs.next()){
+        	if(rs.next()){
 
 	        	rs.beforeFirst();
 	        	userBlogs = new ArrayList<String>();
@@ -158,12 +159,14 @@ public class User {
 	        	while (rs.next()){	
 	        		userBlogs.add(rs.getString("title"));
 	        	}
+	        	    	
         	}
         	rs.close();
         	pst.close();
         	
         } catch (SQLException sqlE) {  
         	
+        	sqlE.printStackTrace();
         	connectionManager.closeConnection();
         	userBlogs = null;
         	
@@ -193,5 +196,5 @@ public class User {
         
         return userBlogs;  
         
-    }  
+    }
 }
