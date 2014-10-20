@@ -72,8 +72,7 @@
 				
 						<p>New Post Content Below</p> 
 						
-						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>
-						</textarea>
+						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea>
 				<%
 					}else if(b.getEditMode() == true){
 				%>

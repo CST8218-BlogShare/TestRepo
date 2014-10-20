@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.Blog;
 import com.amzi.dao.Post;
+import com.amzi.dao.PostEditPrivilege;
+import com.amzi.dao.User;
   
 public class BlogCreateServlet extends HttpServlet{  
   
@@ -23,19 +25,13 @@ public class BlogCreateServlet extends HttpServlet{
 		 
 		 Blog b = null;
 		 Post p = null;
-		 PrintWriter out = null;
-		 int userId;
+		 PostEditPrivilege pep = null;
+		 User u = null;
 		 
 		 //If a session has not been created, none will be created
 		 HttpSession userSession = request.getSession(false);
 		
 		 response.setContentType("text/html");
-		 try{
-			 out = response.getWriter();
-		 }catch(IOException ioE){
-			 ioE.printStackTrace();
-			 return;
-		 }
 		
 		String blogTitle=request.getParameter("blogTitle");
 		String postTitle=request.getParameter("postTitle");
@@ -44,22 +40,32 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		b = new Blog(blogTitle);
 		p = new Post(postTitle,postBody);
+		pep = new PostEditPrivilege();
 		
 		try{
 		
-			userId = (int) userSession.getAttribute("userId");
+			u = (User) userSession.getAttribute("currentUser");
 
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
+			//return;
+		}catch(IllegalStateException isE){
+			isE.printStackTrace();
+			//return;
+		}
+		
+		if(u == null){
+			System.out.println("Current user could not be retrieved from current session");
 			return;
 		}
+		
 		/*The function insertBlogInDatabase() is called to take the contents entered into the
 		 form within blogCreate held within Blog Object b, and insert this info into the database
 		 
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */
 		
-		 if(b.insertBlogInDatabase(userId) && p.insertPostInDatabase(userId, b)){
+		 if(b.insertBlogInDatabase(u.getUserId(), u.getUsername()) && p.insertPostInDatabase(u.getUserId(),u.getUsername(),b) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId()) ){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 
@@ -67,7 +73,8 @@ public class BlogCreateServlet extends HttpServlet{
 			   allowing it and it's data members to be retrieved within Blog.jsp*/
 			 
 			 userSession.setAttribute("currentBlog", b);
-			 userSession.setAttribute("blogId", b.getBlogId());//may not need to re-add
+			 
+			 //userSession.setAttribute("blogId", b.getBlogId());//may not need to re-add
 			 
 			 //Get the current users bloglist from Context
 			 //Add the new blog to the list and load it back into the context
@@ -75,13 +82,9 @@ public class BlogCreateServlet extends HttpServlet{
 			
 			 if(userBlogList != null){
 				 userBlogList.add(0,b.getBlogTitle());
-				 //userSession.setAttribute("userBlogList", userBlogList);
-				 	//Adding userSession back into the session is uneeded as userBlogList has the same reference id as the object stored in the userSession.
+				 //Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.
 			 }
 		 
-			 
-			
-			 //userSession.setAttribute("CreationDate", BlogCreate.creationDate);
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 
 			try {
@@ -96,8 +99,6 @@ public class BlogCreateServlet extends HttpServlet{
 
 		 }
 		 else{
-			 //getServletContext().setAttribute("errorCode", 1);
-			 //getServletContext().setAttribute("errorMessage", BlogCreate.errorMessege);
 			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
 		 
 			 try {
@@ -109,10 +110,6 @@ public class BlogCreateServlet extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		 }
-		
-		 if(out != null){
-		 	out.close();
 		 }
 	 }
 } 

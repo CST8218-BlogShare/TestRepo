@@ -44,7 +44,7 @@ CREATE TABLE Blog
     ( 
      BlogID           INT  NOT NULL , 
      Title            VARCHAR(100)  NOT NULL , 
-     CreationDateTime DATE  NOT NULL 
+     CreationDateTime DATETIME  NOT NULL 
     ) 
 ;
 
@@ -94,7 +94,7 @@ CREATE TABLE Post
      BlogID           INT  NOT NULL , 
      Title            VARCHAR(100)  NOT NULL , 
      Content          LONGTEXT  NOT NULL ,  -- LONGTEXT is equivalent to oracle's CLOB
-     CreationDateTime DATE  NOT NULL 
+     CreationDateTime DATETIME  NOT NULL 
     ) 
 ;
 
@@ -146,7 +146,7 @@ CREATE TABLE PostEdit
     ( 
      PostEditID        INT  NOT NULL , 
      PostID            INT , 
-     EditDateTime      DATE  NOT NULL , 
+     EditDateTime      DATETIME  NOT NULL , 
      ContentBeforeEdit LONGTEXT  NOT NULL -- LONGTEXT is equivalent to oracle's CLOB
     ) 
 ;

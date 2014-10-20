@@ -26,13 +26,7 @@
 			
 			Need to make null checks for these sessionState variables and throw appropriate exception.
 		*/
-		
-		User u = (User) session.getAttribute("currentUser");
 		Blog b = (Blog) session.getAttribute("currentBlog");
-			
-	 	if(b.getAuthor() == null){
-	 		b.setAuthor(u.getUserId());
-	 	}
    %>
 		
 		<!-- navigation bar -->
@@ -48,7 +42,7 @@
 					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
 				</tr>
 				<tr style="height:50%;">
-					<td><a href="Profile.jsp">Welcome <%= u.getUsername() %>!</a></td>
+					<td><a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
 					<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
 					<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
 					<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>
@@ -146,37 +140,4 @@
 		</form>
 		
 	<body>
-	
-	
-	<!-- first post belonging to author of the blog, 
-					
-					This post is kept separate from the loop below that is dedicated to
-					creating additional posts, since a different title is used on the content. 
-					
-					Could be changed once permissions are implemented since it would 
-					be possible to dynamically retrieve the author of each post. Might happen, might not.
-					 
-				<tr>
-						<td>
-							<p title="Post Title - Owned By Author Of Blog ">  b.getBlogPostTitle()  </p>
-						</td>
-						<td>
-							<a href="BlogEdit.jsp"><img title="Read Only Element - User Cannot Edit" src="images/read.jpg" alt="Read Only"></a> 
-						</td>
-				</tr>
-				
-				<tr>
-						<td style="background:white; text-align:left;">								
-							<p title="Content Of Post - Owned By Author Of Blog" style="margin:5%"> b.getBlogPostBody() </p> 
-						</td>
-				</tr>
-				
-				<!-- creating space 
-				<tr>
-					<td>
-						<br>
-					</td>
-				</tr> -->
-				
-	
 </html>

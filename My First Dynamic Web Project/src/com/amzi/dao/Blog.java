@@ -15,6 +15,7 @@ public class Blog {
 	private String blogTitle = null;
     private ArrayList<String> postTitleList = new ArrayList<String>();
 	private ArrayList<String> postBodyList = new ArrayList<String>();
+	private ArrayList<Post> postList = new ArrayList<Post>();
 	
 	private boolean isEditableMode = false;
 	private int toEdit = 0;
@@ -29,8 +30,6 @@ public class Blog {
 		Exception blogCreateError = new Exception();
 		
 		blogTitle = blogTitle.trim();
-    	//blogPostTitle = blogPostTitle.trim();
-    	//blogPostBody = blogPostBody.trim();
     	
     	try{
 	    	if(blogTitle.equals("")){
@@ -87,7 +86,7 @@ public class Blog {
 		return postBodyList.get(i);
 	}
 	
-	public boolean setAuthor(int userId) {          
+	/*public boolean setAuthor(int userId) {          
         
     	boolean status = true;  
         PreparedStatement pst = null; 
@@ -98,14 +97,14 @@ public class Blog {
         	
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
-        	
+      	
         	pst = connectionManager.getConnection().prepareStatement("select username from user where userid = '"+userId+"' ");
         	rs = pst.executeQuery();
         	rs.first();
         	this.author = rs.getString("username");
         	rs.close();
         	pst.close();
-        	      	
+        	
         } catch (SQLException sqlE) {  
         	
         	connectionManager.closeConnection();
@@ -133,7 +132,7 @@ public class Blog {
             }  
         }  
         return status;  
-    }
+    }*/
 	
 	public String getAuthor(){
 		return author;
@@ -143,9 +142,13 @@ public class Blog {
 	    	postTitleList.add(postTitle);
 	    	postBodyList.add(postBody);
 
-	    }
+	 }
+	 
+	 public void addPost(Post p){
+		 postList.add(p);
+	 }
 	
-    public boolean insertBlogInDatabase(int userId) {          
+    public boolean insertBlogInDatabase(int userId, String username) {          
 	
         PreparedStatement pst = null; 
         ResultSet rs = null;
@@ -159,15 +162,16 @@ public class Blog {
         */
         
         if(this.blogTitle == null){
+        	System.out.println("The title of the blog object in use, has not been initialized");
         	return false;
         }
         
-       /* if(userId == -1 ){
+        if(userId == -1){
+        	System.out.println("The userId to be assoicated with this blog, has not been initialized");
         	return false;
-        }*/
+        }
         
         try {  
-        	
         	
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
@@ -179,18 +183,11 @@ public class Blog {
         	 *  
         	 *insert blog title and creation date into blog table
 			  select blogid from blog table where title matches blogTitle
-			  insert blogid and userid into user_blog table
-			  
-			  
-			  taken out atm.....
-			  insert post title, blogid, content, creation date into post table
-			  select postid from post table where blogid and title are matched
-			  insert postid and user id into user_post
-			  
+			  insert blogid and userid into user_blog table			  
         	 */
         	
-        	//insert blog title and creation date into blog table
-            pst = connectionManager.getConnection().prepareStatement("insert into blog values( 0, '"+blogTitle+"', curdate() )");  
+        	//insert blog title and creation date into blog table -- The SQL function now(), retrieves the current dateTime value.
+            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, '"+blogTitle+"', now() )");  
             pst.executeUpdate(); 
             //closing the connection to prepare for the next prepared statement.
             pst.close();
@@ -202,12 +199,13 @@ public class Blog {
             this.blogId = rs.getInt("blogId");
             rs.close();
             pst.close();
-            
-            
+             
             //insert blogid and userid into user_blog table
             pst = connectionManager.getConnection().prepareStatement("insert into user_blog values('"+userId+"', '"+blogId+"')");
             pst.executeUpdate();
             pst.close();
+            
+            this.author = username;
          
         } catch (SQLException sqlE) {  
         	
@@ -246,23 +244,47 @@ public class Blog {
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
+        int userId = -1;
         
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
-        try { 	
+        try { 
+        	
+        	/*
+    	 	algorithm to retrieve author of blog, whether user is logged in or using searchBar as public user. 
+    	 	
+    	 	retrieve blogId from blog table based on the title value
+    		retrieve userId based on blogid value within the user_blog table 
+    		retrieve username from user table based on the retrieved value of userId
+    	*/
+        	this.blogTitle = blogTitle;
+        	
         	if(this.blogId == -1){
-        		
         		//get the blog's id with the title
-        		pst = connectionManager.getConnection().prepareStatement(" select blogid from blog where title = ?");
+        		pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = ?");
         		pst.setString(1, blogTitle);
             	rs = pst.executeQuery();
             	rs.first();
             	this.blogId = rs.getInt("blogid");
-            	this.blogTitle = blogTitle;
             	rs.close();
             	pst.close();
-        		
         	}
+        	
+        	//retrieve userId based on blogId value within user_blog table
+        	pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u where b.blogId = '"+blogId+"' AND b.blogId = ub.blogId AND u.userId = ub.userId");
+        	rs = pst.executeQuery();
+        	rs.first();
+        	userId = rs.getInt("userid");
+        	rs.close();
+        	pst.close();
+        	
+        	//retrieve username from user table based on the retrieved value of userId and assign value to blog's author data member.
+        	pst = connectionManager.getConnection().prepareStatement("select username from user where userId = '"+userId+"' ");
+        	rs = pst.executeQuery();
+        	rs.first();
+        	this.author = rs.getString("username");
+        	rs.close();
+        	pst.close();
         	
         	//get the blog's posts and their bodies from the database using the blogid
         	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
@@ -271,7 +293,6 @@ public class Blog {
         	postCount = rs.getRow();
         	rs.beforeFirst();
         	
-    
         	while(rs.next()){
         			postTitleList.add(rs.getString("title")); 
         			postBodyList.add(rs.getString("content"));
