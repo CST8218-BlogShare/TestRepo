@@ -7,15 +7,12 @@ import java.util.ArrayList;
 
 public class Blog { 
 	
-	//private String errorMessage = null;
-	
 	private int blogId = -1;
 	private int postCount = 0;
-	private String author = null; 
-	private String blogTitle = null;
-    private ArrayList<String> postTitleList = new ArrayList<String>();
-	private ArrayList<String> postBodyList = new ArrayList<String>();
+	private String author = ""; 
+	private String blogTitle = "";
 	private ArrayList<Post> postList = new ArrayList<Post>();
+	private boolean isPublic = false;
 	
 	private boolean isEditableMode = false;
 	private int toEdit = 0;
@@ -26,23 +23,33 @@ public class Blog {
 		
 	}
 	
-	public Blog(String blogTitle){
+	public Blog(String blogTitle, String username, Boolean isPublic){
 		Exception blogCreateError = new Exception();
 		
 		blogTitle = blogTitle.trim();
+		username = username.trim();
     	
     	try{
 	    	if(blogTitle.equals("")){
-	    		System.out.println("Blog Has no tittle, throwing java.lang.Exception.");
+	    		System.out.println("Blog does not have a title, throwing blogCreateError.");
+	    		//errorMessage = "Error with Post. No Post Title was not entered";
+	    		throw blogCreateError;
+	    	}
+	   
+	    	if(username.equals("")){
+	    		System.out.println("Username contains no characters, throwing blogCreateError.");
 	    		//errorMessage = "Error with Post. No Post Title was not entered";
 	    		throw blogCreateError;
 	    	}
 	    	
-    	}catch(Exception e){
+	    }catch(Exception e){
     		e.printStackTrace();
+    		return;
     	}
     	
     	this.blogTitle = blogTitle;
+    	this.author = username;
+    	this.isPublic = isPublic;
 	}
 	
 	public boolean setEditMode(boolean mode , int toEditP) {
@@ -54,7 +61,7 @@ public class Blog {
 		return isEditableMode;
 	}
 	
-	public void setPostCount(int count){
+	protected void setPostCount(int count){
 		this.postCount = count;
 	}
 	
@@ -78,77 +85,31 @@ public class Blog {
 		return blogTitle;
 	}
 	
-	public String getPostTitleAt(int i){
-		return postTitleList.get(i);
+	public Post getPostAt(int i){
+		return postList.get(i);
 	}
 	
-	public String getPostBodyAt(int i){
-		return postBodyList.get(i);
-	}
-	
-	/*public boolean setAuthor(int userId) {          
-        
-    	boolean status = true;  
-        PreparedStatement pst = null; 
-        ResultSet rs = null;
-        DbConnection connectionManager = null;
-        
-        try {  
-        	
-        	//gaining access to the shared database connection.
-        	connectionManager = DbConnection.getInstance();
-      	
-        	pst = connectionManager.getConnection().prepareStatement("select username from user where userid = '"+userId+"' ");
-        	rs = pst.executeQuery();
-        	rs.first();
-        	this.author = rs.getString("username");
-        	rs.close();
-        	pst.close();
-        	
-        } catch (SQLException sqlE) {  
-        	
-        	connectionManager.closeConnection();
-        	sqlE.printStackTrace();
-        	status = false;
-        }catch(Exception e){
-        	 e.printStackTrace(); //may not be necessary
-             status = false;
-        }
-         finally { 
-        	//we now have to manage closing the connection a different way...at logout...
-            if (pst != null) {  
-                try {  
-                    pst.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-            if (rs != null) {  
-                try {  
-                    rs.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-        }  
-        return status;  
-    }*/
+	protected void setAuthor(String author) {          
+        this.author = author;
+    }
 	
 	public String getAuthor(){
 		return author;
 	}
 	
-	 public void addPost(String postTitle, String postBody){
-	    	postTitleList.add(postTitle);
-	    	postBodyList.add(postBody);
-
-	 }
-	 
+	public boolean getIsPublic() {
+		return isPublic;
+	}
+	
+	protected void setIsPublic(boolean b){
+		this.isPublic = b;
+	}
+		 
 	 public void addPost(Post p){
 		 postList.add(p);
 	 }
 	
-    public boolean insertBlogInDatabase(int userId, String username) {          
+    public boolean insertBlogInDatabase(int userId) {          
 	
         PreparedStatement pst = null; 
         ResultSet rs = null;
@@ -205,8 +166,6 @@ public class Blog {
             pst.executeUpdate();
             pst.close();
             
-            this.author = username;
-         
         } catch (SQLException sqlE) {  
         	
         	
@@ -245,6 +204,8 @@ public class Blog {
         ResultSet rs = null;
         DbConnection connectionManager = null;
         int userId = -1;
+        
+        //need to instantiate postId,blogId,title,content,creationDate,author
         
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
@@ -287,15 +248,29 @@ public class Blog {
         	pst.close();
         	
         	//get the blog's posts and their bodies from the database using the blogid
-        	pst = connectionManager.getConnection().prepareStatement("select title, content from post where blogid = '"+blogId+"' ");
+        	pst = connectionManager.getConnection().prepareStatement("select postId, title, content from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
         	rs.last();
         	postCount = rs.getRow();
         	rs.beforeFirst();
         	
         	while(rs.next()){
-        			postTitleList.add(rs.getString("title")); 
-        			postBodyList.add(rs.getString("content"));
+        			Post p = new Post();
+        			p.setBlogId(blogId);
+        			p.setPostId(rs.getInt("postId"));
+        			p.setPostTitle(rs.getString("title"));
+        			p.setPostBody(rs.getString("content"));
+        			//p.setCreationDateTime(rs.getString("creationDateTime"));
+        			
+        			//selecting the author of the current post, by checking the contents of the user_post table to retireve, the userId associated with the post, and then selecting the username based on that userId. 
+        			PreparedStatement authorPst = connectionManager.getConnection().prepareStatement("select username from user where userId = (select u.userId from user u, post p, user_post up where p.postId = '"+p.getPostId()+"' AND u.userId = up.userId AND p.postId = up.postId)");
+        			ResultSet authorRs = authorPst.executeQuery();
+        			authorRs.first();
+        			p.setAuthor(authorRs.getString("username")); 
+        			authorPst.close();
+        			authorRs.close();
+        			
+        			addPost(p);
         	}
         	rs.close();
         	pst.close();

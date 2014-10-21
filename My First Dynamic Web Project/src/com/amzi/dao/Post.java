@@ -6,66 +6,111 @@ import java.sql.ResultSet;
 import com.amzi.dao.Blog;
 
 public class Post {
-	public static String creationDate = null;
-	private String errorMessage = null;
 	private int blogId = -1;
 	private int postId = -1;
 	private String author = null;
 	private String postTitle = null;
 	private String postBody = null;
+	private boolean isPublic = false;
+	//private String creationDateTime = null;
 	
 	public Post() {
 		
 	}
 
-	public Post(String postTitle, String postBody) {
+	public Post(String postTitle, String postBody, String username, boolean isPublic) {
 		Exception postCreateError = new Exception();
 		try {
 			postTitle = postTitle.trim();
 			postBody = postBody.trim();
+			username = username.trim();
 			
 			if (postTitle.equals("")) {
-				System.out.println("Post has no tittle, throwing java.lang.Exception.");
+				System.out.println("Post has no tittle, throwing postCreateError.");
 				throw postCreateError;
 			}
 			
 			if (postBody.equals("")) {
-				System.out.println("Post has no body, throwing java.lang.Exception.");
+				System.out.println("Post has no body,  throwing postCreateError.");
+				throw postCreateError;
+			}
+			
+			if (username.equals("")) {
+				System.out.println("Username contains no characters,  throwing postCreateError.");
 				throw postCreateError;
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return;
 		}
 		this.postTitle = postTitle;
 		this.postBody = postBody;
+		this.author = username;
+		this.isPublic = isPublic;
 	}
 
 	public int getBlogId() {
 		return blogId;
 	}
 	
+	protected void setBlogId(int blogId) {
+		this.blogId = blogId;;
+	}
+	
 	public int getPostId() {
 		return postId;
 	}
-
-	public String getErrorMessage() {
-		return errorMessage;
+	
+	protected void setPostId(int postId) {
+		this.postId = postId;
 	}
 
 	public String getAuthor() {
 		return author;
 	}
+	
+	protected void setAuthor(String author){
+		this.author = author;
+	}
 
 	public String getPostTitle() {
 		return postTitle;
+	}
+	
+	protected void setPostTitle(String postTitle){
+		this.postTitle = postTitle;
 	}
 
 	public String getPostBody() {
 		return postBody;
 	}
 	
-	 public boolean insertPostInDatabase(int userId, String username, Blog b) {          
+	protected void setPostBody(String postBody){
+		this.postBody = postBody;
+	}
+	
+	public boolean getIsPublic() {
+		return isPublic;
+	}
+	
+	protected void setIsPublic(boolean b){
+		this.isPublic = b;
+	}
+	
+	
+	
+	/*public String getCreationDateTime() {
+		return creationDateTime;
+	}
+	
+	protected void setCreationDateTime(String creationDateTime){
+		this.creationDateTime = creationDateTime;
+	}*/
+	
+	
+	
+	 public boolean insertPostInDatabase(int userId, Blog b) {          
 		 
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
@@ -148,6 +193,7 @@ public class Post {
 			        rs = pst.executeQuery();
 			        rs.first();
 			        this.postId = rs.getInt("postId");
+			        //this.creationDateTime = rs.getString("creationDateTime");
 			        rs.close();
 			        pst.close();
 			            
@@ -156,9 +202,8 @@ public class Post {
 			        pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
 			        pst.executeUpdate();
 			        pst.close();
-			        
-			        this.author = username;
-		        	
+			        		        	
+			        //b.addPost(postTitle, postBody);
 			        b.addPost(this);
 			        b.setPostCount(b.getPostCount()+1);
 	        	//}

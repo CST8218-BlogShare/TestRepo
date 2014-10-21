@@ -21,6 +21,8 @@ if(getServletContext().getAttribute("errorMessage") == null){
 	getServletContext().setAttribute("errorMessage","");	
 }
 
+
+// the username is used within the navigation bar of the website. 
 if(session.getAttribute("username") == null){
 	session.setAttribute("username","");
 }
@@ -31,7 +33,7 @@ if(session.getAttribute("username") == null){
 
 	<body>
 
-		<!-- navigation bar -->
+		<!-- navigation bar possibly implement some html5 tags here <header> -->
 		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
 			<table style="width:90%; margin-right:auto; margin-left:auto;">

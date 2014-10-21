@@ -19,22 +19,21 @@ public class PostCreateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
-		String postTitle = "";
-		String postBody = "";
 		User u = null;
 		Blog b = null; 
 		Post p = null;
 		PostEditPrivilege pep = null;
 		HttpSession userSession = null;
+		String postTitle = "";
+		String postBody = "";
+		boolean postIsPublic = false;
+		
+		
+		
 		
 		// If a session has not been created, none will be created
 		userSession = request.getSession(false);
 		response.setContentType("text/html");
-		
-		postTitle = request.getParameter("postTitle");
-		postBody = request.getParameter("postBody");
-		p = new Post(postTitle, postBody);
-		pep = new PostEditPrivilege();
 		
 		try{
 		
@@ -49,7 +48,17 @@ public class PostCreateServlet extends HttpServlet {
 			return;
 		}
 		
-		 if(p.insertPostInDatabase(u.getUserId(), u.getUsername(), b) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
+		postTitle = request.getParameter("postTitle");
+		postBody = request.getParameter("postBody");
+		
+		if(request.getParameter("postEditableCheckBox").contentEquals("on")){
+			postIsPublic = true;
+		}
+		
+		p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
+		pep = new PostEditPrivilege();
+		
+		 if(p.insertPostInDatabase(u.getUserId(), b) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
 			
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 

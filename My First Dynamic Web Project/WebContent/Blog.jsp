@@ -1,10 +1,10 @@
 <%@ page language="java" 
 		 contentType="text/html; charset=ISO-8859-1"  
     	 pageEncoding="ISO-8859-1"
-    	 import="com.amzi.dao.Blog, com.amzi.dao.User"
+    	 import="com.amzi.dao.Blog, com.amzi.dao.User, com.amzi.dao.Post, com.amzi.dao.DbConnection, java.sql.PreparedStatement, java.sql.ResultSet, java.sql.SQLException "
     %>  
 <html>
-<!-- The page used to display all Blogs created within BLOGSHARE
+<!--  The page used to display all Blogs created within BLOGSHARE
 	
 	Only a single blog is shown at a time,
 	The content of the blog is retrieved from the Blog object created 
@@ -27,6 +27,8 @@
 			Need to make null checks for these sessionState variables and throw appropriate exception.
 		*/
 		Blog b = (Blog) session.getAttribute("currentBlog");
+		User u = (User) session.getAttribute("currentUser");
+					
    %>
 		
 		<!-- navigation bar -->
@@ -84,27 +86,66 @@
 	
 		<!-- Displaying posts, either created by the author or by another user -->
 		<%
-		
-			//i is started at 1 in order to skip first post, which is already on page.
-			for(int i = 0 ; i < b.getPostCount(); ++i){
 			
 			//adding any additional posts to the page using the contents retrieved from the post table matching the current blogId.
-		 	
+	 	
+			for(int i = 0 ; i < b.getPostCount(); ++i){
+			
+				Post p = b.getPostAt(i);
+				Boolean editEnabled = true;
+				
+				//If the post is not public and the current user is not the author of the post.
+				if( !p.getIsPublic() && !p.getAuthor().equals(u.getUsername())){
+					
+					
+					//An attempt is made to match current userId with the userId that is associated to the privilegeId of this post. 
+					PreparedStatement pst = null;
+					ResultSet rs = null;
+					DbConnection connectionManager = DbConnection.getInstance(); 					
+					
+					try{
+						pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, posteditprivilege pep, user_posteditprivilege u_pep, post_posteditprivilege p_pep"
+																				+ " where u.userid = u_pep.userid"
+																				+ " and u_pep.postEditPrivilegeId = pep.postEditPrivilegeId"
+																				+ " and pep.postEditPrivilegeId = p_pep.postEditPrivilegeId"
+																				+ " and p_pep.postid = p.postid"
+																				+ " and u.userid = '"+u.getUserId()+"' ");
+						rs = pst.executeQuery();
+						rs.first();
+						
+						//if the user does not have a corresponding entry for the post within postEditPrivilege
+						if(u.getUserId() != rs.getInt("userId")){
+							editEnabled = false;	
+						}
+					}catch(SQLException sqlE){
+						System.out.println("An exception was thrown while attempting to associate the current user with the edit privileges granted granted for this post.");
+						sqlE.printStackTrace();
+					}
+				}
+				
 		 %>
+			 
+			 
 			 
 			 <tr>
 				<td>
-					<p title="Title Of Post - Owned by Author Of Post"> <%= b.getPostTitleAt(i) %> </p>
+					<p title="Title Of Post - Created by <%= p.getAuthor() %> "> <%= p.getPostTitle() %> </p>
 				</td>
 				
 				<td>
-					<a href="PostCreate.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
+					<% if(editEnabled == true){ %>
+					<a href="PostCreate.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg"  alt="Click here to edit."> </a>
+					<% } %>
+					
+					<% if(editEnabled == false){ %>
+					<a href="PostCreate.jsp"><img title="Edit Disabled For Element - User Can View" src="images/read.jpg"  alt="Click here to view."> </a>
+					<% } %>	
 				</td>
 			</tr>
 					
 			<tr>
 				<td style="background:white; text-align:left;">	
-					<p title="Content Of Post - Owned by Author Of Post" style="margin:5%"><%= b.getPostBodyAt(i) %></p>
+					<p title="Content Of Post - Created by <%= p.getAuthor() %>" style="margin:5%"><%= p.getPostBody() %></p>
 				</td>
 			</tr>	
 			 

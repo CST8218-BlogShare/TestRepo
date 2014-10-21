@@ -27,20 +27,16 @@ public class BlogCreateServlet extends HttpServlet{
 		 Post p = null;
 		 PostEditPrivilege pep = null;
 		 User u = null;
+		 String blogTitle = "";
+		 String postTitle = "";
+		 String postBody = "";
+		 Boolean blogIsPublic = false;
+		 
 		 
 		 //If a session has not been created, none will be created
 		 HttpSession userSession = request.getSession(false);
 		
 		 response.setContentType("text/html");
-		
-		String blogTitle=request.getParameter("blogTitle");
-		String postTitle=request.getParameter("postTitle");
-		String postBody=request.getParameter("postBody");
-
-		
-		b = new Blog(blogTitle);
-		p = new Post(postTitle,postBody);
-		pep = new PostEditPrivilege();
 		
 		try{
 		
@@ -59,13 +55,26 @@ public class BlogCreateServlet extends HttpServlet{
 			return;
 		}
 		
+		blogTitle=request.getParameter("blogTitle");
+		
+		if(request.getParameter("blogEditableCheckBox").contentEquals("on")){
+			blogIsPublic = true;
+		}
+		
+		postTitle=request.getParameter("postTitle");
+	    postBody=request.getParameter("postBody");
+		
+		b = new Blog(blogTitle,u.getUsername(),blogIsPublic);
+		p = new Post(postTitle,postBody, u.getUsername(),false);
+		pep = new PostEditPrivilege();
+		
 		/*The function insertBlogInDatabase() is called to take the contents entered into the
 		 form within blogCreate held within Blog Object b, and insert this info into the database
 		 
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */
 		
-		 if(b.insertBlogInDatabase(u.getUserId(), u.getUsername()) && p.insertPostInDatabase(u.getUserId(),u.getUsername(),b) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId()) ){
+		 if(b.insertBlogInDatabase(u.getUserId()) && p.insertPostInDatabase(u.getUserId(),b) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId()) ){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 

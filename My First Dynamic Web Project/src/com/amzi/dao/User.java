@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class User{
 
 	private int userId = -1;
-	private String username = null;
-	private String password = null;
-	private String dateRegistered = null;
+	private String username = "";
+	private String password = "";
+	private String dateRegistered = "";
 	
 	public User() {
 		// TODO Auto-generated constructor stub
