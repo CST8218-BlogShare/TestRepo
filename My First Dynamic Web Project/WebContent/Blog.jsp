@@ -32,7 +32,7 @@
    %>
 		
 		<!-- navigation bar -->
-		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
+		<header class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
 			<table style="width:90%; margin-right:auto; margin-left:auto;">
 				<tr style="height:50%;">
@@ -51,7 +51,7 @@
 				</tr>
 			</table>
 			<br>
-		</div>
+		</header>
 
 		<!--table to hold pages content -->
 		<table class="centered80W" style="margin-bottom:2%;">
@@ -124,8 +124,6 @@
 				}
 				
 		 %>
-			 
-			 
 			 
 			 <tr>
 				<td>
