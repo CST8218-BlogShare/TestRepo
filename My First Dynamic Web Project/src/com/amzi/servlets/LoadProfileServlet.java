@@ -24,9 +24,15 @@ public class LoadProfileServlet extends HttpServlet {
 		HttpSession userSession = request.getSession(false);
 		User u = (User) userSession.getAttribute("currentUser");
 
-		/*if (userSession == null) {
-			
-		}*/
+		if (u == null) {
+			try {
+				throw new Exception();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
 				
 		ArrayList<String> userBlogList = u.getUserBlogs(u.getUserId());
 		

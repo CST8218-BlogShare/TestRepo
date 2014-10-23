@@ -6,70 +6,115 @@ import java.sql.ResultSet;
 import com.amzi.dao.Blog;
 
 public class Post {
-	public static String creationDate = null;
-	private String errorMessage = null;
 	private int blogId = -1;
 	private int postId = -1;
 	private String author = null;
 	private String postTitle = null;
 	private String postBody = null;
+	private boolean isPublic = false;
+	//private String creationDateTime = null;
 	
 	public Post() {
 		
 	}
 
-	public Post(String postTitle, String postBody) {
+	public Post(String postTitle, String postBody, String username, boolean isPublic) {
 		Exception postCreateError = new Exception();
 		try {
 			postTitle = postTitle.trim();
 			postBody = postBody.trim();
+			username = username.trim();
+			
 			if (postTitle.equals("")) {
-				System.out
-						.println("Post has no tittle, throwing java.lang.Exception.");
+				System.out.println("Post has no tittle, throwing postCreateError.");
 				throw postCreateError;
 			}
+			
 			if (postBody.equals("")) {
-				System.out
-						.println("Post has no body, throwing java.lang.Exception.");
+				System.out.println("Post has no body,  throwing postCreateError.");
 				throw postCreateError;
 			}
+			
+			if (username.equals("")) {
+				System.out.println("Username contains no characters,  throwing postCreateError.");
+				throw postCreateError;
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return;
 		}
 		this.postTitle = postTitle;
 		this.postBody = postBody;
+		this.author = username;
+		this.isPublic = isPublic;
 	}
 
 	public int getBlogId() {
 		return blogId;
 	}
 	
+	protected void setBlogId(int blogId) {
+		this.blogId = blogId;;
+	}
+	
 	public int getPostId() {
 		return postId;
 	}
-
-	public String getErrorMessage() {
-		return errorMessage;
+	
+	protected void setPostId(int postId) {
+		this.postId = postId;
 	}
 
 	public String getAuthor() {
 		return author;
 	}
+	
+	protected void setAuthor(String author){
+		this.author = author;
+	}
 
 	public String getPostTitle() {
 		return postTitle;
+	}
+	
+	protected void setPostTitle(String postTitle){
+		this.postTitle = postTitle;
 	}
 
 	public String getPostBody() {
 		return postBody;
 	}
 	
+	protected void setPostBody(String postBody){
+		this.postBody = postBody;
+	}
+	
+	public boolean getIsPublic() {
+		return isPublic;
+	}
+	
+	protected void setIsPublic(boolean b){
+		this.isPublic = b;
+	}
+	
+	
+	
+	/*public String getCreationDateTime() {
+		return creationDateTime;
+	}
+	
+	protected void setCreationDateTime(String creationDateTime){
+		this.creationDateTime = creationDateTime;
+	}*/
+	
+	
+	
 	 public boolean insertPostInDatabase(int userId, Blog b) {          
 		 
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
 	        DbConnection connectionManager = null;
-	        
 	        boolean status = true;  
 	       
 	        /*
@@ -78,21 +123,23 @@ public class Post {
 	        */
 	        
 	        if(this.postTitle == null){
-	        	try {
-					throw new Exception();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	        	System.out.println("The title of the post object in use, has not been initialized");
+	        	return false;
 	        }
 	        
 	        if(this.postBody == null){
-	        	try {
-					throw new Exception();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	        	System.out.println("The body of the post object in use, has not been initialized");
+				return false;
+	        }
+	        
+	        if(userId == -1){
+				System.out.println("The userId value that is to be related to this post, has not been initialized");
+				return false;
+	        }
+	        
+	        if(b == null){
+				System.out.println("The blog object that will be related to this post, has not been initialized");
+				return false;
 	        }
 	        
 	        try {  
@@ -100,24 +147,21 @@ public class Post {
 	        	
 	        	//gaining access to the shared database connection.
 	        	connectionManager = DbConnection.getInstance();
-	  
-	        	blogId = b.getBlogId();
-	        	
-	        	if(blogId == -1){
-	        		try {
-						throw new Exception();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	        	}
 	        	
 	        	/*
-	        	 *  
-	        	 *  
+	        	 * If the blog object b has been successfully initialized, 
+	        	 * the blogId object is guaranteed to be set to a value other than -1.
+	        	 */
+	        	
+	        	this.blogId = b.getBlogId();
+	        	
+	        	
+	        	/* 
 	        	 *Algorithm used below
 	        	 *  
-	        	 	*insert post title, blogid content, creation date into post table
+	        	 	select title from post table based on a match to the title and blogid of the post to be inserted.
+	        	 		if a match is found, do not insert this post into the database.  
+	        	 	insert post title, blogid content, creation date into post table
 				    select postid from post table where blogid and title is the same
 				    insert postid and user id into user_post
 	        	 */
@@ -127,34 +171,41 @@ public class Post {
 	        		pst = connectionManager.getConnection().prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
 	        		rs = pst.executeQuery();
 	        		
-	        		//if the result set is empty, meaning that a match with the title of the post to be created is not found.
-	        		if(rs.next() == false){
-	        			//closing the connection to prepare for the next prepared statement.
-	        			rs.close();
-		        		pst.close();
-		        		
-		        		//insert post title, blogid content, creation date into post table
-			            pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', curdate() )");  
-			            pst.executeUpdate();
-			            pst.close();
-			            
-			            //select postid from post table where blogid and title is the same
-			            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
-			            rs = pst.executeQuery();
-			            rs.first();
-			            this.postId = rs.getInt("postId");
-			            rs.close();
-			            pst.close();
-			            
-			            
-			            //insert postid and user id into user_post
-			            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
-			            pst.executeUpdate();
-			            pst.close();
-			           
-			            b.addPost(postTitle,postBody);
-			            b.setPostCount(b.getPostCount()+1);
+	        		//If there is an entry within the resultSet, then a post with an identical title already exists within the Blog.
+	        		if(rs.next() == true){
+	        			System.out.println("This post cannot be created.");
+	        			System.out.println("A post with the title " + postTitle  + " already exists within " + b.getBlogTitle());
+	        			//No need to close the ResultSet or PreparedStatement objects as close() is called within the finally clause.
+	        			return false;
 	        		}
+	        		
+	        		//closing the ResultSet and PreparedStatment objects, in order to prepare for the next database query.
+	        		rs.close();
+	        		pst.close();
+	        		
+	        		//insert post title, blogid content, creation date into post table
+			        pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', now() )");  
+			        pst.executeUpdate();
+			        pst.close();
+			            
+			        //select postid from post table where blogid and title is the same
+			        pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
+			        rs = pst.executeQuery();
+			        rs.first();
+			        this.postId = rs.getInt("postId");
+			        //this.creationDateTime = rs.getString("creationDateTime");
+			        rs.close();
+			        pst.close();
+			            
+			            
+			        //insert postid and user id into user_post
+			        pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
+			        pst.executeUpdate();
+			        pst.close();
+			        		        	
+			        //b.addPost(postTitle, postBody);
+			        b.addPost(this);
+			        b.setPostCount(b.getPostCount()+1);
 	        	//}
 		            
 		            
@@ -185,12 +236,9 @@ public class Post {
 	        	}*/
 	        } catch (SQLException sqlE) {  
 	        	
-	        	
 	        	connectionManager.closeConnection();
 	        	System.out.println("Post field missing, throwing SQLException");
 	        	sqlE.printStackTrace();
-	        	//errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
-	        	
 	        	status = false;
 	        }
 	         finally { 

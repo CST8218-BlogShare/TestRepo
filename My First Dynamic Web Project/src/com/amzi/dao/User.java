@@ -5,14 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class User{
 
 	private int userId = -1;
-	private String username = null;
-	private String password = null;
-	private String dateRegistered = null;
+	private String username = "";
+	private String password = "";
+	private String dateRegistered = "";
 	
 	public User() {
 		// TODO Auto-generated constructor stub
@@ -69,7 +68,7 @@ public class User{
 	       
 	    	newPass = newPass.trim();
 	        
-	    	if (userId < 0) {
+	    	if (userId == -1) {
 	        	System.out.println("Login class was not initialized before calling changePass().\n");
 	        	//errorMessege = "Error with password edit attempt. Login.userId is null.";
 	        	throw Error;

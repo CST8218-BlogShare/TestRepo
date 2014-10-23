@@ -18,7 +18,7 @@ public class GetBlogServlet extends HttpServlet {
 	//load the requested blog into the session and forward to blog.jsp
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		Blog b = null;
-		
+		String blogTitle = null;
 		HttpSession userSession = request.getSession(false);
 		
 		if(userSession == null){
@@ -26,10 +26,18 @@ public class GetBlogServlet extends HttpServlet {
 			return;
 		}
 		
+		blogTitle = request.getParameter("blogTitle");
+		
+		if(blogTitle == null){
+			return;
+		}
+		
 		b = (Blog) userSession.getAttribute("currentBlog");
 		
-		String blogTitle = request.getParameter("blogTitle");
-		
+		/*
+		 * If the currentBlog attribute stored within the session has not been initialized or the blog to be loaded is different 
+		 * from the currently stored blog, then a new blog is created and replaces the previous blog that was stored in the session.
+		 */
 		if(b == null || b.getBlogTitle().contentEquals(blogTitle) == false){
 			
 			b = new Blog();

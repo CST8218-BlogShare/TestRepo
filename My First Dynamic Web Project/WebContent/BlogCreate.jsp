@@ -70,19 +70,16 @@
 						<font size="5">
 							Enter Post Body<br>
 						</font>
-						<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea> <br> <br>
+						<textarea name="postBody" WRAP=soft COLS=80 ROWS=10></textarea> <br> <br>
 					</td>
 				</tr>
 		
 				<tr>
-					<td>
-						<div class="FillScreenTextCentered" style="margin-bottom:2%;">
-							<font size=4>
-								The title of your Blog<br>
-								and the title and content of your first Post<br> 
-								are editable only by you, the author of the Blog.<br>
-							</font> 
-						</div>
+					<td class="FillScreenTextCentered">
+						<font size=4>
+							The title of your Blog and the title and content of your first Post.<br> 
+							Are editable only by you, the author of the Blog.<br>
+						</font> 
 					<td>
 				<tr>
 				
@@ -91,9 +88,29 @@
 				<tr>
 					<td><br></td>
 				</tr>
-		
+				
 				<tr>
-					<td><input type="submit" class = button value="Create Blog">
+					<td class="FillScreenTextCentered">
+						<font size=4>
+							Additional posts may be made editable by any BlogShare visitor.<br>
+							By selecting the option below.<br>
+						</font>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<input type=checkbox name="blogEditableCheckBox"/><font>Allow Public Editing</font><p>
+					</td>
+				</tr>
+		
+				<!-- creating space -->
+				<tr>
+					<td><br></td>
+				</tr>
+				
+				<tr>
+					<td><input type="submit" class=button value="Create Blog">
 					<td></td>
 				</tr>
 		
@@ -103,7 +120,7 @@
 			<table style="width:80%;  margin-left:10%; margin-right:10%;">
 				<tr>
 					<td>
-						<input type="submit" class = button width="wrap_content" value="Cancel">
+						<input type="submit" class=button width="wrap_content" value="Cancel">
 					</td>
 				</tr>
 			</table>

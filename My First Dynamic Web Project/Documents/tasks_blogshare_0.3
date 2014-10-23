@@ -1,0 +1,49 @@
+things to do
+
+fix error checking on insertInto functions.
+implement error checking on sessionState variables as they are passed.
+
+
+implement postEditPrivilege class and insert into functionality - done
+
+implement postEditPrivilege functionality within webpage.
+
+implement database class.
+implement rollBack functionality during transactions...
+
+Can Jan do this stuff? 
+implement errorMessage creation for various pages.
+implement logout on profile page. 
+
+Can Vince do this??
+
+Implement connectivity to server the database and application is hosted on. 
+
+
+
+if retrieving the author of a blog
+
+if the currentuser is the author - can use authorid
+
+but what if the user is a public user
+	then I need to retrieve blogid based on the title
+	then userid based on blogid within user_blog
+	then username from user based on userid
+	
+	select u.userId as userId from blog b, user_blog ub, user u where
+	b.blogId = 1 AND
+	b.blogId = ub.blogId AND u.userId = ub.userId;
+
+NEED to modify build from title to retrieve author without depending on the user being logged in.
+
+selecting author of post based on postid
+
+select username from user
+where userId = 
+(select u.userId from user u, post p, user_post up
+where p.postId = 15 AND
+u.userId = up.userId AND
+p.postId = up.postId);
+
+	
+

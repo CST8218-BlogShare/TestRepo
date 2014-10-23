@@ -33,9 +33,8 @@ public class EditUserServlet extends HttpServlet {
         String newUsername = request.getParameter("newUsername");
 
         
-        if(Login.validate(name, pass)){   
+        if(Login.validate(name, pass) != null){   
         	if(userToEdit.changePass(newUsername, newPass)){   
-            	//userSession.setAttribute("currentUser",userToEdit);
                 RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
                 rd.forward(request,response);    
             }    

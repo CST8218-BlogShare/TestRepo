@@ -2,6 +2,7 @@ package com.amzi.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,42 +12,53 @@ import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.Blog;
 import com.amzi.dao.Post;
+import com.amzi.dao.PostEditPrivilege;
+import com.amzi.dao.User;
   
 public class PostCreateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
-		Post p = null;
-		PrintWriter out = null;
+		User u = null;
 		Blog b = null; 
-		int userId = -1;
+		Post p = null;
+		PostEditPrivilege pep = null;
+		HttpSession userSession = null;
+		String postTitle = "";
+		String postBody = "";
+		boolean postIsPublic = false;
+		
+		
+		
 		
 		// If a session has not been created, none will be created
-		HttpSession userSession = request.getSession(false);
+		userSession = request.getSession(false);
 		response.setContentType("text/html");
-		
-		
-		try {
-			out = response.getWriter();
-		} catch (IOException ioE) {
-			ioE.printStackTrace();
-			return;
-		}
-		String postTitle = request.getParameter("postTitle");
-		String postBody = request.getParameter("postBody");
-		p = new Post(postTitle, postBody);
 		
 		try{
 		
-			userId = (int) userSession.getAttribute("userId");
+			u = (User) userSession.getAttribute("currentUser");
 			b = (Blog) userSession.getAttribute("currentBlog");
-		
+			
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
 			return;
+		}catch(IllegalStateException isE){
+			isE.printStackTrace();
+			return;
 		}
 		
-		 if(p.insertPostInDatabase(userId, b)){
+		postTitle = request.getParameter("postTitle");
+		postBody = request.getParameter("postBody");
+		
+		if(request.getParameter("postEditableCheckBox").contentEquals("on")){
+			postIsPublic = true;
+		}
+		
+		p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
+		pep = new PostEditPrivilege();
+		
+		 if(p.insertPostInDatabase(u.getUserId(), b) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
 			
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 
@@ -72,9 +84,6 @@ public class PostCreateServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		if (out != null) {
-			out.close();
 		}
 	}
 }

@@ -5,17 +5,15 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
   
 public class Register {  
-    
-	public static int userId = -1;
-	public static String dateRegistered = null;
+	
 	public static String errorMessege = null;
 	
-	public static boolean validate(String name, String pass, String pass2) {          
-        boolean status = true;  
+	//could return a user object instead and if null an error occured.
+	public static User validate(String name, String pass, String pass2) {          
+        User u = null;
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null;
-        
         Exception registrationError = new Exception();
  
         try {  
@@ -52,6 +50,11 @@ public class Register {
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
   
+        	if(connectionManager.getConnection() == null){
+            	errorMessege = "Error communicating with database. Registration cannnot be completed.";
+            	throw registrationError;
+            }
+        	
             pst = connectionManager.getConnection().prepareStatement("insert into User values(0, '"+name+"','"+pass+"', curdate() );");  
            
             pst.executeUpdate(); 
@@ -65,12 +68,10 @@ public class Register {
             pst.setString(2, pass);  
   
             rs = pst.executeQuery(); 
-            
             rs.first();
            
-            userId = rs.getInt("UserId");
-            dateRegistered = rs.getString("DateRegistered");
-  
+            //if the query does not return any rows. Calling getInt() and getString() will throw an SQLException.
+            u = new User(rs.getInt("UserId"), name, pass, rs.getString("DateRegistered"));
             
         // should totally catch this.. com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry 'Derek' for key 'User_Unique_Username'    
         } catch (SQLException sqlE) { 
@@ -82,11 +83,9 @@ public class Register {
         	System.out.println("Error inserting information of new user into registration table, throwing SQLException.");
         	sqlE.printStackTrace();
        	 	errorMessege = "Error completing registration";
-       	 	status = false;
        	 	
         } catch (Exception e) { 
-        	 e.printStackTrace(); //may not be necessary
-            status = false;
+        	 e.printStackTrace(); 
         } finally {  
             if (pst != null) {  
                 try {  
@@ -103,6 +102,6 @@ public class Register {
                 }  
             }  
         }  
-        return status;  
+        return u;  
     }  
 }  

@@ -8,6 +8,16 @@
 <head>
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - Blog</title>
+
+<%
+
+// the username is used within the navigation bar of the website.
+if(session.getAttribute("username") == null){
+	session.setAttribute("username","");
+}
+
+%>
+
 </head>
 	<body>
 	
