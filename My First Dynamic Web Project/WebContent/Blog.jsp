@@ -104,7 +104,7 @@
 				</td>
 				
 				<td>
-					<a href="PostCreate.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
+					<a href="PostCreate.jsp"><%b.setEditMode(true, i);%><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg" alt="Edit Enabled, click here"> </a>
 				</td>
 			</tr>
 					
