@@ -101,6 +101,14 @@ public class Blog {
 		return isPublic;
 	}
 	
+	public int getIsPublicAsInt() {
+		if(isPublic == true){
+			return 1;
+		}
+		
+		return 0;
+	}
+	
 	protected void setIsPublic(boolean b){
 		this.isPublic = b;
 	}
@@ -108,6 +116,8 @@ public class Blog {
 	 public void addPost(Post p){
 		 postList.add(p);
 	 }
+	 
+	 
 	
     public boolean insertBlogInDatabase(int userId) {          
 	
@@ -147,8 +157,9 @@ public class Blog {
 			  insert blogid and userid into user_blog table			  
         	 */
         	
-        	//insert blog title and creation date into blog table -- The SQL function now(), retrieves the current dateTime value.
-            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, '"+blogTitle+"', now() )");  
+        	//insert blog title and creation date into blog table -- The SQL function now(), retrieves the current dateTime value. 
+        	//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
+            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, '"+blogTitle+"', now(), '"+getIsPublicAsInt()+"')" );  
             pst.executeUpdate(); 
             //closing the connection to prepare for the next prepared statement.
             pst.close();

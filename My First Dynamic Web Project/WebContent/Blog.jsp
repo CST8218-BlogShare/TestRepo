@@ -31,8 +31,8 @@
 					
    %>
 		
-		<!-- navigation bar -->
-		<header class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
+		<!-- Navigation and Search Bar -->
+		<header id="navbar" class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
 			<table style="width:90%; margin-right:auto; margin-left:auto;">
 				<tr style="height:50%;">
@@ -97,25 +97,28 @@
 				//If the post is not public and the current user is not the author of the post.
 				if( !p.getIsPublic() && !p.getAuthor().equals(u.getUsername())){
 					
-					
-					//An attempt is made to match current userId with the userId that is associated to the privilegeId of this post. 
+					//An attempt is made to match current userId with a userId that is associated to the privilegeId of this post. 
 					PreparedStatement pst = null;
 					ResultSet rs = null;
 					DbConnection connectionManager = DbConnection.getInstance(); 					
+					editEnabled = false;
 					
 					try{
-						pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, posteditprivilege pep, user_posteditprivilege u_pep, post_posteditprivilege p_pep"
-																				+ " where u.userid = u_pep.userid"
-																				+ " and u_pep.postEditPrivilegeId = pep.postEditPrivilegeId"
-																				+ " and pep.postEditPrivilegeId = p_pep.postEditPrivilegeId"
-																				+ " and p_pep.postid = p.postid"
-																				+ " and u.userid = '"+u.getUserId()+"' ");
-						rs = pst.executeQuery();
-						rs.first();
+						pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
+																				 " where u.userid = upep.userid AND " +
+																				 " upep.postEditPrivilegeId = pep.postEditPrivilegeId AND " +
+																			     " pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND " +
+																				 " p.postId = ppep.postid AND " +
+																				 " u.userid = up.userid AND " +
+																				 " P.postid = up.postid AND " +
+																				 " p.postid = '"+p.getPostId()+"'"); 
 						
-						//if the user does not have a corresponding entry for the post within postEditPrivilege
-						if(u.getUserId() != rs.getInt("userId")){
-							editEnabled = false;	
+						while(rs.next()){
+							//if the user does not have a corresponding entry for the post within postEditPrivilege
+							if(u.getUserId() == rs.getInt("userId")){
+								editEnabled = true;
+								break;
+							}
 						}
 					}catch(SQLException sqlE){
 						System.out.println("An exception was thrown while attempting to associate the current user with the edit privileges granted granted for this post.");

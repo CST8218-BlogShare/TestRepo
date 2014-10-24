@@ -12,7 +12,12 @@ import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.User;
 
-
+/* considering taking this Servlet out all together and just rebuilding the userBlogList everytime profile is accessed.
+   since
+   1. The list is not stored in the session. 
+   2. Dont have to worry about calling this servlet when the profile is accessed from the navigation bar. 
+   3. Gets rid of the need to add to the list when a new blog is made as it is always rebuilt based on the contents of the database.
+*/
 
 @WebServlet("/LoadProfileServlet")
 public class LoadProfileServlet extends HttpServlet {

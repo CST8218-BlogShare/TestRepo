@@ -1,43 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-  
-  <!-- home page of BLOGSHARE -->
   <welcome-file-list>
     <welcome-file>Home.jsp</welcome-file>
   </welcome-file-list>
-  
-  <!-- custom error handling for entire application -->
-  
   <error-page>
     <error-code>400</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>404</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>405</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>408</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>413</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>414</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>500</error-code>
     <location>/Error.jsp</location>
@@ -46,38 +35,22 @@
     <error-code>501</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>502</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>503</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>504</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
   <error-page>
     <error-code>505</error-code>
     <location>/Error.jsp</location>
   </error-page>
-  
-  <!--  
-  <error-page>
-  	<exception-type>java.lang.Throwable</exception-type>
-  	<location>/Error.jsp</location> 
-  </error-page>
-  -->
-  
-  
-  <!-- Servlets available to application. 
-       The functionality of each servlet depends on the implementation of the 
-       class listed within the <servlet-class> tag within the <servlet> tag -->
   <servlet>
     <servlet-name>login</servlet-name>
     <servlet-class>com.amzi.servlets.LoginServlet</servlet-class>
@@ -86,7 +59,6 @@
     <servlet-name>login</servlet-name>
     <url-pattern>/loginServlet</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>register</servlet-name>
     <servlet-class>com.amzi.servlets.RegisterServlet</servlet-class>
@@ -95,7 +67,6 @@
     <servlet-name>register</servlet-name>
     <url-pattern>/registerServlet</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>postCreate</servlet-name>
     <servlet-class>com.amzi.servlets.PostCreateServlet</servlet-class>
@@ -104,7 +75,6 @@
     <servlet-name>postCreate</servlet-name>
     <url-pattern>/postCreateServlet</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>blog</servlet-name>
     <servlet-class>com.amzi.servlets.BlogCreateServlet</servlet-class>
@@ -113,5 +83,12 @@
     <servlet-name>blog</servlet-name>
     <url-pattern>/blogServlet</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <servlet-name>Search</servlet-name>
+    <servlet-class>com.amzi.servlets.SearchServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Search</servlet-name>
+    <url-pattern>/searchServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

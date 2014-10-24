@@ -10,17 +10,20 @@
 	<body>
 	
 	
-		<!--  description for user about what to do on the page -->
-		
-		<div class="FillScreenTextCentered" style="margin-bottom:3%;">
-			<font size=10>
-				Create Your Blog<br>
-			</font> 
-		</div>
-		
 		 <!--table to hold pages content -->
 		<form name="blogCreateForm" action="blogServlet" method="post">
-			<table style="width: 80%; margin-left: 10%; margin-right: 10%;">
+			<table class="centered80W">
+		
+				<!--  description for user about what to do on the page -->
+				<tr>
+					<td>
+						<div class="centered80W" style="margin-bottom:3%;">
+							<font size=10>
+								Create Your Blog<br>
+							</font> 
+						</div>
+					</td>
+				</tr>
 		
 				<!-- blog title -->
 				<tr style="margin-bottom: 5%;">
@@ -39,7 +42,7 @@
 				
 				<tr>
 					<td>
-						<div class="FillScreenTextCentered" style="margin-bottom:2%;">
+						<div class="centered80W" style="margin-bottom:2%;">
 							<font size=4>
 								Please use the first post to describe the purpose of your Blog.<br>
 							</font> 
@@ -75,7 +78,7 @@
 				</tr>
 		
 				<tr>
-					<td class="FillScreenTextCentered">
+					<td class="centered80W">
 						<font size=4>
 							The title of your Blog and the title and content of your first Post.<br> 
 							Are editable only by you, the author of the Blog.<br>
@@ -90,7 +93,7 @@
 				</tr>
 				
 				<tr>
-					<td class="FillScreenTextCentered">
+					<td class="centered80W">
 						<font size=4>
 							Additional posts may be made editable by any BlogShare visitor.<br>
 							By selecting the option below.<br>
@@ -117,13 +120,7 @@
 			</table>
 		</form>
 		<form action="Profile.jsp">
-			<table style="width:80%;  margin-left:10%; margin-right:10%;">
-				<tr>
-					<td>
-						<input type="submit" class=button width="wrap_content" value="Cancel">
-					</td>
-				</tr>
-			</table>
+			<input class="centered80W" type="submit" width="wrap_content" value="Cancel" style="font-size:18px;">		
 		</form>
 	</body>
 </html>

@@ -57,10 +57,11 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		blogTitle=request.getParameter("blogTitle");
 		
-		if(request.getParameter("blogEditableCheckBox").contentEquals("on")){
+		if(request.getParameter("blogEditableCheckBox") != null){
 			blogIsPublic = true;
 		}
 		
+		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
 		postTitle=request.getParameter("postTitle");
 	    postBody=request.getParameter("postBody");
 		
@@ -82,17 +83,8 @@ public class BlogCreateServlet extends HttpServlet{
 			   allowing it and it's data members to be retrieved within Blog.jsp*/
 			 
 			 userSession.setAttribute("currentBlog", b);
-			 
-			 //userSession.setAttribute("blogId", b.getBlogId());//may not need to re-add
-			 
-			 //Get the current users bloglist from Context
-			 //Add the new blog to the list and load it back into the context
-			 ArrayList<String> userBlogList = (ArrayList<String>) userSession.getAttribute("userBlogList");
-			
-			 if(userBlogList != null){
-				 userBlogList.add(0,b.getBlogTitle());
-				 //Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.
-			 }
+			 	
+			//Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.
 		 
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 

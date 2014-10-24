@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet{
         	//added for use in home.jsp, since only the single value from user is needed there
         	userSession.setAttribute("username",name);
 
-        	RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
+        	RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
             
         	try {
 				rd.forward(request,response);

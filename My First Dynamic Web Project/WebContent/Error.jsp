@@ -24,8 +24,8 @@ if(session.getAttribute("username") == null){
 		<!-- Allows the page to identify itself as an error page for handling errors produced by TomCat -->
 		<%@ page isErrorPage="true" %>
 		
-		<!-- navigation bar -->
-		<div class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
+		<!-- Navigation and Search Bar -->
+		<header class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
 			<table style="width:90%; margin-right:auto; margin-left:auto;">
 				<tr style="height:50%;">
@@ -44,7 +44,7 @@ if(session.getAttribute("username") == null){
 				</tr>
 			</table>
 			<br>
-		</div>
+		</header>
 		
 		
 		<div  class="FillScreenTextCentered" style="height:60%;  margin-top:auto; marign-bottom:auto; background-color:lightgrey;">

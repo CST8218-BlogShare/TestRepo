@@ -16,7 +16,7 @@
 </head>
 <body>
 
-	<!-- navigation bar - nav bar is being styled differently, think it has something to do with the external style sheets you are using.  -->
+	<!-- Navigation and Search Bar - version on this page is being styled differently, think it has something to do with the external style sheets you are using.  -->
 	<div class="FillScreenTextCentered"
 		style="background-color: lightgrey; height: auto; margin-bottom: 2%;">
 		<br>
@@ -77,7 +77,9 @@
 	<!-- the dynamic list of user blogs is generated here -->
 	<div class="list-group">
 		<%
-			ArrayList<String> userBlogList = (ArrayList<String>) session.getAttribute("userBlogList");
+			//ArrayList<String> userBlogList = (ArrayList<String>) session.getAttribute("userBlogList");
+		
+			ArrayList<String> userBlogList = u.getUserBlogs(u.getUserId());
 
 			if (userBlogList != null) {
 				for (String blogTitle: userBlogList){

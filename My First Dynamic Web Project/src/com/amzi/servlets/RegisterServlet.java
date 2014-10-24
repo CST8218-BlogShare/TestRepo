@@ -16,7 +16,7 @@ public class RegisterServlet extends HttpServlet {
 
 	 private static final long serialVersionUID = 1L;  
 	  
-	    public void doPost(HttpServletRequest request, HttpServletResponse response){ //need to handle other exceptions.
+	    public void doPost(HttpServletRequest request, HttpServletResponse response){ 
 	    	User u = null;
 	    	String name = "";
 	    	String pass = "";
@@ -43,13 +43,10 @@ public class RegisterServlet extends HttpServlet {
 	        		        	
 	        	userSession.setAttribute("currentUser", u);
 	        	
-	        	//added for use in postCreate.jsp, since only the single value from user is needed there
-	        	//userSession.setAttribute("userId", u.getUserId());
-	        	
-	        	//added for use in home.jsp, since only the single value from user is needed there
+	        	//username variable is added for use in the header section of the page's where the header is shown.
 	        	userSession.setAttribute("username",name);
 	           
-	            RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
+	            RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
 	            
 	            try {
 					rd.forward(request,response);

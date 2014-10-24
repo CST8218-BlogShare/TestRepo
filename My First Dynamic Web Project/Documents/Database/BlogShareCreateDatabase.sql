@@ -44,7 +44,8 @@ CREATE TABLE Blog
     ( 
      BlogID           INT  NOT NULL , 
      Title            VARCHAR(100)  NOT NULL , 
-     CreationDateTime DATETIME  NOT NULL 
+     CreationDateTime DATETIME  NOT NULL , 
+	 isPublic		  BOOL NOT NULL
     ) 
 ;
 
