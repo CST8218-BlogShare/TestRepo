@@ -42,15 +42,15 @@ if(session.getAttribute("username") == null){
 						<td><h3>BLOGSHARE</h3></td>
 						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
 						<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
-						<td style="width:10%"> <input type=checkbox name=navBarTitlesCheck checked="checked"/>Titles<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarUsersCheck checked="checked"/>Users<p> </td>
+						<td style="width:10%"> <input type=checkbox name=navBarTitleCheck checked="checked"/>Titles<p></td>
+						<td style="width:10%"> <input type=checkbox name=navBarUsersCheck />Users<p> </td>
 						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch maxlength=100 value="Search"/></td>
 					</tr>
 					<tr style="height:50%;">
 						<td> <a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
-						<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
-						<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>
+						<td style="width:10%"> <input type=checkbox name=navBarPostsCheck checked="checked"/>Posts<p> </td>
+						<td style="width:10%"> <input type=checkbox name=navBarBodyCheck checked="checked"/>Content<p></td>
+						<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck />Authors<p> </td>
 					</tr>
 				</table>
 			</form>
