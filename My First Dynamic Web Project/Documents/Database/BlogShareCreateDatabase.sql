@@ -95,7 +95,8 @@ CREATE TABLE Post
      BlogID           INT  NOT NULL , 
      Title            VARCHAR(100)  NOT NULL , 
      Content          LONGTEXT  NOT NULL ,  -- LONGTEXT is equivalent to oracle's CLOB
-     CreationDateTime DATETIME  NOT NULL 
+     CreationDateTime DATETIME  NOT NULL ,
+	 isPublic		  BOOL NOT NULL
     ) 
 ;
 
