@@ -105,7 +105,6 @@ public class Blog {
 		if(isPublic == true){
 			return 1;
 		}
-		
 		return 0;
 	}
 	

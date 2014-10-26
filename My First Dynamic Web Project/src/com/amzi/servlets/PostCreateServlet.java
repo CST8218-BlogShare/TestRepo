@@ -27,7 +27,8 @@ public class PostCreateServlet extends HttpServlet {
 		String postTitle = "";
 		String postBody = "";
 		boolean postIsPublic = false;
-		
+		int toEdit = -1;
+		boolean isEditMode  = false;
 		
 		
 		
@@ -40,7 +41,19 @@ public class PostCreateServlet extends HttpServlet {
 			u = (User) userSession.getAttribute("currentUser");
 			b = (Blog) userSession.getAttribute("currentBlog");
 			
-		}catch(NumberFormatException nfE){
+			try{
+				isEditMode = Boolean.parseBoolean((userSession.getAttribute("editMode").toString()));
+			}catch(Exception e){
+				isEditMode = false;
+			}
+			
+			try{
+				toEdit = Integer.parseInt(userSession.getAttribute("toEdit").toString());
+			}catch(Exception e){
+				toEdit = -1;
+			}
+			
+			}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
 			return;
 		}catch(IllegalStateException isE){
@@ -59,7 +72,7 @@ public class PostCreateServlet extends HttpServlet {
 		p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
 		pep = new PostEditPrivilege();
 		
-		 if(p.insertPostInDatabase(u.getUserId(), b) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
+		 if(p.insertPostInDatabase(u.getUserId(), b, isEditMode) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
 			
 			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 			 
