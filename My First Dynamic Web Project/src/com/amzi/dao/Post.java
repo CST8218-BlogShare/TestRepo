@@ -3,7 +3,10 @@ package com.amzi.dao;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Connection;
+
 import com.amzi.dao.Blog;
+
 
 public class Post {
 	private int blogId = -1;
@@ -123,6 +126,7 @@ public class Post {
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
 	        DbConnection connectionManager = null;
+	        Connection conn = null;
 	        boolean status = true;  
 	       
 	        /*
@@ -155,7 +159,7 @@ public class Post {
 	        	
 	        	//gaining access to the shared database connection.
 	        	connectionManager = DbConnection.getInstance();
-	        	
+	        	conn = connectionManager.getConnection();
 	        	/*
 	        	 * If the blog object b has been successfully initialized, 
 	        	 * the blogId object is guaranteed to be set to a value other than -1.
@@ -176,7 +180,7 @@ public class Post {
 	        	//if(b.getEditMode() == false){
 		        	
 	        		//checking within current blog for a post with the same title as the one that is to be created.
-	        		pst = connectionManager.getConnection().prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
+	        		pst = conn.prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
 	        		rs = pst.executeQuery();
 	        		
 	        		//If there is an entry within the resultSet, then a post with an identical title already exists within the Blog.
@@ -191,14 +195,17 @@ public class Post {
 	        		rs.close();
 	        		pst.close();
 	        		
+	        		//checking if the post is part of a blog that has been deemed to be publicly editable.
+	        		//pst  = 
+	        		
 	        		//insert post title, blogid content, creation date into post table -- The SQL function now(), retrieves the current dateTime value.
 	        		//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
-			        pst = connectionManager.getConnection().prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', now(), '"+getIsPublicAsInt()+"' )");  
+			        pst = conn.prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', now(), '"+getIsPublicAsInt()+"' )");  
 			        pst.executeUpdate();
 			        pst.close();
 			            
 			        //select postid from post table where blogid and title is the same
-			        pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
+			        pst = conn.prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
 			        rs = pst.executeQuery();
 			        rs.first();
 			        this.postId = rs.getInt("postId");
@@ -208,7 +215,7 @@ public class Post {
 			            
 			            
 			        //insert postid and user id into user_post
-			        pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
+			        pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
 			        pst.executeUpdate();
 			        pst.close();
 			        		        	

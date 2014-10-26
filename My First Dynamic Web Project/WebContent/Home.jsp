@@ -30,7 +30,6 @@ if(session.getAttribute("username") == null){
 %>
 
 </head>
-
 	<body>
 
 		<!-- Navigation and Search Bar -->
@@ -43,14 +42,14 @@ if(session.getAttribute("username") == null){
 						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
 						<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
 						<td style="width:10%"> <input type=checkbox name=navBarTitleCheck checked="checked"/>Titles<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarUsersCheck />Users<p> </td>
+						<td style="width:10%"> <input type=checkbox name=navBarEditableCheck />Editable<p> </td>
 						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch maxlength=100 value="Search"/></td>
 					</tr>
 					<tr style="height:50%;">
 						<td> <a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
 						<td style="width:10%"> <input type=checkbox name=navBarPostsCheck checked="checked"/>Posts<p> </td>
 						<td style="width:10%"> <input type=checkbox name=navBarBodyCheck checked="checked"/>Content<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck />Authors<p> </td>
+						<td style="width:10%"> <input type=checkbox name=navBarUsersCheck />Users<p> </td>
 					</tr>
 				</table>
 			</form>
@@ -66,7 +65,10 @@ if(session.getAttribute("username") == null){
 		<div class="FillScreenTextCentered">
 			<font size=4>
 				 If this is your first time visiting the site. <br>
-				 Feel free to use the search tools above to explore our public content. <br>
+				 Feel free to use the search tools above to explore our content. <br>
+				 <br>
+				 By default content is only available to be read by the public, <br>
+				 but certain authors' may have enabled public editing of their work.<br>
 			</font> 
 				<br>
 				<br>

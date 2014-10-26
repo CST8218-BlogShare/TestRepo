@@ -288,7 +288,7 @@ public class Blog {
         	
         } catch (SQLException sqlE) {  
         	
-        	
+        	sqlE.printStackTrace();
         	connectionManager.closeConnection();
         	
         	
