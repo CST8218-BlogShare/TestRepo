@@ -134,12 +134,13 @@
 				</td>
 				
 				<td>
-					<% if(editEnabled == true){ %>
-					<a href="PostCreate.jsp"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg"  alt="Click here to edit."> </a>
+					<% if(editEnabled == true){
+						%>
+					<a href="PostCreate.jsp?editEnabled=true&post=<%=i%>"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg"  alt="Click here to edit."> </a>
 					<% } %>
 					
 					<% if(editEnabled == false){ %>
-					<a href="PostCreate.jsp"><img title="Edit Disabled For Element - User Can View" src="images/read.jpg"  alt="Click here to view."> </a>
+					<a href="PostCreate.jsp?editEnabled=false"><img title="Edit Disabled For Element - User Can View" src="images/read.jpg"  alt="Click here to view."> </a>
 					<% } %>	
 				</td>
 			</tr>

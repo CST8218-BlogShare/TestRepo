@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 
 import com.amzi.dao.Blog;
+import com.sun.org.apache.bcel.internal.generic.ISUB;
 
 
 public class Post {
@@ -121,7 +122,7 @@ public class Post {
 	
 	
 	
-	 public boolean insertPostInDatabase(int userId, Blog b) {          
+	 public boolean insertPostInDatabase(int userId, Blog b, boolean editMode) {          
 		 
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
@@ -177,7 +178,7 @@ public class Post {
 				    select postid from post table where blogid and title is the same
 				    insert postid and user id into user_post
 	        	 */
-	        	//if(b.getEditMode() == false){
+	        	if(!editMode){
 		        	
 	        		//checking within current blog for a post with the same title as the one that is to be created.
 	        		pst = conn.prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
@@ -221,35 +222,41 @@ public class Post {
 			        		        	
 			        //b.addPost(postTitle, postBody);
 			        b.addPost(this);
-			        b.setPostCount(b.getPostCount()+1);
-	        	//}
-		            
-		            
-		            
+			        b.setPostCount(b.getPostCount()+1);  
 	        	//Code below to be in the next iteration. Now that we are repopulating the fields for edit we need to update the table. First queary is being worked on
-	        	/*else if( b.getEditMode() == true){
-	        		//*insert post title, blogid content, creation date into post table
-		            pst = connectionManager.getConnection().prepareStatement("update  post set title = '"+postTitle+"', content = '"+postBody+"' where blogId = '"+b.getBlogId()+"' )");  
-		            pst.executeUpdate(); 
+	        	}else if( editMode ){
+			        //select postid from post table where blogid and title is the same
+			        pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+b.getPostAt(b.getToEdit()).postTitle+"' ");
+			        rs = pst.executeQuery();
+			        rs.first();
+			        this.postId = rs.getInt("postId");
+			        //this.creationDateTime = rs.getString("creationDateTime");
+			        rs.close();
+			        pst.close();
+	        		
+			        pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE blogId = ? AND postID  = ?");  
+		            pst.setString(1, postTitle);
+		            pst.setString(2, postBody);
+		            pst.setBoolean(3, isPublic);
+		            pst.setInt(4, b.getPostAt(b.getToEdit()).blogId);
+		            pst.setInt(5, postId);
+	        		pst.executeUpdate(); 
 		            //closing the connection to prepare for the next prepared statement.
 		            pst.close();
+		            b.getPostAt(b.getToEdit()).postTitle = postTitle;
+		            b.getPostAt(b.getToEdit()).postBody = postBody;
 		            
-		            //select postid from post table where blogid and title is the same
-		            pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+b.getBlogId()+"' AND title = '"+postTitle+"' ");
-		            rs = pst.executeQuery();
-		            rs.first();
-		            this.postId = rs.getInt("postId");
-		            rs.close();
-		            pst.close();
-		            
-		            
+		       
+		            /*
 		            //insert postid and user id into user_post
 		            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
 		            pst.executeUpdate();
 		            pst.close();
 		            
-		            b.setNewPost(true);
-	        	}*/
+		           // b.setNewPost(true);
+		            * 
+		            */
+	        	}
 	        } catch (SQLException sqlE) {  
 	        	
 	        	connectionManager.closeConnection();

@@ -13,15 +13,22 @@
 
 <%
 	final int firstPostIndex = 0;
+	boolean isEditMode;
+	int toEdit = -1;
+	
 	Blog b = (Blog) session.getAttribute("currentBlog");
-
+	
 	try{
-		boolean isEditMode = b.getEditMode();
-		int toEdit = b.getToEdit();
+		isEditMode = Boolean.parseBoolean((request.getParameter("editEnabled")));
+		toEdit = Integer.parseInt(request.getParameter("post"));
 	}catch(Exception e){
-		
+		isEditMode = false;
+		toEdit = -1;
 	}
+	session.setAttribute("editMode", isEditMode);
+	session.setAttribute("toEdit", toEdit);
 
+	b.setEditMode(isEditMode, toEdit);
 %>
 <body>
 	<form name="postForm" action="postCreateServlet" method="post">
@@ -66,7 +73,7 @@
 	
 					<p>New Post Title Below</p>
 					<%
-						if( b.getEditMode() == false){
+						if( isEditMode == false){
 					%>
 							<input type=text name=postTitle maxlength=100/>	
 					
@@ -74,13 +81,13 @@
 							
 							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea>
 					<%
-						}else if(b.getEditMode() == true){
+						}else if(isEditMode == true){
 					%>
-							<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(b.getToEdit()).getPostTitle() %>"/>
+							<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
 					
 							<p>New Post Content Below</p> 
 							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>
-								<%=b.getPostAt(b.getToEdit()).getPostBody() %>
+								<%=b.getPostAt(toEdit).getPostBody() %>
 							</textarea>
 					<%
 						}
@@ -107,8 +114,17 @@
 			</tr>
 					
 			<tr>
-				<td>
+				<td>	<%
+						if( isEditMode == false){
+					%>
 					<input type=checkbox name="postEditableCheckBox"/><font>Allow Public Editing</font><p>
+					<%
+						}else if(isEditMode == true){
+					%>
+						<input type=checkbox name="postEditableCheckBox" checked="checked"/><font>Allow Public Editing</font><p>
+					<%
+						}
+					%>
 				</td>
 			</tr>
 			
@@ -118,7 +134,7 @@
 			</tr>
 			
 			<tr>
-				<td>
+				<td> 
 					<input type="submit" class=button value="Save">
 				</td>
 			</tr>
