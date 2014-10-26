@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"%>  
+    pageEncoding="ISO-8859-1"
+    import="java.util.Locale, java.util.ResourceBundle"
+    %>  
 <html>
 
 <!-- The home page of BLOGSHARE, the user is brought here when the site is accessed. -->
@@ -13,6 +15,9 @@
 <!-- initialization variables needed for page -->
 <%
 
+//for generating the french/english page link
+session.setAttribute("currentpage","Home");
+
 if(getServletContext().getAttribute("errorCode") == null){
 	getServletContext().setAttribute("errorCode",0);
 }
@@ -21,40 +26,42 @@ if(getServletContext().getAttribute("errorMessage") == null){
 	getServletContext().setAttribute("errorMessage","");	
 }
 
-
 // the username is used within the navigation bar of the website. 
 if(session.getAttribute("username") == null){
 	session.setAttribute("username","");
 }
+		
+//used to set keep the language consistent between pages
+if(session.getAttribute("language") == null){
+	session.setAttribute("language","EN");
+}
+
+ResourceBundle lang = ResourceBundle.getBundle("Home_EN");
+String languageSwitch = "FR";
+
+//if the session language is FR switch to french, otherwise remains english as set above
+if (session.getAttribute("language").toString().equals("FR")){
+	lang = ResourceBundle.getBundle("Home_FR");
+	languageSwitch = "EN";
+} 
+
+//if the user clicked change language, set to appropriate language
+if (request.getParameter("language") != null){	
+	if (request.getParameter("language").equals("FR")){
+		lang = ResourceBundle.getBundle("Home_FR");
+		session.setAttribute("language","FR");
+	} else {
+		lang = ResourceBundle.getBundle("Home_EN");
+		session.setAttribute("language","EN");
+	}
+}		
 
 %>
 
 </head>
 	<body>
-
-		<!-- Navigation and Search Bar -->
-		<header class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
-			<br>
-			<form name="searchForm" action="searchServlet" method="post" >
-				<table style="width:90%; margin-right:auto; margin-left:auto;">
-					<tr style="height:50%;">
-						<td><h3>BLOGSHARE</h3></td>
-						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
-						<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
-						<td style="width:10%"> <input type=checkbox name=navBarTitleCheck checked="checked"/>Titles<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarEditableCheck />Editable<p> </td>
-						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch maxlength=100 value="Search"/></td>
-					</tr>
-					<tr style="height:50%;">
-						<td> <a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
-						<td style="width:10%"> <input type=checkbox name=navBarPostsCheck checked="checked"/>Posts<p> </td>
-						<td style="width:10%"> <input type=checkbox name=navBarBodyCheck checked="checked"/>Content<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarUsersCheck />Users<p> </td>
-					</tr>
-				</table>
-			</form>
-			<br>
-		</header>
+	
+	<jsp:include page="SearchBar.jsp"></jsp:include>
 	
 		<!-- "BlogShare" banner -->
 		<div class="FillScreenTextCentered" style="margin-bottom:2%;"> 
@@ -64,11 +71,7 @@ if(session.getAttribute("username") == null){
 		<!--  A brief explanation of the user's options -->
 		<div class="FillScreenTextCentered">
 			<font size=4>
-				 If this is your first time visiting the site. <br>
-				 Feel free to use the search tools above to explore our content. <br>
-				 <br>
-				 By default content is only available to be read by the public, <br>
-				 but certain authors' may have enabled public editing of their work.<br>
+				<% out.println(lang.getString("content.1")); %>
 			</font> 
 				<br>
 				<br>
@@ -76,14 +79,12 @@ if(session.getAttribute("username") == null){
 					<tr>
 						<td>
 							<font size=4>
-								If you wish to create your own Blogs. <br>
-								Please fill out the registration form below.
+								<% out.println(lang.getString("content.2")); %>
 							</font>
 						</td>
 						<td>
 							<font size=4>
-								If you have previously registered <br>
-								Please login below.
+								<% out.println(lang.getString("content.3")); %>
 							</font>
 						</td>	
 					</tr>
@@ -100,19 +101,19 @@ if(session.getAttribute("username") == null){
 						<form name="RegisterForm" action="registerServlet" method="post">
 							<table>
 								<tr> 
-										 <td colspan=2> <font size=6 > <b> Register </b> </font> </td> 
+										 <td colspan=2> <font size=6 > <b> <% out.println(lang.getString("register")); %> </b> </font> </td> 
 								</tr>
 								<tr>
-										 <td class="HomeInputTitle"><font>Username</font></td> <td  class="HomeInputContent"><input type=text name=registerUsername value="" maxlength=100/> </td> 
+										 <td class="HomeInputTitle"><font><% out.println(lang.getString("username")); %></font></td> <td  class="HomeInputContent"><input type=text name=registerUsername value="" maxlength=100/> </td> 
 								</tr>
 								<tr>
-										 <td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=registerUserPass  maxlength=100/></td>
+										 <td class="HomeInputTitle"><font><% out.println(lang.getString("password")); %></font></td> <td class="HomeInputContent"> <input type=password name=registerUserPass  maxlength=100/></td>
 								</tr>
 								<tr>
-										<td class="HomeInputTitle"><font>Reenter Password</font></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
+										<td class="HomeInputTitle"><font><% out.println(lang.getString("reenter")); %></font></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
 								</tr>
 								<tr>
-										 <td colspan=2><input class=button type=submit value="Register"/></td>     
+										 <td colspan=2><input class=button type=submit value="<%= lang.getString("register") %>"/></td>     
 								</tr>
 							</table>
 						</form>
@@ -123,19 +124,19 @@ if(session.getAttribute("username") == null){
 						<form name="LoginForm" action="loginServlet" method="post">
 							<table>
 								<tr>
-									<td colspan=2> <font size=6> <b>Login</b> </font> </td> 
+									<td colspan=2> <font size=6> <b><% out.println(lang.getString("login")); %></b> </font> </td> 
 								</tr>
 							    <tr>
-									<td class="HomeInputTitle"><font>Username</font></td> <td><input type=text name=loginUsername value="" maxlength=100/> </td> 
+									<td class="HomeInputTitle"><font><% out.println(lang.getString("username")); %></font></td> <td><input type=text name=loginUsername value="" maxlength=100/> </td> 
 								</tr>
 								<tr>
-									<td class="HomeInputTitle"><font>Password</font></td> <td class="HomeInputContent"> <input type=password name=loginUserpass  maxlength=100/>   </td> 
+									<td class="HomeInputTitle"><font><% out.println(lang.getString("password")); %></font></td> <td class="HomeInputContent"> <input type=password name=loginUserpass  maxlength=100/>   </td> 
 								</tr>
 								<tr>
 									<td colspan=2> <br><br> </td> <!-- empty column to fill in table -->  
 								</tr>
 								<tr>
-									<td colspan=2><input class=button type=submit value="Login"/></td>   
+									<td colspan=2><input class=button type=submit value="<%= lang.getString("login") %>"/></td>   
 								</tr>
 							</table>
 						</form>
