@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"
 	import="java.util.ArrayList, java.io.IOException, com.amzi.dao.User"
     import="java.util.Locale, java.util.ResourceBundle"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -30,6 +30,8 @@
 	}		
 
 	User u =  (User) session.getAttribute("currentUser");
+	
+	
 %>
 
 
@@ -37,7 +39,7 @@
 </head>
 <body>
 
-	<jsp:include page="SearchBar.jsp"></jsp:include>
+	<!--<jsp:include page="SearchBar.jsp"></jsp:include>-->
 
 	<h1>
 		<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
@@ -48,13 +50,13 @@
 	</h3>
 
 	<p style="padding: 50px">
-		<a href="ProfileEdit.jsp"><button type="button"
-				class="btn btn-default btn-lrg" style="width: 500px"><% out.println(lang.getString("edit")); %>
-				</button></a> <br style="clear: left;" />
-				
-	 <a href="BlogCreate.jsp"><button
-				type="button" class="btn btn-default btn-lrg" style="width: 500px"><% out.println(lang.getString("create")); %>
-				</button></a>
+		<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 500px">
+			<% out.println(lang.getString("edit")); %>
+		</button>
+		<br style="clear: left;" /> <a href="BlogCreate.jsp"><button
+				type="button" class="btn btn-default btn-lrg" style="width: 500px">
+				<% out.println(lang.getString("create")); %>
+			</button></a>
 	</p>
 
 	<!-- the dynamic list of user blogs is generated here -->
@@ -75,22 +77,100 @@
 		%>
 	</div>
 
+	<!-- profileedit is shown in this modal window -->
+	<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" style="background-color:blue">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h3 class="modal-title" id="myModalLabel">
+						<span class="glyphicon glyphicon-user" style="fontSize:50px"></span> 
+						<%= u.getUsername() %>'s <%=lang.getString("profileedit")%>
+					</h3>
+				</div>
+				<div class="modal-body">
+					<h3><span class="label label-default"><%=lang.getString("joined")%>: <%= u.getDateRegistered() %></span></h3>
+						<div style="padding:30px">	
+							<div class="input-group">
+							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("username")%>:</span>
+							 	<input id="loginUsername" name="loginUsername" type="text" class="form-control" readonly="true" value="<%= u.getUsername() %>" >
+							</div>
+							<div class="input-group">
+							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("newusername")%>:</span>
+							 	<input id="newUsername" name="newUsername" type="text" class="form-control">
+							</div>
+							<div class="input-group">
+							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("password")%>:</span>
+							 	<input id="loginPassword" name="loginPassword" type="password" class="form-control" >
+							</div>
+							<div class="input-group">
+							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("newpassword")%>:</span>
+							 	<input id="newPass" name="newPass" type="password" class="form-control" >
+							</div>
+							<div class="input-group">
+							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("reenter")%>: </span>
+							 	<input id="newPassConfirm" name="newPassConfirm" type="password" class="form-control" >
+							</div>
+							<div class="btn-group" style="padding:30px">
+								 <button id="submitChangesButton" class="btn btn-default btn-lrg" type="button"><%=lang.getString("submit")%></button>
+								 <button type="button" data-dismiss="modal" class="btn btn-default btn-lrg"><%=lang.getString("close")%></button>
+							</div>							
+							<div id="alert" class="alert alert-warning" role="alert" style="color:black"><b>ALAAAAARM!</b></div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- form used to request a blog by title from getblogservlet -->
 	<form id="goToBlog" action="GetBlogServlet" method="post">
 		<input type="hidden" id="goToBlogName" name="blogTitle" value="">
 	</form>
+	<form id="reloadProfileForm" action="LoadProfileServlet" method="post"></form>
 
-	<!-- Attach an onclick event to list elements with class blog-link -->
-	<!-- this event gets the list item's blogTitle attribute and places it into the input with id gotoblog -->
-	<!-- it then submits the gotoblog form -->
+	<!-- this is all the javascript which controls profile.jsp -->
 	<script>
+	
+	//Attach an onclick event to list elements with class blog-link: turns the dynamic blog list into links
+	//this event gets the list item's blogTitle attribute and places it into the input with id gotoblog
+	//it then submits the gotoblog form
 	$('li.blog-link').click(function(){
 		
 		$('input#goToBlogName').val($(this).attr('blogTitle'));
 		$('form#goToBlog').submit();
 		$(this).toggleClass('active');
 	});
+	
+	$('#submitChangesButton').click(function(){
+		
+		$.post("/My_First_Dynamic_Web_Project/EditUserServlet", {
+				loginUsername: $('#loginUsername').val(),
+				newUsername: $('#newUsername').val(),
+				loginPassword: $('#loginPassword').val(),
+				newPass: $('#newPass').val()
+			},
+			function ( response) {
+				$("#alert").html(response);
+				
+				if (response == "SUCCESS"){
+					$("#alert").html("<%=lang.getString("alert.success")%>").attr('class', 'alert alert-success');
+					$('#reloadProfileForm').submit();
+				} else if (response == "WRONG_PASS")
+					$("#alert").html("<%=lang.getString("alert.wrongpass")%>").attr('class', 'alert alert-danger');
+				else if (response == "SQL_ERROR")
+					$("#alert").html("<%=lang.getString("alert.sqlerror")%>").attr('class', 'alert alert-danger');
+				
 
+		});
+		
+		//$('#editPassForm').submit();
+		
+	});
+
+	
 	</script>
 </body>
 </html>

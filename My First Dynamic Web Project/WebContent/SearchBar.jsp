@@ -1,10 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
-    import="java.util.Locale, java.util.ResourceBundle"
+    import="java.util.Locale, java.util.ResourceBundle, com.amzi.dao.User"
     %>
 <!-- Navigation and Search Bar -->
 
 <% 
+	
+
+	User u =  new User();
+	if(session.getAttribute("currentUser") == null){
+		u.setUserName("");
+		session.setAttribute("currentUser", u);
+	}else
+		u =  (User) session.getAttribute("currentUser");
+
 	//EN language is the default, then check if needs to be changed to FR
 	String languageSwitch = "FR";
 	ResourceBundle lang = ResourceBundle.getBundle("SearchBar_EN");
@@ -29,7 +38,7 @@
 						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch maxlength=100 value="<%=lang.getString("search") %>"/></td>
 					</tr>
 					<tr style="height:50%;">
-						<td> <a href="Profile.jsp"><% out.println(lang.getString("welcome")); %> <%= session.getAttribute("username") %>!</a></td>
+						<td> <a href="Profile.jsp"><% out.println(lang.getString("welcome")); %> <%=u.getUsername()%>!</a></td>
 						<td style="width:10%"> <input type=checkbox name=navBarPostsCheck checked="checked"/><% out.println(lang.getString("posts")); %><p> </td>
 						<td style="width:10%"> <input type=checkbox name=navBarBodyCheck checked="checked"/><% out.println(lang.getString("content")); %><p></td>
 						<td style="width:10%"> <input type=checkbox name=navBarUsersCheck /><% out.println(lang.getString("users")); %><p> </td>
