@@ -37,12 +37,10 @@ if(session.getAttribute("language") == null){
 }
 
 ResourceBundle lang = ResourceBundle.getBundle("Home_EN");
-String languageSwitch = "FR";
 
 //if the session language is FR switch to french, otherwise remains english as set above
 if (session.getAttribute("language").toString().equals("FR")){
 	lang = ResourceBundle.getBundle("Home_FR");
-	languageSwitch = "EN";
 } 
 
 //if the user clicked change language, set to appropriate language

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="java.util.ArrayList, java.io.IOException, com.amzi.dao.User"%>
+	import="java.util.ArrayList, java.io.IOException, com.amzi.dao.User"
+    import="java.util.Locale, java.util.ResourceBundle"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,6 +9,26 @@
 <jsp:include page="BootstrapInclude.html" />
 
 <%
+
+	session.setAttribute("currentpage","Profile");
+	ResourceBundle lang = ResourceBundle.getBundle("Profile_EN");
+	
+	//if the session language is FR switch to french, otherwise remains english as set above
+	if (session.getAttribute("language").toString().equals("FR")){
+		lang = ResourceBundle.getBundle("Profile_FR");
+	} 
+	
+	//if the user clicked change language, set to appropriate language
+	if (request.getParameter("language") != null){	
+		if (request.getParameter("language").equals("FR")){
+			lang = ResourceBundle.getBundle("Profile_FR");
+			session.setAttribute("language","FR");
+		} else {
+			lang = ResourceBundle.getBundle("Profile_EN");
+			session.setAttribute("language","EN");
+		}
+	}		
+
 	User u =  (User) session.getAttribute("currentUser");
 %>
 
@@ -16,62 +37,24 @@
 </head>
 <body>
 
-	<!-- Navigation and Search Bar - version on this page is being styled differently, think it has something to do with the external style sheets you are using.  -->
-	<div class="FillScreenTextCentered"
-		style="background-color: lightgrey; height: auto; margin-bottom: 2%;">
-		<br>
-		<table style="width: 90%; margin-right: auto; margin-left: auto;">
-			<tr style="height: 50%;">
-				<td><h3>
-						<a href="Home.jsp">BLOGSHARE</a>
-					</h3></td>
-				<td rowspan="2" style="width: 25%; font-size: 24px;"><input
-					type=text name=navBarSearchTerm maxlength=100 /></td>
-				<td style="width: 10%"><input type=checkbox
-					name=navBarBlogsCheck checked="checked" />Blogs
-					<p></td>
-				<td style="width: 10%"><input type=checkbox
-					name=navBarTitlesCheck checked="checked" />Titles
-					<p></td>
-				<td style="width: 10%"><input type=checkbox
-					name=navBarUsersCheck checked="checked" />Users
-					<p></td>
-				<td rowspan="2" style="width: 25%"><input type=button
-					name=navBarSearch maxlength=100 value="Search" /></td>
-			</tr>
-			<tr style="height: 50%;">
-				<td>Welcome <%=u.getUsername()%>!
-				</td>
-				<td style="width: 10%"><input type=checkbox
-					name=navBarPostCheck checked="checked" />Posts
-					<p></td>
-				<td style="width: 10%"><input type=checkbox
-					name=navBarContentCheck checked="checked" />Content
-					<p></td>
-				<td style="width: 10%"><input type=checkbox
-					name=navBarAuthorsCheck checked="checked" />Authors
-					<p></td>
-			</tr>
-		</table>
-		<br>
-	</div>
+	<jsp:include page="SearchBar.jsp"></jsp:include>
 
 	<h1>
 		<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-		<%=u.getUsername()%>'s Profile Page
+		<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
 	</h1>
 	<h3>
-		<span class="label label-default">Joined: <%=u.getDateRegistered()%></span>
+		<span class="label label-default"><% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%></span>
 	</h3>
 
 	<p style="padding: 50px">
 		<a href="ProfileEdit.jsp"><button type="button"
-				class="btn btn-default btn-lrg" style="width: 500px">Edit
-				Profile</button></a> <br style="clear: left;" />
+				class="btn btn-default btn-lrg" style="width: 500px"><% out.println(lang.getString("edit")); %>
+				</button></a> <br style="clear: left;" />
 				
 	 <a href="BlogCreate.jsp"><button
-				type="button" class="btn btn-default btn-lrg" style="width: 500px">Create
-				Blog</button></a>
+				type="button" class="btn btn-default btn-lrg" style="width: 500px"><% out.println(lang.getString("create")); %>
+				</button></a>
 	</p>
 
 	<!-- the dynamic list of user blogs is generated here -->
