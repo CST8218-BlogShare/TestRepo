@@ -33,12 +33,11 @@ if(getServletContext().getAttribute("errorMessage") == null){
 			var titleCheckBox = document.getElementById("navBarTitleCheck");
 			var bodyCheckBox = document.getElementById("navBarBodyCheck");
 			var editCheckBox = document.getElementById("navBarEditableCheck");
-			var userCheckBox = document.getElementById("navBarUsersCheck");
 			
-			//if post not enabled
+			//if post is not activated, else do nothing.
 			if(postCheckBox.checked == false){
 				
-				//if blog is being enabled.
+				//if blog is being activated
 				if(elementClicked.checked == true){
 					//enable and check title checkbox
 					titleCheckBox.checked=true;
@@ -51,29 +50,27 @@ if(getServletContext().getAttribute("errorMessage") == null){
 					//enabling editable checkbox
 					editCheckBox.disabled = false;
 				
-				//if blog is being disabled
+				//if blog is being deactivated
 				}else{
 					//uncheck and disable title Checkbox
 					titleCheckBox.checked = false;
 					titleCheckBox.disabled = true;
 					
-					if(userCheckBox.checked == true){
-						editCheckBox.disabled = true;
-					}
-					
+					//uncheck and disable editable checkbox
+					editCheckBox.checked = false;
+					editCheckBox.disabled = true;
 				}
 			}
 		}
 	
 		//title and content only available if post is clicked.
 		function PostClicked(elementClicked){	
+			var blogCheckBox = document.getElementById("navBarBlogsCheck");
 			var titleCheckBox = document.getElementById("navBarTitleCheck");
 			var bodyCheckBox = document.getElementById("navBarBodyCheck");
-			var blogCheckBox = document.getElementById("navBarBlogsCheck");
 			var editCheckBox = document.getElementById("navBarEditableCheck");
-			var userCheckBox = document.getElementById("navBarUsersCheck");
 			
-			//if disabling post
+			//if activating post
 			if(elementClicked.checked == true){
 
 				//check and enable title checkbox
@@ -87,47 +84,26 @@ if(getServletContext().getAttribute("errorMessage") == null){
 				//enable editable checkbox
 				editCheckBox.disabled = false;
 
-			//if enabling post
+			//if deactivating post
 			}else{
 				//uncheck body checkbox but leave enabled
 				bodyCheckBox.checked = false;
 				bodyCheckBox.disabled = true;
 				
-				//if blog isn't currently enabled, uncheck title checkbox.
+				//if blog isn't currently enabled
 				if(blogCheckBox.checked == false){
+					
+					//uncheck and disable title checkbox
 					titleCheckBox.checked = false;
 					titleCheckBox.disabled = true;
 					
-					if(userCheckBox.checked == true){
-						editCheckBox.disabled = true;
-					}
-					
+					//uncheck and disable editable checkbox
+					editCheckBox.checked = false;
+					editCheckBox.disabled = true;
+						
 				}
 			}
 		}
-		
-		function UserClicked(elementClicked){
-			
-
-			//alert('In UserClicked');
-			
-			var postCheckBox = document.getElementById("navBarPostsCheck");
-			var blogCheckBox = document.getElementById("navBarBlogsCheck");
-			var editCheckBox = document.getElementById("navBarEditableCheck");
-			
-			//alert('In UserClicked 2');
-			
-				//alert('in if statement');
-				if(elementClicked.checked == true){
-					if(postCheckBox.checked == false && blogCheckBox.checked == false){
-						editCheckBox.checked = false;
-						editCheckBox.disabled = true;
-					}
-				}else{
-					editCheckBox.disabled = false;
-				}
-			}
-		
 	</script>
 
 		<!-- Navigation and Search Bar -->
@@ -151,7 +127,7 @@ if(getServletContext().getAttribute("errorMessage") == null){
 						<% } %>
 						<td style="width:10%"> <input type=checkbox id="navBarPostsCheck" name="navBarPostsCheck" OnClick="PostClicked(this)" checked="checked"/>Posts<p> </td>
 						<td style="width:10%"> <input type=checkbox id="navBarBodyCheck" name="navBarBodyCheck" checked="checked"/>Body<p></td>
-						<td style="width:10%"> <input type=checkbox id="navBarUsersCheck" name="navBarUsersCheck" OnClick="UserClicked(this)"  />Users<p> </td>
+						<td style="width:10%"> <input type=checkbox id="navBarUsersCheck" name="navBarUsersCheck"/>Users<p> </td>
 					</tr>
 				</table>
 			</form>
