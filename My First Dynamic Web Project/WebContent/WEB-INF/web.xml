@@ -99,4 +99,12 @@
     <servlet-name>switchResultType</servlet-name>
     <url-pattern>/switchResultTypeServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>Logout</servlet-name>
+    <servlet-class>com.amzi.servlets.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Logout</servlet-name>
+    <url-pattern>/logoutServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

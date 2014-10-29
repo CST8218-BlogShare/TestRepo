@@ -52,10 +52,11 @@ contentType="text/html; charset=ISO-8859-1"
 		<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 500px">
 			<% out.println(lang.getString("edit")); %>
 		</button>
-		<br style="clear: left;" /> <a href="BlogCreate.jsp"><button
-				type="button" class="btn btn-default btn-lrg" style="width: 500px">
+		<br style="clear: left;" /> 
+		<a href="BlogCreate.jsp">
+		<button type="button" class="btn btn-default btn-lrg" style="width: 500px">
 				<% out.println(lang.getString("create")); %>
-			</button></a>
+		</button></a>
 	</p>
 
 	<!-- the dynamic list of user blogs is generated here -->
