@@ -41,6 +41,19 @@ input.button{
 	text-align:center;
 }
 
+.searchSelectButton{
+	height:100%; 
+	padding-top:2%; 
+	padding-bottom:2%;
+}
+
+.searchSelectButton:hover{
+	height:100%; 
+	background-color:white; 
+	padding-top:2%; 
+	padding-bottom:2%;
+}
+
 /*tr{
 	background-color:grey;
 }*/

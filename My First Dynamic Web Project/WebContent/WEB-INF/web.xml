@@ -91,4 +91,12 @@
     <servlet-name>Search</servlet-name>
     <url-pattern>/searchServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>switchResultType</servlet-name>
+    <servlet-class>com.amzi.servlets.switchResultTypeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>switchResultType</servlet-name>
+    <url-pattern>/switchResultTypeServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

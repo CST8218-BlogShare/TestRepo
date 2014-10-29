@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"%>  
+<%@ page language="java"  
+    import="com.amzi.dao.User"%>  
+
+<!DOCTYPE html>
 <html>
-
 <!-- The home page of BLOGSHARE, the user is brought here when the site is accessed. -->
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
+<meta charset="UTF-8">
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - Home</title>
 
@@ -21,16 +21,114 @@ if(getServletContext().getAttribute("errorMessage") == null){
 	getServletContext().setAttribute("errorMessage","");	
 }
 
-
-// the username is used within the navigation bar of the website. 
-if(session.getAttribute("username") == null){
-	session.setAttribute("username","");
-}
-
 %>
 
 </head>
-	<body>
+<body>
+
+	<script>
+	
+		function BlogClicked(elementClicked){
+			var postCheckBox = document.getElementById("navBarPostsCheck");
+			var titleCheckBox = document.getElementById("navBarTitleCheck");
+			var bodyCheckBox = document.getElementById("navBarBodyCheck");
+			var editCheckBox = document.getElementById("navBarEditableCheck");
+			var userCheckBox = document.getElementById("navBarUsersCheck");
+			
+			//if post not enabled
+			if(postCheckBox.checked == false){
+				
+				//if blog is being enabled.
+				if(elementClicked.checked == true){
+					//enable and check title checkbox
+					titleCheckBox.checked=true;
+					titleCheckBox.disabled=false;
+					
+					//uncheck and disable body checkbox
+					bodyCheckBox.checked=false;
+					bodyCheckBox.disabled=true;
+					
+					//enabling editable checkbox
+					editCheckBox.disabled = false;
+				
+				//if blog is being disabled
+				}else{
+					//uncheck and disable title Checkbox
+					titleCheckBox.checked = false;
+					titleCheckBox.disabled = true;
+					
+					if(userCheckBox.checked == true){
+						editCheckBox.disabled = true;
+					}
+					
+				}
+			}
+		}
+	
+		//title and content only available if post is clicked.
+		function PostClicked(elementClicked){	
+			var titleCheckBox = document.getElementById("navBarTitleCheck");
+			var bodyCheckBox = document.getElementById("navBarBodyCheck");
+			var blogCheckBox = document.getElementById("navBarBlogsCheck");
+			var editCheckBox = document.getElementById("navBarEditableCheck");
+			var userCheckBox = document.getElementById("navBarUsersCheck");
+			
+			//if disabling post
+			if(elementClicked.checked == true){
+
+				//check and enable title checkbox
+				titleCheckBox.checked = true;
+				titleCheckBox.disabled = false;
+				
+				//check and enable body checkbox
+				bodyCheckBox.checked = true;
+				bodyCheckBox.disabled = false;
+				
+				//enable editable checkbox
+				editCheckBox.disabled = false;
+
+			//if enabling post
+			}else{
+				//uncheck body checkbox but leave enabled
+				bodyCheckBox.checked = false;
+				bodyCheckBox.disabled = true;
+				
+				//if blog isn't currently enabled, uncheck title checkbox.
+				if(blogCheckBox.checked == false){
+					titleCheckBox.checked = false;
+					titleCheckBox.disabled = true;
+					
+					if(userCheckBox.checked == true){
+						editCheckBox.disabled = true;
+					}
+					
+				}
+			}
+		}
+		
+		function UserClicked(elementClicked){
+			
+
+			//alert('In UserClicked');
+			
+			var postCheckBox = document.getElementById("navBarPostsCheck");
+			var blogCheckBox = document.getElementById("navBarBlogsCheck");
+			var editCheckBox = document.getElementById("navBarEditableCheck");
+			
+			//alert('In UserClicked 2');
+			
+				//alert('in if statement');
+				if(elementClicked.checked == true){
+					if(postCheckBox.checked == false && blogCheckBox.checked == false){
+						editCheckBox.checked = false;
+						editCheckBox.disabled = true;
+					}
+				}else{
+					editCheckBox.disabled = false;
+				}
+			}
+		
+	</script>
 
 		<!-- Navigation and Search Bar -->
 		<header class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
@@ -40,16 +138,20 @@ if(session.getAttribute("username") == null){
 					<tr style="height:50%;">
 						<td><h3>BLOGSHARE</h3></td>
 						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
-						<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
-						<td style="width:10%"> <input type=checkbox name=navBarTitleCheck checked="checked"/>Titles<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarEditableCheck />Editable<p> </td>
-						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch maxlength=100 value="Search"/></td>
-					</tr>
+						<td style="width:10%"> <input type=checkbox id="navBarBlogsCheck" name="navBarBlogsCheck" checked="checked" OnClick="BlogClicked(this)"/>Blogs<p>  </td>
+						<td style="width:10%"> <input type=checkbox id="navBarTitleCheck" name="navBarTitleCheck" checked="checked"/>Titles<p></td>
+						<td style="width:10%"> <input type=checkbox id="navBarEditableCheck" name="navBarEditableCheck" />Editable<p> </td>
+						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch value="Search"/></td>
+					</tr> 
 					<tr style="height:50%;">
-						<td> <a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
-						<td style="width:10%"> <input type=checkbox name=navBarPostsCheck checked="checked"/>Posts<p> </td>
-						<td style="width:10%"> <input type=checkbox name=navBarBodyCheck checked="checked"/>Content<p></td>
-						<td style="width:10%"> <input type=checkbox name=navBarUsersCheck />Users<p> </td>
+						<% if(session.getAttribute("currentUser") == null){ %>
+							<td> Welcome!</td>
+						<% }else{ %>
+							<td> <a href="Profile.jsp">Welcome <%= ((User)session.getAttribute("currentUser")).getUsername() %>!</a></td>
+						<% } %>
+						<td style="width:10%"> <input type=checkbox id="navBarPostsCheck" name="navBarPostsCheck" OnClick="PostClicked(this)" checked="checked"/>Posts<p> </td>
+						<td style="width:10%"> <input type=checkbox id="navBarBodyCheck" name="navBarBodyCheck" checked="checked"/>Body<p></td>
+						<td style="width:10%"> <input type=checkbox id="navBarUsersCheck" name="navBarUsersCheck" OnClick="UserClicked(this)"  />Users<p> </td>
 					</tr>
 				</table>
 			</form>
