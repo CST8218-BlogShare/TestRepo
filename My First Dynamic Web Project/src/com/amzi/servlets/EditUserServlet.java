@@ -22,7 +22,8 @@ public class EditUserServlet extends HttpServlet {
 
     	HttpSession userSession = request.getSession(false);    	
     	User userToEdit = (User) userSession.getAttribute("currentUser");
-    	
+    	response.setContentType("text/plain");
+    	response.setCharacterEncoding("UTF-8");
     	/*if(userSession == null){
 
     	}*/    
@@ -34,28 +35,15 @@ public class EditUserServlet extends HttpServlet {
 
         
         if(Login.validate(name, pass) != null){   
-        	if(userToEdit.changePass(newUsername, newPass)){   
-                RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
-                rd.forward(request,response);    
+        	if(userToEdit.changePass(newUsername, newPass)){ 
+        		response.getWriter().print("SUCCESS");   
             }    
             else{    
-                getServletContext().setAttribute("errorCode", 1);
-            	getServletContext().setAttribute("errorMessage", "Error updating the password.");
-
-                //RequestDispatcher rd=request.getRequestDispatcher("ProfileEdit.jsp");    
-                //rd.include(request,response);    
-            	RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
-                rd.forward(request,response);    
+                response.getWriter().print("SQL_ERROR");    
             }       
         }    
-        else{    
-            getServletContext().setAttribute("errorCode", 1);
-        	getServletContext().setAttribute("errorMessage", "You entered an incorrect Password.");
-
-            //RequestDispatcher rd=request.getRequestDispatcher("ProfileEdit.jsp");    
-            //rd.include(request,response);    
-        	RequestDispatcher rd=request.getRequestDispatcher("/LoadProfileServlet");    
-            rd.forward(request,response);    
+        else{   
+            response.getWriter().print("WRONG_PASS");    
         }    
 		
 	}

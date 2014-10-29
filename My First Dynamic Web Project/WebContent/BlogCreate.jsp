@@ -11,7 +11,7 @@
 	
 	
 		 <!--table to hold pages content -->
-		<form name="blogCreateForm" action="blogServlet" method="post">
+		<form name="blogCreateForm" action="BlogCreateServlet" method="post">
 			<table class="centered80W">
 		
 				<!--  description for user about what to do on the page -->
