@@ -164,8 +164,8 @@ if (request.getParameter("language") != null){
 		<% }else{ %>
 		
 			<div class="FillScreenTextCentered" style="color:LightBlue;">
-				Thank you for using BlogShare, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
-				Access your profile by clicking the welcome message at the top left of the page. 
+				<%= lang.getString("content.4")%>, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
+				<%= lang.getString("content.5")%>
 			</div>
 		<% } %>
 		
