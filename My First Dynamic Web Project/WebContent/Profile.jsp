@@ -118,7 +118,7 @@ contentType="text/html; charset=ISO-8859-1"
 								 <button id="submitChangesButton" class="btn btn-default btn-lrg" type="button"><%=lang.getString("submit")%></button>
 								 <button type="button" data-dismiss="modal" class="btn btn-default btn-lrg"><%=lang.getString("close")%></button>
 							</div>							
-							<div id="alert" class="alert alert-warning" role="alert" style="color:black"><b>ALAAAAARM!</b></div>
+							<div id="alert" class="alert alert-warning hidden" role="alert" style="color:black"><b></b></div>
 						</div>
 				</div>
 			</div>
@@ -144,33 +144,34 @@ contentType="text/html; charset=ISO-8859-1"
 		$(this).toggleClass('active');
 	});
 	
+	//This selects the submit button in profileedit and adds a method to its onclick event
 	$('#submitChangesButton').click(function(){
-		
-		$.post("/My_First_Dynamic_Web_Project/EditUserServlet", {
-				loginUsername: $('#loginUsername').val(),
-				newUsername: $('#newUsername').val(),
-				loginPassword: $('#loginPassword').val(),
-				newPass: $('#newPass').val()
-			},
-			function ( response) {
-				$("#alert").html(response);
-				
-				if (response == "SUCCESS"){
-					$("#alert").html("<%=lang.getString("alert.success")%>").attr('class', 'alert alert-success');
-					$('#reloadProfileForm').submit();
-				} else if (response == "WRONG_PASS")
-					$("#alert").html("<%=lang.getString("alert.wrongpass")%>").attr('class', 'alert alert-danger');
-				else if (response == "SQL_ERROR")
-					$("#alert").html("<%=lang.getString("alert.sqlerror")%>").attr('class', 'alert alert-danger');
-				
-
-		});
-		
-		//$('#editPassForm').submit();
-		
+		//if the passwords dont match display error, otherwise send post to edituserservlet
+		if ($('#newPass').val() != $('#newPassConfirm').val()){
+			$("#alert").html("<%=lang.getString("alert.notpassmatch")%>").attr('class', 'alert alert-warning');
+		} else {
+			//AJAX Post method - sends a post to edituserservlet with javascript instead of the browser
+			$.post("/My_First_Dynamic_Web_Project/EditUserServlet", {
+					loginUsername: $('#loginUsername').val(),
+					newUsername: $('#newUsername').val(),
+					loginPassword: $('#loginPassword').val(),
+					newPass: $('#newPass').val()
+				},
+				function ( response) {
+					//edituserservlet responds with one of three basic strings: SUCCESS, WRONG_PASS, SQL_ERROR
+					//load the appropriate error message into the alert and make the alert visible
+					//if success then reload the profile page
+					if (response == "SUCCESS"){
+						$("#alert").html("<%=lang.getString("alert.success")%>").attr('class', 'alert alert-success');
+						$('#reloadProfileForm').submit();
+					} else if (response == "WRONG_PASS")
+						$("#alert").html("<%=lang.getString("alert.wrongpass")%>").attr('class', 'alert alert-danger');
+					else if (response == "SQL_ERROR")
+						$("#alert").html("<%=lang.getString("alert.sqlerror")%>").attr('class', 'alert alert-danger');
+			});	
+		}
 	});
 
-	
 	</script>
 </body>
 </html>
