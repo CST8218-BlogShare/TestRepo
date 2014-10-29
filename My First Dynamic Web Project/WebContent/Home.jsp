@@ -1,13 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"
-    import="java.util.Locale, java.util.ResourceBundle"
-    %>  
+<%@ page language="java"  
+    import="com.amzi.dao.User, java.util.Locale, java.util.ResourceBundle"%>  
+<!DOCTYPE html>
 <html>
-
 <!-- The home page of BLOGSHARE, the user is brought here when the site is accessed. -->
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 <head>
+<meta charset="UTF-8">
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - Home</title>
 
@@ -26,11 +23,6 @@ if(getServletContext().getAttribute("errorMessage") == null){
 	getServletContext().setAttribute("errorMessage","");	
 }
 
-// the username is used within the navigation bar of the website. 
-if(session.getAttribute("username") == null){
-	session.setAttribute("username","");
-}
-		
 //used to set keep the language consistent between pages
 if(session.getAttribute("language") == null){
 	session.setAttribute("language","EN");
@@ -54,11 +46,12 @@ if (request.getParameter("language") != null){
 	}
 }		
 
+
 %>
 
 </head>
-	<body>
-	
+<body>
+
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 	
 		<!-- "BlogShare" banner -->

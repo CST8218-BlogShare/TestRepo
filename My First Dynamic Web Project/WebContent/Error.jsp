@@ -1,22 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"%>  
-<html>
+<%@ page language="java" 
+	import = "com.amzi.dao.User"%>  
 
 <!-- Displays a custom error message when a http error occurs  -->
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
+<!DOCTYPE html>
+<html>
 <head>
+<meta charset="UTF-8">
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - Blog</title>
-
-<%
-
-// the username is used within the navigation bar of the website.
-if(session.getAttribute("username") == null){
-	session.setAttribute("username","");
-}
-
-%>
 
 </head>
 	<body>
@@ -24,28 +15,7 @@ if(session.getAttribute("username") == null){
 		<!-- Allows the page to identify itself as an error page for handling errors produced by TomCat -->
 		<%@ page isErrorPage="true" %>
 		
-		<!-- Navigation and Search Bar -->
-		<header class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
-			<br>
-			<table style="width:90%; margin-right:auto; margin-left:auto;">
-				<tr style="height:50%;">
-					<td><h3><a href="Home.jsp">BLOGSHARE</a></h3></td>
-					<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name=navBarSearchTerm maxlength=100/></td>
-					<td style="width:10%"> <input type=checkbox name=navBarBlogsCheck checked="checked"/>Blogs<p>  </td>
-					<td style="width:10%"> <input type=checkbox name=navBarTitlesCheck checked="checked"/>Titles<p></td>
-					<td style="width:10%"> <input type=checkbox name=navBarUsersCheck checked="checked"/>Users<p> </td>
-					<td rowspan="2" style="width:25%">  <input type=button name=navBarSearch maxlength=100 value="Search"/></td>
-				</tr>
-				<tr style="height:50%;">
-					<td><a href="Profile.jsp">Welcome <%= session.getAttribute("username") %>!</a></td>
-					<td style="width:10%"> <input type=checkbox name=navBarPostCheck checked="checked"/>Posts<p> </td>
-					<td style="width:10%"> <input type=checkbox name=navBarContentCheck checked="checked"/>Content<p></td>
-					<td style="width:10%"> <input type=checkbox name=navBarAuthorsCheck checked="checked"/>Authors<p> </td>
-				</tr>
-			</table>
-			<br>
-		</header>
-		
+		<jsp:include page="SearchBar.jsp"></jsp:include>
 		
 		<div  class="FillScreenTextCentered" style="height:60%;  margin-top:auto; marign-bottom:auto; background-color:lightgrey;">
 		

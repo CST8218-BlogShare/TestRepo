@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" 
+contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="java.util.ArrayList, java.io.IOException, com.amzi.dao.User"
-    import="java.util.Locale, java.util.ResourceBundle"%>
+	import="java.util.ArrayList, java.io.IOException, com.amzi.dao.User,java.util.Locale, java.util.ResourceBundle"  %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta charset="UTF-8">
 <jsp:include page="BootstrapInclude.html" />
 
 <%
@@ -38,8 +38,7 @@
 <title><%=u.getUsername()%>'s Profile Page</title>
 </head>
 <body>
-
-	<!--<jsp:include page="SearchBar.jsp"></jsp:include>-->
+	<jsp:include page="SearchBar.jsp"></jsp:include>
 
 	<h1>
 		<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>

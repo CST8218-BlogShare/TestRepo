@@ -7,35 +7,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amzi.dao.DbConnection;
 import com.amzi.dao.User;
+import com.amzi.dao.SearchResult;
 
 /**
  * Servlet implementation class SearchServlet
  */
-@WebServlet("/SearchServlet")
 public class SearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-  
-    public SearchServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }*/
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		
+		User u = null;
+		SearchResult searchResult = null;
+	
 		DbConnection connectionManager = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -48,9 +43,9 @@ public class SearchServlet extends HttpServlet {
 		boolean searchEditable = false;
 		boolean searchUsers = false;
 		
-		ArrayList<Integer> searchResultBlogs = null;
-		ArrayList<Integer> searchResultPosts = null;
-		ArrayList<Integer> searchResultUsers = null;
+		ArrayList<Integer> searchResultsBlog = null;
+		ArrayList<Integer> searchResultsPost = null;
+		ArrayList<Integer> searchResultsUser = null;
 		
 		searchTerm = request.getParameter("navBarSearchTerm");
 		searchTerm = searchTerm.trim();
@@ -83,20 +78,24 @@ public class SearchServlet extends HttpServlet {
 			}
 			
 			if(searchBlogs == true){
-				searchResultBlogs = new ArrayList<Integer>();
 				try {
 					
 					if(searchEditable == true){
-						User u = (User) request.getSession().getAttribute("currentUser");
+						u = (User) request.getSession().getAttribute("currentUser");
 						
-						//if the user is logged in
+						//if the user is not logged in
 						if(u == null){
 							//only search for blogs that are publicly editable. 
 							ps =  connectionManager.getConnection().prepareStatement("select blogID from blog where title like '%"+searchTerm+"%' AND isPublic = 1");
+						//if the user is logged in
 						}else{
-							//since privileges may not be given to edit a blog, only select from the set of blogs where the currentUser is the author of the blog
+							//since privileges may not be given to edit a blog, only select from the set of blogs where the currentUser is the author of the blog.
 							//further checks are unneeded as editing privileges may not be granted for a a blog. 
-							ps =  connectionManager.getConnection().prepareStatement("select blogID from blog where title like '%"+searchTerm+"%' AND username = '"+u.getUsername()+"'");
+							ps =  connectionManager.getConnection().prepareStatement("select b.blogID from blog b, user u, user_blog ub " +
+																					 " where b.title like '%"+searchTerm+"%' " +
+																					 " AND b.blogId = ub.blogId" +
+																					 " AND u.userId = ub.userId" +
+																					 " AND u.username = '"+u.getUsername()+"' ");
 						}
 					}else{
 						ps =  connectionManager.getConnection().prepareStatement("select blogID from blog where title like '%"+searchTerm+"%'");
@@ -104,8 +103,15 @@ public class SearchServlet extends HttpServlet {
 					
 					rs = ps.executeQuery();
 					
+					//determining if the list that will holds the corresponding searchResults, needs to initialized by checking if the resultSet contains any rows of data.
+					rs.last();
+					if(rs.getRow() > 0 ){
+						searchResultsBlog = new ArrayList<Integer>();
+					}
+					rs.beforeFirst();
+					
 					while(rs.next()){
-						searchResultBlogs.add(rs.getInt("blogID"));
+						searchResultsBlog.add(rs.getInt("blogID"));
 					}
 					
 					
@@ -134,8 +140,7 @@ public class SearchServlet extends HttpServlet {
 			if(searchPosts == true){
 				//String searchTermColumns = "";
 				String searchTermTitleBody = "";
-				searchResultPosts = new ArrayList<Integer>();
-				
+
 				if(searchTitle){
 					//searchTermColumns = searchTermColumns.concat("title");
 					searchTermTitleBody = searchTermTitleBody.concat("title like '%"+searchTerm+"%'");
@@ -158,7 +163,7 @@ public class SearchServlet extends HttpServlet {
 					//determining the query to use when searching for thr searchTerm.
 					
 					if(searchEditable == true){
-						User u = (User) request.getSession().getAttribute("currentUser");
+						 u = (User) request.getSession().getAttribute("currentUser");
 						
 						//the query being used will depend on if the user is a public or registered user. 
 						if(u == null){
@@ -184,8 +189,15 @@ public class SearchServlet extends HttpServlet {
 					
 					rs = ps.executeQuery();
 					
+					//determining if the list that will holds the corresponding searchResults, needs to initialized by checking if the resultSet contains any rows of data.
+					rs.last();
+					if(rs.getRow() > 0 ){
+						searchResultsPost = new ArrayList<Integer>();
+					}
+					rs.beforeFirst();
+					
 					while(rs.next()){
-						searchResultPosts.add(rs.getInt("postId"));
+						searchResultsPost.add(rs.getInt("postId"));
 					}
 					
 				}catch(SQLException sqlE){
@@ -210,15 +222,20 @@ public class SearchServlet extends HttpServlet {
 			}
 			
 			if(searchUsers == true){
-				searchResultUsers = new ArrayList<Integer>();
-				
 				try{
 					
 					ps = connectionManager.getConnection().prepareStatement("select userId from user where username like '%"+searchTerm+"%'"); 
 					rs = ps.executeQuery();
 					
+					//determining if the list that will holds the corresponding searchResults, needs to initialized by checking if the resultSet contains any rows of data.
+					rs.last();
+					if(rs.getRow() > 0 ){
+						searchResultsUser = new ArrayList<Integer>();
+					}
+					rs.beforeFirst();
+					
 					while(rs.next()){
-						searchResultUsers.add(rs.getInt("userId"));
+						searchResultsUser.add(rs.getInt("userId"));
 					}
 					
 				}catch(SQLException sqlE){
@@ -242,28 +259,21 @@ public class SearchServlet extends HttpServlet {
 				}
 				
 			}
+		}
 		
-			RequestDispatcher rd=request.getRequestDispatcher("SearchResults.jsp");
-			 
-			try {
-				rd.include(request,response);
-			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
+		//need to figure out way to load same page that called request.
+		searchResult = new SearchResult(searchTerm,searchResultsBlog,searchResultsPost,searchResultsUser);
+	    request.getSession().setAttribute("currentSearchResult", searchResult);
+		RequestDispatcher rd=request.getRequestDispatcher("SearchResults.jsp");
+		 
+		try {
+			rd.include(request,response);
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}*/
-	
-
 }
