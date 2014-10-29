@@ -42,7 +42,7 @@ contentType="text/html; charset=ISO-8859-1"
 
 	<h1>
 		<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-		<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
+		<%=u.getUsername()%> <% out.println(lang.getString("profilepage")); %>
 	</h1>
 	<h3>
 		<span class="label label-default"><% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%></span>
@@ -88,7 +88,7 @@ contentType="text/html; charset=ISO-8859-1"
 					</button>
 					<h3 class="modal-title" id="myModalLabel">
 						<span class="glyphicon glyphicon-user" style="fontSize:50px"></span> 
-						<%= u.getUsername() %>'s <%=lang.getString("profileedit")%>
+						<%= u.getUsername() %> <%=lang.getString("profileedit")%>
 					</h3>
 				</div>
 				<div class="modal-body">
