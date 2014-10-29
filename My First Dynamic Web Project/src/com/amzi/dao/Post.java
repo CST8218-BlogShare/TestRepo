@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 
 import com.amzi.dao.Blog;
-import com.sun.org.apache.bcel.internal.generic.ISUB;
 
 
 public class Post {
@@ -178,7 +177,7 @@ public class Post {
 				    select postid from post table where blogid and title is the same
 				    insert postid and user id into user_post
 	        	 */
-	        	if(!editMode){
+	        	
 		        	
 	        		//checking within current blog for a post with the same title as the one that is to be created.
 	        		pst = conn.prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
@@ -196,55 +195,58 @@ public class Post {
 	        		rs.close();
 	        		pst.close();
 	        		
-	        		//checking if the post is part of a blog that has been deemed to be publicly editable.
-	        		//pst  = 
+	        		//checking if the post is part of a blog that is publicly editable.
+	        		if(b.getIsPublic() && b.getPostCount() != 0){
+	        			this.setIsPublic(true);
+	        		}
 	        		
-	        		//insert post title, blogid content, creation date into post table -- The SQL function now(), retrieves the current dateTime value.
-	        		//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
-			        pst = conn.prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', now(), '"+getIsPublicAsInt()+"' )");  
-			        pst.executeUpdate();
-			        pst.close();
-			            
-			        //select postid from post table where blogid and title is the same
-			        pst = conn.prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
-			        rs = pst.executeQuery();
-			        rs.first();
-			        this.postId = rs.getInt("postId");
-			        //this.creationDateTime = rs.getString("creationDateTime");
-			        rs.close();
-			        pst.close();
-			            
-			            
-			        //insert postid and user id into user_post
-			        pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
-			        pst.executeUpdate();
-			        pst.close();
-			        		        	
-			        //b.addPost(postTitle, postBody);
-			        b.addPost(this);
-			        b.setPostCount(b.getPostCount()+1);  
-	        	//Code below to be in the next iteration. Now that we are repopulating the fields for edit we need to update the table. First queary is being worked on
-	        	}else if( editMode ){
-			        //select postid from post table where blogid and title is the same
-			        pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+b.getPostAt(b.getToEdit()).postTitle+"' ");
-			        rs = pst.executeQuery();
-			        rs.first();
-			        this.postId = rs.getInt("postId");
-			        //this.creationDateTime = rs.getString("creationDateTime");
-			        rs.close();
-			        pst.close();
-	        		
-			        pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE blogId = ? AND postID  = ?");  
-		            pst.setString(1, postTitle);
-		            pst.setString(2, postBody);
-		            pst.setBoolean(3, isPublic);
-		            pst.setInt(4, b.getPostAt(b.getToEdit()).blogId);
-		            pst.setInt(5, postId);
-	        		pst.executeUpdate(); 
-		            //closing the connection to prepare for the next prepared statement.
-		            pst.close();
-		            b.getPostAt(b.getToEdit()).postTitle = postTitle;
-		            b.getPostAt(b.getToEdit()).postBody = postBody;
+	        		if(!editMode){
+		        		//insert post title, blogid content, creation date into post table -- The SQL function now(), retrieves the current dateTime value.
+		        		//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
+				        pst = conn.prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', now(), '"+getIsPublicAsInt()+"' )");  
+				        pst.executeUpdate();
+				        pst.close();
+				            
+				        //select postid from post table where blogid and title is the same
+				        pst = conn.prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
+				        rs = pst.executeQuery();
+				        rs.first();
+				        this.postId = rs.getInt("postId");
+				        //this.creationDateTime = rs.getString("creationDateTime");
+				        rs.close();
+				        pst.close();
+				            
+				            
+				        //insert postid and user id into user_post
+				        pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
+				        pst.executeUpdate();
+				        pst.close();
+				        		        	
+				        //b.addPost(postTitle, postBody);
+				        b.addPost(this);
+				        b.setPostCount(b.getPostCount()+1);  
+	        		}else if( editMode ){
+			        
+		        		//select postid from post table where blogid and title is the same
+				        pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+b.getPostAt(b.getToEdit()).postTitle+"' ");
+				        rs = pst.executeQuery();
+				        rs.first();
+				        this.postId = rs.getInt("postId");
+				        //this.creationDateTime = rs.getString("creationDateTime");
+				        rs.close();
+				        pst.close();
+		        						        
+				        pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE blogId = ? AND postID  = ?");  
+			            pst.setString(1, postTitle);
+			            pst.setString(2, postBody);
+			            pst.setBoolean(3, isPublic);
+			            pst.setInt(4, b.getPostAt(b.getToEdit()).blogId);
+			            pst.setInt(5, postId);
+		        		pst.executeUpdate(); 
+			            //closing the connection to prepare for the next prepared statement.
+			            pst.close();
+			            b.getPostAt(b.getToEdit()).postTitle = postTitle;
+			            b.getPostAt(b.getToEdit()).postBody = postBody;
 		            
 		       
 		            /*
