@@ -33,6 +33,10 @@ input.button{
 	font-size:18px;
 }
 
+fixed-panel{
+	max-width: 400px;
+}
+
 .centered80W{
 	width:80%;
 	margin-left:10%;
