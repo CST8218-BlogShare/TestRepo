@@ -2,6 +2,7 @@
     <wb-module deploy-name="My First Dynamic Web Project">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Lang"/>
         <property name="context-root" value="My_First_Dynamic_Web_Project"/>
         <property name="java-output-path" value="/My First Dynamic Web Project/build/classes"/>
     </wb-module>
