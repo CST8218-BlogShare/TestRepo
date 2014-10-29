@@ -90,8 +90,7 @@
 					
 					//uncheck and disable editable checkbox
 					editCheckBox.checked = false;
-					editCheckBox.disabled = true;
-						
+					editCheckBox.disabled = true;		
 				}
 			}
 		}
@@ -102,12 +101,12 @@
 			<form name="searchForm" action="searchServlet" method="post" >
 				<table style="width:90%; margin-right:auto; margin-left:auto;">
 					<tr style="height:50%;">
-						<td><h3>BLOGSHARE</h3></td>
+						<td><h3><a href="Home.jsp">BLOGSHARE</a></h3></td>
 						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name="navBarSearchTerm" maxlength=100/></td>
 						<td style="width:10%"> <input type=checkbox id="navBarBlogsCheck" name="navBarBlogsCheck" checked="checked" OnClick="BlogClicked(this)"/><% out.println(lang.getString("blogs")); %><p>  </td>
 						<td style="width:10%"> <input type=checkbox id="navBarTitleCheck" name="navBarTitleCheck" checked="checked"/><% out.println(lang.getString("titles")); %><p></td>
 						<td style="width:10%"> <input type=checkbox id="navBarEditableCheck" name="navBarEditableCheck" /><% out.println(lang.getString("editable")); %><p> </td>
-						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch maxlength=100 value="<%=lang.getString("search") %>"/></td>
+						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch value="<%=lang.getString("search") %>"/></td>
 					</tr>
 					<tr style="height:50%;">
 						<% if(session.getAttribute("currentUser") == null){ %>
@@ -126,4 +125,10 @@
 				<input type=hidden name=language value="<%=languageSwitch%>"/>
 				<input type=submit name=langbutton maxlength=100 value="<%=lang.getString("gotolang")%>"/>
 			</form>
+			
+			<% if(session.getAttribute("currentUser") != null){ %>
+			<form name="logoutForm" action="logoutServlet" method="post">
+				<input type=submit name=navBarSearch value="Logout"/>
+			</form>
+			<% } %>
 		</header>

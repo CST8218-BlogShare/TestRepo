@@ -230,16 +230,17 @@ public class Blog {
     	*/
         	this.blogTitle = blogTitle;
         	
-        	if(this.blogId == -1){
-        		//get the blog's id with the title
-        		pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = ?");
-        		pst.setString(1, blogTitle);
-            	rs = pst.executeQuery();
-            	rs.first();
-            	this.blogId = rs.getInt("blogid");
-            	rs.close();
-            	pst.close();
-        	}
+        	
+        	//get the blog's id and isPubic value using the value of the title
+        	pst = connectionManager.getConnection().prepareStatement("select blogid, isPublic from blog where title = ?");
+        	pst.setString(1, blogTitle);
+            rs = pst.executeQuery();
+            rs.first();
+            this.blogId = rs.getInt("blogid");
+            this.isPublic = rs.getBoolean("isPublic");
+            rs.close();
+            pst.close();
+        	
         	
         	//retrieve userId based on blogId value within user_blog table
         	pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u where b.blogId = '"+blogId+"' AND b.blogId = ub.blogId AND u.userId = ub.userId");
@@ -258,7 +259,7 @@ public class Blog {
         	pst.close();
         	
         	//get the blog's posts and their bodies from the database using the blogid
-        	pst = connectionManager.getConnection().prepareStatement("select postId, title, content from post where blogid = '"+blogId+"' ");
+        	pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = '"+blogId+"' ");
         	rs = pst.executeQuery();
         	rs.last();
         	postCount = rs.getRow();
@@ -270,6 +271,7 @@ public class Blog {
         			p.setPostId(rs.getInt("postId"));
         			p.setPostTitle(rs.getString("title"));
         			p.setPostBody(rs.getString("content"));
+        			p.setIsPublic(rs.getBoolean("isPublic"));
         			//p.setCreationDateTime(rs.getString("creationDateTime"));
         			
         			//selecting the author of the current post, by checking the contents of the user_post table to retireve, the userId associated with the post, and then selecting the username based on that userId. 

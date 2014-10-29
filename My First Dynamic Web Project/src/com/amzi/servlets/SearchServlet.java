@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -167,7 +166,7 @@ public class SearchServlet extends HttpServlet {
 						
 						//the query being used will depend on if the user is a public or registered user. 
 						if(u == null){
-							String queryString = "select postId from post where " + searchTermTitleBody + " AND isPublic = 1"; 
+							String queryString = "select postId from post where isPublic = 1 AND " + searchTermTitleBody; 
 							ps = connectionManager.getConnection().prepareStatement(queryString);
 						}else{
 							//find the posts where the user has been granted editing privileges and the title and or body of the post matches the search term.  

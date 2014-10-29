@@ -68,6 +68,7 @@ public class BlogCreateServlet extends HttpServlet{
 	    postBody=request.getParameter("postBody");
 		
 		b = new Blog(blogTitle,u.getUsername(),blogIsPublic);
+		//the first post is never publicly editable. 
 		p = new Post(postTitle,postBody, u.getUsername(),false);
 		pep = new PostEditPrivilege();
 		
