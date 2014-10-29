@@ -284,6 +284,44 @@ public class Post {
 	            }  
 	        }  
 	        return status;  
-	    } 
+	    }
+	 
+	 public boolean determinePostEditPrivilege(User u){
+		 Boolean editEnabled = true;
+		 PreparedStatement pst = null;
+		 ResultSet rs = null;
+			
+			//If the post is not public and the current user is not the author of the post.
+			if( isPublic == false && author.equals(u.getUsername()) == false){
+				
+				//An attempt is made to match current userId with a userId that is associated to the privilegeId of this post. 
+				
+				DbConnection connectionManager = DbConnection.getInstance(); 					
+				editEnabled = false;
+				
+				try{
+					pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
+																			 " where u.userid = upep.userid AND " +
+																			 " upep.postEditPrivilegeId = pep.postEditPrivilegeId AND " +
+																		     " pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND " +
+																			 " p.postId = ppep.postid AND " +
+																			 " u.userid = up.userid AND " +
+																			 " P.postid = up.postid AND " +
+																			 " p.postid = '"+postId+"'"); 
+					rs = pst.executeQuery();
+					while(rs.next()){
+						//if the user does not have a corresponding entry for the post within postEditPrivilege
+						if(u.getUserId() == rs.getInt("userId")){
+							editEnabled = true;
+							break;
+						}
+					}
+				}catch(SQLException sqlE){
+					System.out.println("An exception was thrown while attempting to associate the current user with the edit privileges granted granted for this post.");
+					sqlE.printStackTrace();
+				}
+			}
+			return editEnabled;
+	 }
 }  
 

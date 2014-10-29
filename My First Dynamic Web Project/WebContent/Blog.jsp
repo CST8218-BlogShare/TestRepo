@@ -1,7 +1,7 @@
 <%@ page language="java" 
 		 contentType="text/html; charset=ISO-8859-1"  
     	 pageEncoding="ISO-8859-1"
-    	 import="com.amzi.dao.Blog, com.amzi.dao.User, com.amzi.dao.Post, com.amzi.dao.DbConnection, java.sql.PreparedStatement, java.sql.ResultSet, java.sql.SQLException "
+    	 import="com.amzi.dao.Blog, com.amzi.dao.User, com.amzi.dao.Post"
     %>  
 <!DOCTYPE html>
 <html>
@@ -72,8 +72,10 @@
 			for(int i = 0 ; i < b.getPostCount(); ++i){
 			
 				Post p = b.getPostAt(i);
-				Boolean editEnabled = true;
+				Boolean editEnabled = p.determinePostEditPrivilege(u);
 				
+				
+				/*
 				//If the post is not public and the current user is not the author of the post.
 				if( !p.getIsPublic() && !p.getAuthor().equals(u.getUsername())){
 					
@@ -105,6 +107,7 @@
 						sqlE.printStackTrace();
 					}
 				}
+				*/
 				
 		 %>
 			 

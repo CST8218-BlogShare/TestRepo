@@ -53,35 +53,41 @@ if (request.getParameter("language") != null){
 <body>
 
 	<jsp:include page="SearchBar.jsp"></jsp:include>
-	
+		
 		<!-- "BlogShare" banner -->
 		<div class="FillScreenTextCentered" style="margin-bottom:2%;"> 
 			<font size=7>BLOGSHARE </font>
 		</div>
 
-		<!--  A brief explanation of the user's options -->
+		
+<!--  A brief explanation of the user's options -->
 		<div class="FillScreenTextCentered">
 			<font size=4>
 				<% out.println(lang.getString("content.1")); %>
 			</font> 
-				<br>
-				<br>
-				<table style="width:80%;  margin-left:5%; margin-right:5%;">
-					<tr>
-						<td>
-							<font size=4>
-								<% out.println(lang.getString("content.2")); %>
-							</font>
-						</td>
-						<td>
-							<font size=4>
-								<% out.println(lang.getString("content.3")); %>
-							</font>
-						</td>	
-					</tr>
-				</table>
 		</div>
+				
+		<br>
+		<br>
 	
+		<% if(session.getAttribute("currentUser") == null){ %>
+	
+		<div class="FillScreenTextCentered">
+			<table style="width:80%;  margin-left:5%; margin-right:5%;">
+				<tr>
+					<td>
+						<font size=4>
+							<% out.println(lang.getString("content.2")); %>
+						</font>
+					</td>
+					<td>
+						<font size=4>
+							<% out.println(lang.getString("content.3")); %>
+						</font>
+					</td>	
+				</tr>
+			</table>
+		</div>
 		
 		<!-- table containing form for user registration and login-->
 		<div>														   
@@ -154,5 +160,14 @@ if (request.getParameter("language") != null){
 				<br>
 			</p>
 		</div>	
+		
+		<% }else{ %>
+		
+			<div class="FillScreenTextCentered" style="color:LightBlue;">
+				Thank you for using BlogShare, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
+				Access your profile by clicking the welcome message at the top left of the page. 
+			</div>
+		<% } %>
+		
 	</body>
 </html>
