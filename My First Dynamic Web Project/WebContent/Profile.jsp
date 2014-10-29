@@ -51,7 +51,7 @@ contentType="text/html; charset=ISO-8859-1"
 		
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
 		
-			<div class="col-sm-4">
+			<div class="col-sm-11">
 			<div style="max-width:600px">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -69,8 +69,7 @@ contentType="text/html; charset=ISO-8859-1"
 					</div>
 				</div>
 			</div>
-			</div><!-- end col-sm-4-->
-			<div class="col-sm-7"></div><!-- end col-sm-7-->
+			</div><!-- end col-sm-11-->
 		</div><!-- End row -->
 		<div class="row">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
