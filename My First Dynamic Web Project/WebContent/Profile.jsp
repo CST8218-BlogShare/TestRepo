@@ -42,12 +42,12 @@ contentType="text/html; charset=ISO-8859-1"
 	<div class="container">
 		<jsp:include page="SearchBar.jsp"></jsp:include>
 	
-		<h1>
-			<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-			<p><%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %></p>
+		<h1 class="row" style="color:white">
+			<span class="glyphicon glyphicon-user" style="fontSize:50px; color:lightgrey"></span>
+			<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
 		</h1>		
-		<div class="row">
 		
+		<div class="row">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
 		
 			<div class="col-sm-11">
@@ -91,7 +91,7 @@ contentType="text/html; charset=ISO-8859-1"
 										out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>");
 									}		
 								} else {
-								out.println("<li class=\"list-group-item\">No Blogs Found</li>");
+								out.println(lang.getString("noblog"));
 								}
 							%>
 						</div>

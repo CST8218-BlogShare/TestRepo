@@ -60,10 +60,8 @@
 			 	
 			 	<!-- blog title -->
 			 	<tr>
-					<td>
-					
+					<td>					
 						<p title="<%=lang.getString("blogtitle")%>" style="font-size:28px"> <b> <%= b.getBlogTitle() %> </b> </p>
-
 					</td>
 					<td>
 						<!-- space for edit logo -->
