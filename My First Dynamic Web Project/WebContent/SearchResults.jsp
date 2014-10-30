@@ -51,39 +51,102 @@
 				ResultSet rs = null;
 				DbConnection connectionManager = DbConnection.getInstance();
 				String t = result.getResultType();
+				String blogTitle="";
+				String blogAuthor="";
+				String postTitle="";
+				String postBody="";
+				int blogId;
 		%>
 		
 		<article style= "width:95%; margin-left:auto; margin-right:auto; border-style:dashed; border-width:thin; border-color:lightgrey;">
-			<table style="width:100%;">
+			<table style="width:100%; margin-right:auto; margin-left:auto; text-align:center;" >
 			<% 
 				try{
 					switch(t){
 						case "Blog": 
-							ps = connectionManager.getConnection().prepareStatement("select title from blog where blogid = "+result.getResultIdAt(i)+" ");
+							ps = connectionManager.getConnection().prepareStatement("select blogId, title from blog where blogid = "+result.getResultIdAt(i)+" ");
 							rs = ps.executeQuery();
 							rs.first();
+							blogId = rs.getInt("blogId");
+							blogTitle = rs.getString("title");
+							
+							ps.close();
+							rs.close();
+							
+							ps = connectionManager.getConnection().prepareStatement( "select username from user u, blog b, user_blog ub" +
+																					 " where" + 
+							      												     " b.blogid = "+blogId+" AND" +
+																			   		 " b.blogid = ub.blogid AND" +
+						            											     " u.userId = ub.userId");
+							rs = ps.executeQuery();
+							rs.first();
+							blogAuthor = rs.getString("username");
+
+							ps.close();
+							rs.close();
+										
 			%>
 							<tr>
-								<td style="font-size:18px;">
-								Blog Title: <br>
-								<%= rs.getString("title") %>
+								<td style="font-size:18px; width:50%;">
+								<div style="float:right; padding-right:2%">
+									<div style="text-decoration:underline">Blog Title</div> 
+									<%= blogTitle %>
+								</div>
 								</td>
+								
+								
+								
+								<td style="font-size:18px; width:50%;">
+								<div style="float:left; padding-left:2%">
+									<div style="text-decoration:underline"> Author</div> 
+									<%= blogAuthor %> 
+								</div>
 							</tr>
 			<% 				break;
 						case "Post":
-							ps = connectionManager.getConnection().prepareStatement("select b.title as blogTitle, p.title as postTitle, p.content as postContent" +
+							
+							ps = connectionManager.getConnection().prepareStatement("select b.blogid as blogId, b.title as blogTitle, p.title as postTitle, p.content as postBody" +
 						   														    " from blog b, post p" +
 																				    " where b.blogid = p.blogid AND" +
 																				    " p.postId =  "+result.getResultIdAt(i)+" ");
 							rs = ps.executeQuery();
 							rs.first();
+							blogTitle = rs.getString("blogTitle");
+							blogId = rs.getInt("blogId");
+							postTitle = rs.getString("postTitle");
+							postBody = rs.getString("postBody");
+							
+							ps.close();
+							rs.close();
+							
+							ps = connectionManager.getConnection().prepareStatement( "select username from user u, blog b, user_blog ub" +
+									 												 " where" + 
+																			         " b.blogid = "+blogId+" AND" +
+																					 " b.blogid = ub.blogid AND" +
+																		             " u.userId = ub.userId");
+							rs = ps.executeQuery();
+							rs.first();
+							blogAuthor = rs.getString("username");
+							
+							ps.close();
+							rs.close();
 			 %>
 		
 							<tr>
-								<td style="font-size:18px;">
-								Blog Title: <br>
-								<%= rs.getString("blogTitle") %>
+								<td style="font-size:18px; width:50%;">
+								<div style="float:right; padding-right:2%">
+									<div style="text-decoration:underline">Blog Title</div> 
+									<%= blogTitle %>
+								</div>
 								</td>
+								
+								
+								
+								<td style="font-size:18px; width:50%;">
+								<div style="float:left; padding-left:2%">
+									<div style="text-decoration:underline"> Author</div> 
+									<%= blogAuthor %> 
+								</div>
 							</tr>
 								
 							<!-- making space -->
@@ -94,15 +157,23 @@
 							</tr>
 								
 							<tr>
-								<td style="font-size:18px;">
-								Title: <br>
-								<%= rs.getString("postTitle") %>
+								<td colspan="2" style="font-size:18px;">
+									<div style="text-decoration:underline"> Title </div> 
+									<%= postTitle %>
 								<td>
 							</tr>
+							
+							<!-- making space -->
 							<tr>
-								<td style="font-size:18px;">
-								Content: <br>
-								<%= rs.getString("postContent") %>
+								<td>
+									<br>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="2" style="font-size:18px;">
+									<div style="text-decoration:underline"> Content </div> 
+									<%= postBody %>
 								</td>
 							</tr>
 			<% 				break;

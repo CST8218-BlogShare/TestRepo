@@ -97,7 +97,7 @@ if (request.getParameter("language") != null){
 		
 		<!-- table containing form for user registration and login-->
 		<div>														   
-			<table class="centered80W" style="border-collapse:collaspe;">
+			<table class="centered80W">
 				<tr>
 				<!--Registration Form -->
 					<td style="width:40%;">

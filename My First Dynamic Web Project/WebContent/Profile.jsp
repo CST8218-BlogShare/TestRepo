@@ -44,7 +44,7 @@ contentType="text/html; charset=ISO-8859-1"
 	
 		<h1>
 			<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-			<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
+			<p><%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %></p>
 		</h1>		
 		<div class="row">
 		

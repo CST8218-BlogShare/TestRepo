@@ -61,11 +61,10 @@
 			 	<!-- blog title -->
 			 	<tr>
 					<td>
-<<<<<<< HEAD
 						<p title="Blog Title" style="font-size:24px;"><b> <%= b.getBlogTitle() %> </b> </p>
-=======
+
 						<p title="<%=lang.getString("blogtitle")%>"> <%= b.getBlogTitle() %> </p>
->>>>>>> 21303c99db7f899dd97e955b80ba5ac623d9ba19
+
 					</td>
 					<td>
 						<!-- space for edit logo -->
@@ -77,11 +76,8 @@
 				
 				<tr>
 					<td>
-<<<<<<< HEAD
-						<a style="color:lightblue; font-size:18px;"" href="Profile.jsp"> Written by <%= b.getAuthor() %>  </a> 
-=======
+						<a style="color:lightblue; font-size:18px;" href="Profile.jsp"> Written by <%= b.getAuthor() %>  </a> 
 						 <h3 title="<%=lang.getString("blogauthor")%>"> <a href="Profile.jsp"> <%=lang.getString("writtenby")%> <%= b.getAuthor() %>  </a> </h3> 
->>>>>>> 21303c99db7f899dd97e955b80ba5ac623d9ba19
 					</td>
 				</tr>
 				
