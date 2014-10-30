@@ -37,17 +37,27 @@
 	
 			<!-- blog title -->
 			<tr style="margin-bottom: 5%;">
-				<td> <p style="font-size:24px;"> <%= b.getBlogTitle() %><p></td>
+				<td> <p style="font-size:32px;"> <b> <%= b.getBlogTitle() %> </b></p></td>
 			</tr>
 	
 			<!-- creating space -->
 			<tr>
-				<td><br></td>
+				<td><br><br></td>
+			</tr>
+			
+			<tr>
+				<td>
+					<p style="font-size:17px;">
+					The Title and Post shown below are from the first post of this blog.<br>
+					They should contain a general explanation of the blog, and are shown to help you create your post. <br>
+					</p>
+					<br>
+				</td>
 			</tr>
 	
 			<!-- first post -->
 			<tr>
-				<td><p style="font-size:20px;"> <%= b.getPostAt(firstPostIndex).getPostTitle() %> </p></td>
+				<td><p style="font-size:20px; text-decoration:underline;"> <%= b.getPostAt(firstPostIndex).getPostTitle() %> </p></td>
 			</tr>
 	
 			<!-- creating space -->
@@ -64,24 +74,19 @@
 	
 			<!-- creating space -->
 			<tr>
-				<td><br></td>
+				<td><br><br></td>
 			</tr>
 			
 			<!-- post to be added -->
 			<tr>
 				<td>
-					<p style="font-size:16px;">
-					The Title and Post shown above is your previous post to help
-					you continue writing your blog below
-					</p>
-	
-					<p style="font-size:18px;">New Post Title Below</p>
+					<p style="font-size:20px; text-decoration:underline;">New Post Title</p>
 					<%
 						if( isEditMode == false){
 					%>
 							<input type=text name=postTitle maxlength=100/>	
 					
-							<p style="font-size:18px;">New Post Content Below</p> 
+							<p style="font-size:20px; text-decoration:underline;">New Post Content</p> 
 							
 							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea>
 					<%
@@ -89,7 +94,7 @@
 					%>
 							<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
 					
-							<p style="font-size:18px;">New Post Content Below</p> 
+							<p style="font-size:20px; text-decoration:underline;">Current Post Content</p> 
 							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>
 								<%=b.getPostAt(toEdit).getPostBody() %>
 							</textarea>
@@ -113,6 +118,7 @@
 					<p style="font-size:18px;">
 						This post may be made editable by any BlogShare visitor.<br>
 						By selecting the option below.<br>
+						<br>
 					</p>
 				</td>
 			</tr>
@@ -120,18 +126,18 @@
 			<tr>
 				<td>
 					<%
-						if( isEditMode == false){
+						if(isEditMode == false){
 					%>
-					<input type=checkbox name="postEditableCheckBox"/><p style="font-size:16px;">Allow Public Editing</p>
+					<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;">Allow Public Editing</p>
 					<%
 						}else if(isEditMode == true){
 							if(b.getPostAt(toEdit).getIsPublic()){
 					%>
-								<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;">>Allow Public Editing</p>
+								<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;">Allow Public Editing</p>
 					<%		
 							}else{ 
 					%>
-								<input type=checkbox name="postEditableCheckBox"/><p style="font-size:16px;">Allow Public Editing</p>
+								<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;">Allow Public Editing</p>
 						<% } %>
 					<%
 						}

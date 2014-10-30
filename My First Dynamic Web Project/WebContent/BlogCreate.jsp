@@ -18,8 +18,8 @@
 				<tr>
 					<td>
 						<div class="centered80W" style="margin-bottom:3%;">
-							<p>
-								Create Your Blog<br>
+							<p style="font-size:32px;">
+							   	<b>Create Your Blog</b> <br>
 							</p> 
 						</div>
 					</td>
@@ -28,10 +28,10 @@
 				<!-- blog title -->
 				<tr style="margin-bottom: 5%;">
 					<td>
-						<p> 
-							   Enter Blog Title<br>
-						 </p>
-						 <p><input type=text name=blogTitle maxlength=100 /></p>
+						<p style="font-size:20px; text-decoration:underline"> 
+						Blog Title
+						</p>
+						<input type=text name=blogTitle maxlength=100 />
 					</td>
 				</tr>
 		
@@ -43,7 +43,7 @@
 				<tr>
 					<td>
 						<div class="centered80W" style="margin-bottom:2%;">
-							<p>
+							<p style="font-size:18px">
 								Please use the first post to describe the purpose of your Blog.<br>
 							</p>
 						</div>
@@ -54,12 +54,10 @@
 				<!-- first post -->
 				<tr>
 					<td>
-						<p>
-							Enter Post Title<br>
+						<p style="font-size:20px; text-decoration:underline">
+						   Post Title
 						</p>
-						
-						<input type=text name=postTitle maxlength=100 />
-					</td>
+						<input type=text name=postTitle readonly="readonly" value="Explanation of Blog"/></td>
 				</tr>
 		
 				<!-- creating space -->
@@ -70,31 +68,20 @@
 		
 				<tr>
 					<td>
-						<p>
-							Enter Post Body<br>
+						<p style="font-size:20px; text-decoration:underline">
+							Post Body<br>
 						</p>
 						<textarea name="postBody" WRAP=soft COLS=80 ROWS=10></textarea> <br> <br>
 					</td>
 				</tr>
 		
 				<tr>
-					<td class="centered80W">
+					<td class="centered80W" style="font-size:18px;">
 						<p>
 							The title of your Blog and the title and content of your first Post.<br> 
 							Are editable only by you, the author of the Blog.<br>
-						</p> 
-					<td>
-				<tr>
-				
-				
-				<!-- creating space -->
-				<tr>
-					<td><br></td>
-				</tr>
-				
-				<tr>
-					<td class="centered80W">
-						<p>
+							<br>
+							<br>
 							Additional posts may be made editable by any BlogShare visitor.<br>
 							By selecting the option below.<br>
 						</p>
@@ -103,7 +90,7 @@
 				
 				<tr>
 					<td>
-						<input type=checkbox name="blogEditableCheckBox"/><p>Allow Public Editing</p>
+						<input type=checkbox name="blogEditableCheckBox"/><p style="font-size:18px;">Allow Public Editing</p>
 					</td>
 				</tr>
 		

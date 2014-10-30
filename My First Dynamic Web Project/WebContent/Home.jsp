@@ -104,7 +104,7 @@ if (request.getParameter("language") != null){
 						<form name="RegisterForm" action="registerServlet" method="post">
 							<table>
 								<tr> 
-										 <td colspan=2> <p style="font-size:18px;"><b><% out.println(lang.getString("register")); %></b> </p> </td> 
+										 <td colspan=2> <p style="font-size:22px;"><b><% out.println(lang.getString("register")); %></b> </p> </td> 
 								</tr>
 								<tr>
 										 <td class="HomeInputTitle"><p><% out.println(lang.getString("username")); %></p></td> <td  class="HomeInputContent"><input type=text name=registerUsername value="" maxlength=100/> </td> 
@@ -127,7 +127,7 @@ if (request.getParameter("language") != null){
 						<form name="LoginForm" action="loginServlet" method="post">
 							<table>
 								<tr>
-									<td colspan=2> <p style="font-size:18px;"> <b><% out.println(lang.getString("login")); %></b> </p> </td> 
+									<td colspan=2> <p style="font-size:24px;"> <b><% out.println(lang.getString("login")); %></b> </p> </td> 
 								</tr>
 							    <tr>
 									<td class="HomeInputTitle"><p><% out.println(lang.getString("username")); %></p></td> <td><input type=text name=loginUsername value="" maxlength=100/> </td> 

@@ -61,9 +61,8 @@
 			 	<!-- blog title -->
 			 	<tr>
 					<td>
-						<p title="Blog Title" style="font-size:24px;"><b> <%= b.getBlogTitle() %> </b> </p>
-
-						<p title="<%=lang.getString("blogtitle")%>"> <%= b.getBlogTitle() %> </p>
+					
+						<p title="<%=lang.getString("blogtitle")%>" style="font-size:28px"> <b> <%= b.getBlogTitle() %> </b> </p>
 
 					</td>
 					<td>
@@ -76,8 +75,7 @@
 				
 				<tr>
 					<td>
-						<a style="color:lightblue; font-size:18px;" href="Profile.jsp"> Written by <%= b.getAuthor() %>  </a> 
-						 <h3 title="<%=lang.getString("blogauthor")%>"> <a href="Profile.jsp"> <%=lang.getString("writtenby")%> <%= b.getAuthor() %>  </a> </h3> 
+						<a href="Profile.jsp" title="<%=lang.getString("blogauthor")%>" style="color:lightblue; font-size:18px;"> <%=lang.getString("writtenby")%> <%= b.getAuthor() %>  </a>
 					</td>
 				</tr>
 				
@@ -139,11 +137,7 @@
 			 
 			 <tr>
 				<td>
-
-					<p title="Title Of Post - Created by <%= p.getAuthor() %>" style="font-size:18px; text-decoration:underline;"> <%= p.getPostTitle() %> </p>
-
-					<p title="<%=lang.getString("posttitle")%> <%= p.getAuthor() %> "> <%= p.getPostTitle() %> </p>
-
+					<p title="<%=lang.getString("posttitle")%> <%= p.getAuthor() %>" style="font-size:20px; text-decoration:underline;"> <%= p.getPostTitle() %> </p>
 				</td>
 				
 				<td>
@@ -160,9 +154,7 @@
 					
 			<tr>
 				<td style="background:white; text-align:left;">	
-					 <p title="Content Of Post - Created by <%= p.getAuthor() %>" style="margin:5%; color:black;"><%= p.getPostBody() %></p>
-
-					<p title="<%=lang.getString("postcontent")%> <%= p.getAuthor() %>" style="margin:5%"><%= p.getPostBody() %></p>
+					 <p title="<%=lang.getString("postcontent")%> <%= p.getAuthor() %>" style="margin:5%; color:black;"><%= p.getPostBody() %></p>
 				</td>
 			</tr>	
 			 

@@ -33,7 +33,7 @@
 			<%
 				if(result.getResultCount() == 0){
 			%>
-					Unable to find any <%=result.getResultType() %> content relating to search term "<%= result.getSearchTerm() %>". 
+					Unable to find any <%=result.getResultType() %> content during previous search, relating to search term "<%= result.getSearchTerm() %>". 
 			<% 
 				}else{
 			%>		
