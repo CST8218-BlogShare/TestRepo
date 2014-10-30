@@ -1,9 +1,31 @@
 <%@ page language="java" 
 		 contentType="text/html; charset=ISO-8859-1"  
     	 pageEncoding="ISO-8859-1"
-    	 import="com.amzi.dao.Blog, com.amzi.dao.User, com.amzi.dao.Post"
+    	 import="com.amzi.dao.Blog, com.amzi.dao.User, com.amzi.dao.Post, java.util.ResourceBundle"
     %>  
 <!DOCTYPE html>
+
+<% 
+	session.setAttribute("currentpage","Blog");
+	ResourceBundle lang = ResourceBundle.getBundle("Blog_EN");
+	
+	//if the session language is FR switch to french, otherwise remains english as set above
+	if (session.getAttribute("language").toString().equals("FR")){
+		lang = ResourceBundle.getBundle("Blog_FR");
+	} 
+	
+	//if the user clicked change language, set to appropriate language
+	if (request.getParameter("language") != null){	
+		if (request.getParameter("language").equals("FR")){
+			lang = ResourceBundle.getBundle("Blog_FR");
+			session.setAttribute("language","FR");
+		} else {
+			lang = ResourceBundle.getBundle("Blog_EN");
+			session.setAttribute("language","EN");
+		}
+	}		
+	%>
+	
 <html>
 <!--  The page used to display all Blogs created within BLOGSHARE
 	
@@ -39,11 +61,11 @@
 			 	<!-- blog title -->
 			 	<tr>
 					<td>
-						<p title="Blog Title"> <%= b.getBlogTitle() %> </p>
+						<p title="<%=lang.getString("blogtitle")%>"> <%= b.getBlogTitle() %> </p>
 					</td>
 					<td>
 						<!-- space for edit logo -->
-						<a href="BlogEdit.jsp"><img title="Read Only Element - User Cannot Edit" src="images/read.jpg" alt="Read Only"> </a>
+						<a href="BlogEdit.jsp"><img title="<%=lang.getString("readonlyelement")%>" src="images/read.jpg" alt="<%=lang.getString("readonly")%>"> </a>
 					</td>
 				</tr>
 				
@@ -51,7 +73,7 @@
 				
 				<tr>
 					<td>
-						 <h3 title="Author of Blog"> <a href="Profile.jsp"> Written by <%= b.getAuthor() %>  </a> </h3> 
+						 <h3 title="<%=lang.getString("blogauthor")%>"> <a href="Profile.jsp"> <%=lang.getString("writtenby")%> <%= b.getAuthor() %>  </a> </h3> 
 					</td>
 				</tr>
 				
@@ -113,24 +135,24 @@
 			 
 			 <tr>
 				<td>
-					<p title="Title Of Post - Created by <%= p.getAuthor() %> "> <%= p.getPostTitle() %> </p>
+					<p title="<%=lang.getString("posttitle")%> <%= p.getAuthor() %> "> <%= p.getPostTitle() %> </p>
 				</td>
 				
 				<td>
 					<% if(editEnabled == true){
 						%>
-					<a href="PostCreate.jsp?editEnabled=true&post=<%=i%>"><img title="Edit Enabled For Element - User Can Edit" src="images/edit.jpg"  alt="Click here to edit."> </a>
+					<a href="PostCreate.jsp?editEnabled=true&post=<%=i%>"><img title="<%=lang.getString("editenabled")%>" src="images/edit.jpg"  alt="<%=lang.getString("clicktoedit")%>"> </a>
 					<% } %>
 					
 					<% if(editEnabled == false){ %>
-					<a href="PostCreate.jsp?editEnabled=false"><img title="Edit Disabled For Element - User Can View" src="images/read.jpg"  alt="Click here to view."> </a>
+					<a href="PostCreate.jsp?editEnabled=false"><img title="<%=lang.getString("editdisabled")%>" src="images/read.jpg"  alt="<%=lang.getString("clicktoview")%>"> </a>
 					<% } %>	
 				</td>
 			</tr>
 					
 			<tr>
 				<td style="background:white; text-align:left;">	
-					<p title="Content Of Post - Created by <%= p.getAuthor() %>" style="margin:5%"><%= p.getPostBody() %></p>
+					<p title="<%=lang.getString("postcontent")%> <%= p.getAuthor() %>" style="margin:5%"><%= p.getPostBody() %></p>
 				</td>
 			</tr>	
 			 
@@ -155,7 +177,7 @@
 			<table class="centered80W">
 				<tr>
 					<td style="width:80%;">
-						<input type="submit" class=button value="Create New Post">
+						<input type="submit" class=button value="<%=lang.getString("createnew")%>">
 					</td>
 					
 					<td style="width:20%;">
