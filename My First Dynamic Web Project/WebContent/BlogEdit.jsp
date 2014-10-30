@@ -13,7 +13,7 @@
 			 	<tr style="margin-bottom:5%;">
 					<td>
 						<p> Blog Title </p>
-						<font size="18"><input type=text name=blogTitle maxlength=100/></font>
+						<p><input type=text name=blogTitle maxlength=100/></p>
 					</td>
 				</tr>
 				

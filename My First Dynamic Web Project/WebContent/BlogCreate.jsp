@@ -18,9 +18,9 @@
 				<tr>
 					<td>
 						<div class="centered80W" style="margin-bottom:3%;">
-							<font size=10>
+							<p>
 								Create Your Blog<br>
-							</font> 
+							</p> 
 						</div>
 					</td>
 				</tr>
@@ -28,10 +28,10 @@
 				<!-- blog title -->
 				<tr style="margin-bottom: 5%;">
 					<td>
-						<font size="5"> 
+						<p> 
 							   Enter Blog Title<br>
-						 </font>
-						 <font size="18"><input type=text name=blogTitle maxlength=100 /></font>
+						 </p>
+						 <p><input type=text name=blogTitle maxlength=100 /></p>
 					</td>
 				</tr>
 		
@@ -43,9 +43,9 @@
 				<tr>
 					<td>
 						<div class="centered80W" style="margin-bottom:2%;">
-							<font size=4>
+							<p>
 								Please use the first post to describe the purpose of your Blog.<br>
-							</font> 
+							</p>
 						</div>
 					<td>
 				<tr>
@@ -54,9 +54,9 @@
 				<!-- first post -->
 				<tr>
 					<td>
-						<font size="5">
+						<p>
 							Enter Post Title<br>
-						</font>
+						</p>
 						
 						<input type=text name=postTitle maxlength=100 />
 					</td>
@@ -70,19 +70,19 @@
 		
 				<tr>
 					<td>
-						<font size="5">
+						<p>
 							Enter Post Body<br>
-						</font>
+						</p>
 						<textarea name="postBody" WRAP=soft COLS=80 ROWS=10></textarea> <br> <br>
 					</td>
 				</tr>
 		
 				<tr>
 					<td class="centered80W">
-						<font size=4>
+						<p>
 							The title of your Blog and the title and content of your first Post.<br> 
 							Are editable only by you, the author of the Blog.<br>
-						</font> 
+						</p> 
 					<td>
 				<tr>
 				
@@ -94,16 +94,16 @@
 				
 				<tr>
 					<td class="centered80W">
-						<font size=4>
+						<p>
 							Additional posts may be made editable by any BlogShare visitor.<br>
 							By selecting the option below.<br>
-						</font>
+						</p>
 					</td>
 				</tr>
 				
 				<tr>
 					<td>
-						<input type=checkbox name="blogEditableCheckBox"/><font>Allow Public Editing</font><p>
+						<input type=checkbox name="blogEditableCheckBox"/><p>Allow Public Editing</p>
 					</td>
 				</tr>
 		

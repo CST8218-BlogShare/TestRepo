@@ -29,11 +29,11 @@
 	</form>
 
 	<section class="FillScreenTextCentered" style="background-color:AliceBlue; height:auto; padding-top:0.5%; padding-bottom:0.5%;">
-		<div class="FillScreenTextCentered" style= "width:95%;">
+		<div class="FillScreenTextCentered" style= "width:95%; font-size:18px;">
 			<%
 				if(result.getResultCount() == 0){
 			%>
-					<p>Unable to find any <%=result.getResultType() %> content relating to search term "<%= result.getSearchTerm() %>".</p> 
+					Unable to find any <%=result.getResultType() %> content relating to search term "<%= result.getSearchTerm() %>". 
 			<% 
 				}else{
 			%>		
@@ -64,7 +64,7 @@
 							rs.first();
 			%>
 							<tr>
-								<td>
+								<td style="font-size:18px;">
 								Blog Title: <br>
 								<%= rs.getString("title") %>
 								</td>
@@ -80,7 +80,7 @@
 			 %>
 		
 							<tr>
-								<td>
+								<td style="font-size:18px;">
 								Blog Title: <br>
 								<%= rs.getString("blogTitle") %>
 								</td>
@@ -94,13 +94,13 @@
 							</tr>
 								
 							<tr>
-								<td>
+								<td style="font-size:18px;">
 								Title: <br>
 								<%= rs.getString("postTitle") %>
 								<td>
 							</tr>
 							<tr>
-								<td>
+								<td style="font-size:18px;">
 								Content: <br>
 								<%= rs.getString("postContent") %>
 								</td>
@@ -112,7 +112,7 @@
 							rs.first();
 			%>
 							<tr>
-								<td>
+								<td style="font-size:18px;">
 								Username: <br>
 								<%= rs.getString("username") %>
 								</td>

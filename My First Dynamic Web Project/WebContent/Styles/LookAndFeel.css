@@ -4,7 +4,7 @@ body{
 	background-color:blue;
 }
 
-font{
+p{
 	color:lightblue;
 }
 
@@ -31,6 +31,10 @@ input{
 
 input.button{
 	font-size:18px;
+}
+
+fixed-panel{
+	max-width: 400px;
 }
 
 .centered80W{

@@ -56,19 +56,29 @@ if (request.getParameter("language") != null){
 		
 		<!-- "BlogShare" banner -->
 		<div class="FillScreenTextCentered" style="margin-bottom:2%;"> 
-			<font size=7>BLOGSHARE </font>
+			<p style="font-size:48px;">BLOGSHARE </p>
 		</div>
 
 		
 <!--  A brief explanation of the user's options -->
 		<div class="FillScreenTextCentered">
-			<font size=4>
+			<p style="font-size:18px;">
 				<% out.println(lang.getString("content.1")); %>
-			</font> 
+			</p> 
 		</div>
 				
 		<br>
 		<br>
+	
+		<% if(session.getAttribute("currentUser") != null){%>
+			
+			<div class="FillScreenTextCentered" style="color:LightBlue;">
+				<p style="font-size:18px;"> 	<%= lang.getString("content.4")%>, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
+				<%= lang.getString("content.5")%></p>
+			</div>
+			
+			
+		<%} %>
 	
 		<% if(session.getAttribute("currentUser") == null){ %>
 	
@@ -76,14 +86,10 @@ if (request.getParameter("language") != null){
 			<table style="width:80%;  margin-left:5%; margin-right:5%;">
 				<tr>
 					<td>
-						<font size=4>
-							<% out.println(lang.getString("content.2")); %>
-						</font>
+						<p style="font-size:17px;"> <% out.println(lang.getString("content.2")); %> </p>
 					</td>
 					<td>
-						<font size=4>
-							<% out.println(lang.getString("content.3")); %>
-						</font>
+						<p style="font-size:17px;"> <% out.println(lang.getString("content.3")); %>	</p>
 					</td>	
 				</tr>
 			</table>
@@ -91,23 +97,23 @@ if (request.getParameter("language") != null){
 		
 		<!-- table containing form for user registration and login-->
 		<div>														   
-			<table class="centered80W" style="border-spacing:0.5in 0.2in; /* 1 in = 1 inch = 2.54 cm  */  border-collapse: separate;">
+			<table class="centered80W" style="border-collapse:collaspe;">
 				<tr>
 				<!--Registration Form -->
 					<td style="width:40%;">
 						<form name="RegisterForm" action="registerServlet" method="post">
 							<table>
 								<tr> 
-										 <td colspan=2> <font size=6 > <b> <% out.println(lang.getString("register")); %> </b> </font> </td> 
+										 <td colspan=2> <p style="font-size:18px;"><b><% out.println(lang.getString("register")); %></b> </p> </td> 
 								</tr>
 								<tr>
-										 <td class="HomeInputTitle"><font><% out.println(lang.getString("username")); %></font></td> <td  class="HomeInputContent"><input type=text name=registerUsername value="" maxlength=100/> </td> 
+										 <td class="HomeInputTitle"><p><% out.println(lang.getString("username")); %></p></td> <td  class="HomeInputContent"><input type=text name=registerUsername value="" maxlength=100/> </td> 
 								</tr>
 								<tr>
-										 <td class="HomeInputTitle"><font><% out.println(lang.getString("password")); %></font></td> <td class="HomeInputContent"> <input type=password name=registerUserPass  maxlength=100/></td>
+										 <td class="HomeInputTitle"><p><% out.println(lang.getString("password")); %></p></td> <td class="HomeInputContent"> <input type=password name=registerUserPass  maxlength=100/></td>
 								</tr>
 								<tr>
-										<td class="HomeInputTitle"><font><% out.println(lang.getString("reenter")); %></font></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
+										<td class="HomeInputTitle"><p><% out.println(lang.getString("reenter")); %></p></td> <td class="HomeInputContent"> <input type=password name=registerReenterPass  maxlength=100/> </td> 
 								</tr>
 								<tr>
 										 <td colspan=2><input class=button type=submit value="<%= lang.getString("register") %>"/></td>     
@@ -121,13 +127,13 @@ if (request.getParameter("language") != null){
 						<form name="LoginForm" action="loginServlet" method="post">
 							<table>
 								<tr>
-									<td colspan=2> <font size=6> <b><% out.println(lang.getString("login")); %></b> </font> </td> 
+									<td colspan=2> <p style="font-size:18px;"> <b><% out.println(lang.getString("login")); %></b> </p> </td> 
 								</tr>
 							    <tr>
-									<td class="HomeInputTitle"><font><% out.println(lang.getString("username")); %></font></td> <td><input type=text name=loginUsername value="" maxlength=100/> </td> 
+									<td class="HomeInputTitle"><p><% out.println(lang.getString("username")); %></p></td> <td><input type=text name=loginUsername value="" maxlength=100/> </td> 
 								</tr>
 								<tr>
-									<td class="HomeInputTitle"><font><% out.println(lang.getString("password")); %></font></td> <td class="HomeInputContent"> <input type=password name=loginUserpass  maxlength=100/>   </td> 
+									<td class="HomeInputTitle"><p><% out.println(lang.getString("password")); %></p></td> <td class="HomeInputContent"> <input type=password name=loginUserpass  maxlength=100/>   </td> 
 								</tr>
 								<tr>
 									<td colspan=2> <br><br> </td> <!-- empty column to fill in table -->  
@@ -142,6 +148,9 @@ if (request.getParameter("language") != null){
 			</table>
 		</div>
 	
+		<% } %>
+		<br>
+		<br>
 		<!--Output area for error messages related to registration and login -->
 		<div>
 			<p class="ErrorMessageOutput" id="errorOutput">
@@ -159,15 +168,6 @@ if (request.getParameter("language") != null){
 				<br>
 				<br>
 			</p>
-		</div>	
-		
-		<% }else{ %>
-		
-			<div class="FillScreenTextCentered" style="color:LightBlue;">
-				<%= lang.getString("content.4")%>, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
-				<%= lang.getString("content.5")%>
-			</div>
-		<% } %>
-		
+		</div>
 	</body>
 </html>

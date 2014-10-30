@@ -62,7 +62,7 @@ public class PostCreateServlet extends HttpServlet {
 		
 		postTitle = request.getParameter("postTitle");
 		postBody = request.getParameter("postBody");
-		
+				
 		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
 		if(request.getParameter("postEditableCheckBox") != null){
 			postIsPublic = true;
