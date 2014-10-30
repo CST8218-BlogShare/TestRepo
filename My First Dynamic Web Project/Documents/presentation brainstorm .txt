@@ -1,0 +1,69 @@
+﻿Topics for demo
+
+What blog share is
+
+BlogShare is a service that allows Users to share text based content with the public.
+Where Users create Blogs and then Posts within these blogs.
+The user may also edit their posts as well as search for content created by themselves and other users. 
+
+This are the basic service BlogShare offers, though.
+
+The interesting features it contains come from it's content related to collaboration.
+
+Collaboration is encouraged by giving the user's the ability to make individual
+Blogs or Posts editable. 
+
+This is done by marking the content as "public". 
+
+Making a Blog "public".
+
+Allows any user to create posts within the Blog.
+As well as enabling edits to these individual Blogs from any User.
+
+Making an individual post "public".
+ 
+Allows any User to edit this post. 
+
+A user can discover editable content by searching for it within the included Search Bar. 
+
+If time allows, we may also enable a feature where individual users may be given 
+"public privileges" for a individual blog or post. 
+
+To keep track of edit changes, an edit history is associated with each post, allowing
+the author of the post to track changes and reverse any undesirable edits. 
+
+Currently we have completed the basic functionality of BlogShare, with the exception 
+of the ability to load to results found using the searchBar. 
+
+Today we will be demoing, account creation, a basic profile edit, blog and post creation
+and finally the options available within our searchBar, including the inclusion of public
+or non public content within the searchResults. 
+
+(Needed for demo, multiple users with editable and non editable content).
+
+Who worked on what- rough draft, feel free to restructure. 
+ 
+Overall Idea and Design of BlogShare - Derek
+Styling and Functionality of Profile - Jan
+Blog create, post create - Vince/Derek
+PostEdit - Vince
+Internationalization - Jan(structure)/Vince(translation)
+
+Database (Design/ Implementation / SQL)  - Derek 
+
+
+Demo of login, profile showoff, Blog, post/creation ,Post edit
+
+Login as Jan/Vince - ( Have blogs already created )
+Show off profile, change username, logout
+Create blog, add post
+Back to profile
+Link to blog from profile
+
+Logout and search for other content - will need a preexisting user, with content that has been created.
+
+Talk about what needs to be built
+
+Edit History
+Privileges for multiple users for single posts or multiple posts.
+Link to generated. Search Results 
