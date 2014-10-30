@@ -3,18 +3,18 @@
 What blog share is
 
 BlogShare is a service that allows Users to share text based content with the public.
-Where Users create Blogs and then Posts within these blogs.
-The user may also edit their posts as well as search for content created by themselves and other users. 
+Where Users create Blogs and Posts within these blogs.
+Currently users may also edit the content they create, 
+as well as search for content created by themselves and other users. 
 
-This are the basic service BlogShare offers, though.
+These are the basic service BlogShare offers.
 
-The interesting features it contains come from it's content related to collaboration.
+The additional more interesting features BlogShare contains come from it's content related to user collaboration.
 
-Collaboration is encouraged by giving the user's the ability to make individual
-Blogs or Posts editable. 
+Collaboration is encouraged by giving the user's the ability to make individual Blogs or Posts editable by other users.
 
 This is done by marking the content as "public". 
-
+r
 Making a Blog "public".
 
 Allows any user to create posts within the Blog.
@@ -24,7 +24,7 @@ Making an individual post "public".
  
 Allows any User to edit this post. 
 
-A user can discover editable content by searching for it within the included Search Bar. 
+A user can discover editable content by searching for a match to its title and or post body it within the included Search Bar. 
 
 If time allows, we may also enable a feature where individual users may be given 
 "public privileges" for a individual blog or post. 
@@ -36,7 +36,7 @@ Currently we have completed the basic functionality of BlogShare, with the excep
 of the ability to load to results found using the searchBar. 
 
 Today we will be demoing, account creation, a basic profile edit, blog and post creation
-and finally the options available within our searchBar, including the inclusion of public
+, postEdit and finally the options available within our searchBar, including the inclusion of public
 or non public content within the searchResults. 
 
 (Needed for demo, multiple users with editable and non editable content).
@@ -51,6 +51,9 @@ Internationalization - Jan(structure)/Vince(translation)
 
 Database (Design/ Implementation / SQL)  - Derek 
 
+Today we will be demoing, account creation, a basic profile edit, blog and post creation
+, postEdit and finally the options available within our searchBar, including the inclusion of public
+or non public content within the searchResults. 
 
 Demo of login, profile showoff, Blog, post/creation ,Post edit
 
