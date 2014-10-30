@@ -39,13 +39,12 @@ contentType="text/html; charset=ISO-8859-1"
 </head>
 <body>
 	<jsp:include page="SearchBar.jsp"></jsp:include>
-
-	<h1>
+	
 		<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-		<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
-	</h1>
+		<p><%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %></p>
+
 	<h3>
-		<span class="label label-default"><% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%></span>
+		<span class="label label-default"> <% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%> </span>
 	</h3>
 
 	<p style="padding: 50px">

@@ -39,7 +39,7 @@
 			 	<!-- blog title -->
 			 	<tr>
 					<td>
-						<p title="Blog Title"> <%= b.getBlogTitle() %> </p>
+						<p title="Blog Title" style="font-size:24px;"><b> <%= b.getBlogTitle() %> </b> </p>
 					</td>
 					<td>
 						<!-- space for edit logo -->
@@ -51,7 +51,7 @@
 				
 				<tr>
 					<td>
-						 <h3 title="Author of Blog"> <a href="Profile.jsp"> Written by <%= b.getAuthor() %>  </a> </h3> 
+						<a style="color:lightblue; font-size:18px;"" href="Profile.jsp"> Written by <%= b.getAuthor() %>  </a> 
 					</td>
 				</tr>
 				
@@ -113,7 +113,7 @@
 			 
 			 <tr>
 				<td>
-					<p title="Title Of Post - Created by <%= p.getAuthor() %> "> <%= p.getPostTitle() %> </p>
+					<p title="Title Of Post - Created by <%= p.getAuthor() %>" style="font-size:18px; text-decoration:underline;"> <%= p.getPostTitle() %> </p>
 				</td>
 				
 				<td>
@@ -130,7 +130,7 @@
 					
 			<tr>
 				<td style="background:white; text-align:left;">	
-					<p title="Content Of Post - Created by <%= p.getAuthor() %>" style="margin:5%"><%= p.getPostBody() %></p>
+					 <p title="Content Of Post - Created by <%= p.getAuthor() %>" style="margin:5%; color:black;"><%= p.getPostBody() %></p>
 				</td>
 			</tr>	
 			 

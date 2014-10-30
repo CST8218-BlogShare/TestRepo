@@ -101,7 +101,7 @@
 		    
 		    // Check if the error was handled
 		    if(!handled){
-		    	out.println("<p />No information about this error is available.");
+		    	out.println("<p style=\"font-size:16px;\" />No information about this error is available.");
 		    }
 		%>
 		
