@@ -44,7 +44,7 @@ contentType="text/html; charset=ISO-8859-1"
 	
 		<h1>
 			<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-			<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
+			<%=u.getUsername()%> <% out.println(lang.getString("profilepage")); %>
 		</h1>		
 		<div class="row">
 		
@@ -91,7 +91,7 @@ contentType="text/html; charset=ISO-8859-1"
 										out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>");
 									}		
 								} else {
-								out.println("<li class=\"list-group-item\">No Blogs Found</li>");
+								out.println(lang.getString("noblog"));
 								}
 							%>
 						</div>
