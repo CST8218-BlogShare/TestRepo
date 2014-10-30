@@ -54,13 +54,33 @@ Database (Design/ Implementation / SQL)  - Derek
 
 Demo of login, profile showoff, Blog, post/creation ,Post edit
 
-Login as Jan/Vince - ( Have blogs already created )
-Show off profile, change username, logout
-Create blog, add post
-Back to profile
-Link to blog from profile
+Show off internationalization
 
-Logout and search for other content - will need a preexisting user, with content that has been created.
+Login as Jan/Vince - ( Have blogs from Derek/Jan/Vince already created )
+Show off profile, 
+edit profile (change username)
+navigate to existing blog to show author has changed.
+Logout, 
+Log back in using new username
+Back to profile
+Create blog "demo blog" that is not publicly editable,
+	add post "public demo post" that is publicly editable to "demo blog"
+Back to profile via searchBar
+Link to blog "demo blog" from profile
+Back to profile,
+link to existing blog
+
+Logout
+Search for "public" in searchBar with editable off
+Search for "public" in searchBar with editable on
+Should find only the post
+Search for a specific user "new username"
+Search for old user.
+
+bugs found during test - dont insert single quotes in any text. 
+					   - dont create user with space in name. 
+
+
 
 Talk about what needs to be built
 
