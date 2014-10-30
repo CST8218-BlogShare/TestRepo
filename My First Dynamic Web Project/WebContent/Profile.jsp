@@ -38,43 +38,76 @@ contentType="text/html; charset=ISO-8859-1"
 <title><%=u.getUsername()%>'s Profile Page</title>
 </head>
 <body>
-	<jsp:include page="SearchBar.jsp"></jsp:include>
+
+	<div class="container">
+		<jsp:include page="SearchBar.jsp"></jsp:include>
 	
-		<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-		<p style="font-size:24px;"> <%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %></p>
-	<h3>
-		<span class="label label-default"> <% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%> </span>
-	</h3>
-
-	<p style="padding: 50px">
-		<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 500px">
-			<% out.println(lang.getString("edit")); %>
-		</button>
-		<br style="clear: left;" /> 
-		<a href="BlogCreate.jsp">
-		<button type="button" class="btn btn-default btn-lrg" style="width: 500px">
-				<% out.println(lang.getString("create")); %>
-		</button></a>
-	</p>
-
-	<!-- the dynamic list of user blogs is generated here -->
-	<div class="list-group">
-		<%
-			//ArrayList<String> userBlogList = (ArrayList<String>) session.getAttribute("userBlogList");
+		<h1>
+			<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
+			<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
+		</h1>		
+		<div class="row">
 		
-			ArrayList<String> userBlogList = u.getUserBlogs(u.getUserId());
+			<div class="col-sm-1"></div><!-- end col-sm-1-->
+		
+			<div class="col-sm-11">
+			<div style="max-width:600px">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+							<% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%>
+					</div>
+					<div class="panel-body">
+						<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 100%">
+							<% out.println(lang.getString("edit")); %>
+						</button>
+						<br style="clear: left;" /> 
+						<a href="BlogCreate.jsp">
+						<button type="button" class="btn btn-default btn-lrg" style="width: 100%">
+							<% out.println(lang.getString("create")); %>
+						</button></a>
+					</div>
+				</div>
+			</div>
+			</div><!-- end col-sm-11-->
+		</div><!-- End row -->
+		<div class="row">
+			<div class="col-sm-1"></div><!-- end col-sm-1-->
+			<div class="col-sm-10">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><%=lang.getString("blogs") %>:</h3>
+					</div>
+					<div class="panel-body">
+					    <!-- the dynamic list of user blogs is generated here -->
+						<div class="list-group ">
+							<%
+								//ArrayList<String> userBlogList = (ArrayList<String>) session.getAttribute("userBlogList");
+							
+								ArrayList<String> userBlogList = u.getUserBlogs(u.getUserId());
+					
+								if (userBlogList != null) {
+									for (String blogTitle: userBlogList){
+										out.print("<li");
+										out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>");
+									}		
+								} else {
+								out.println("<li class=\"list-group-item\">No Blogs Found</li>");
+								}
+							%>
+						</div>
+					</div>
+				</div>
+			</div><!-- end col-sm-10-->
+			<div class="col-sm-1"></div><!-- end col-sm-1-->
+		</div><!-- End row -->
+	</div><!-- End container fluid -->	
 
-			if (userBlogList != null) {
-				for (String blogTitle: userBlogList){
-					out.print("<li");
-					out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>");
-				}		
-			} else {
-			out.println("<li class=\"list-group-item\">No Blogs Found</li>");
-			}
-		%>
-	</div>
-
+	<!-- form used to request a blog by title from getblogservlet -->
+	<form id="goToBlog" action="GetBlogServlet" method="post">
+		<input type="hidden" id="goToBlogName" name="blogTitle" value="">
+	</form>
+	<form id="reloadProfileForm" action="LoadProfileServlet" method="post"></form>
+	
 	<!-- profileedit is shown in this modal window -->
 	<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
@@ -122,12 +155,6 @@ contentType="text/html; charset=ISO-8859-1"
 			</div>
 		</div>
 	</div>
-
-	<!-- form used to request a blog by title from getblogservlet -->
-	<form id="goToBlog" action="GetBlogServlet" method="post">
-		<input type="hidden" id="goToBlogName" name="blogTitle" value="">
-	</form>
-	<form id="reloadProfileForm" action="LoadProfileServlet" method="post"></form>
 
 	<!-- this is all the javascript which controls profile.jsp -->
 	<script>
