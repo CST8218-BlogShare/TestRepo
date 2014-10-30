@@ -73,8 +73,8 @@ if (request.getParameter("language") != null){
 		<% if(session.getAttribute("currentUser") != null){%>
 			
 			<div class="FillScreenTextCentered" style="color:LightBlue;">
-				<p style="font-size:18px;"> Thank you for using BlogShare, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
-				Access your profile by clicking the welcome message at the top left of the page.</p>
+				<p style="font-size:18px;"> 	<%= lang.getString("content.4")%>, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
+				<%= lang.getString("content.5")%></p>
 			</div>
 			
 			
@@ -168,7 +168,6 @@ if (request.getParameter("language") != null){
 				<br>
 				<br>
 			</p>
-		</div>	
-		
+		</div>
 	</body>
 </html>

@@ -41,8 +41,7 @@ contentType="text/html; charset=ISO-8859-1"
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 	
 		<span class="glyphicon glyphicon-user" style="fontSize: 50px"></span>
-		<p><%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %></p>
-
+		<p style="font-size:24px;"> <%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %></p>
 	<h3>
 		<span class="label label-default"> <% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%> </span>
 	</h3>
@@ -87,7 +86,7 @@ contentType="text/html; charset=ISO-8859-1"
 					</button>
 					<h3 class="modal-title" id="myModalLabel">
 						<span class="glyphicon glyphicon-user" style="fontSize:50px"></span> 
-						<%= u.getUsername() %>'s <%=lang.getString("profileedit")%>
+						<%= u.getUsername() %> <%=lang.getString("profileedit")%>
 					</h3>
 				</div>
 				<div class="modal-body">
