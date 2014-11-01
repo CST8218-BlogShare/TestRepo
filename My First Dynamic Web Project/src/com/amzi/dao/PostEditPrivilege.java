@@ -45,7 +45,7 @@ public class PostEditPrivilege {
 	        pst.close();
 	        
 	       
-	        //selecting generated value for postEditPrivilegeId column from previous statement.
+	        //selecting value of postEditPrivilegeId column generated from previous statement.
 	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as PrivilegeId");
 	        rs = pst.executeQuery();
 	        rs.first();

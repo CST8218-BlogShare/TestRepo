@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="My First Dynamic Web Project">
+    <wb-module deploy-name="BlogShare">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/Lang"/>
         <property name="context-root" value="My_First_Dynamic_Web_Project"/>
-        <property name="java-output-path" value="/My First Dynamic Web Project/build/classes"/>
+        <property name="java-output-path" value="/BlogShare/build/classes"/>
     </wb-module>
 </project-modules>

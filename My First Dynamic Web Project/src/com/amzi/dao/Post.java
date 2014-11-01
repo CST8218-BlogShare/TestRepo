@@ -171,15 +171,19 @@ public class Post {
 	        	/* 
 	        	 *Algorithm used below
 	        	 *  
-	        	 	select title from post table based on a match to the title and blogid of the post to be inserted.
-	        	 		if a match is found, do not insert this post into the database.  
+	        	 	Removed! 
+	        	 		select title from post table based on a match to the title and blogid of the post to be inserted.
+	        	 			if a match is found, do not insert this post into the database.  
+	        	 		
+	        	 		
 	        	 	insert post title, blogid content, creation date into post table
 				    select postid from post table where blogid and title is the same
 				    insert postid and user id into user_post
 	        	 */
 	        	
-		        	
-	        		//checking within current blog for a post with the same title as the one that is to be created.
+	        	/*
+	        	  
+		        	//checking within current blog for a post with the same title as the one that is to be created.
 	        		pst = conn.prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
 	        		rs = pst.executeQuery();
 	        		
@@ -195,6 +199,8 @@ public class Post {
 	        		rs.close();
 	        		pst.close();
 	        		
+	        	*/
+	        		
 	        		//checking if the post is part of a blog that is publicly editable.
 	        		if(b.getIsPublic() && b.getPostCount() != 0){
 	        			this.setIsPublic(true);
@@ -207,6 +213,15 @@ public class Post {
 				        pst.executeUpdate();
 				        pst.close();
 				            
+				        //selecting value of postId column generated from previous statement.
+				        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as PostId");
+				        rs = pst.executeQuery();
+				        rs.first();
+				        postId = rs.getInt("PostId");
+				        rs.close();
+				        pst.close();
+				        
+				        /*
 				        //select postid from post table where blogid and title is the same
 				        pst = conn.prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
 				        rs = pst.executeQuery();
@@ -214,8 +229,7 @@ public class Post {
 				        this.postId = rs.getInt("postId");
 				        //this.creationDateTime = rs.getString("creationDateTime");
 				        rs.close();
-				        pst.close();
-				            
+				        pst.close(); */
 				            
 				        //insert postid and user id into user_post
 				        pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
@@ -228,41 +242,24 @@ public class Post {
 	        		}else if( editMode ){
 			        
 		        		//select postid from post table where blogid and title is the same
-				        pst = connectionManager.getConnection().prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+b.getPostAt(b.getToEdit()).postTitle+"' ");
-				        rs = pst.executeQuery();
-				        rs.first();
-				        this.postId = rs.getInt("postId");
-				        //this.creationDateTime = rs.getString("creationDateTime");
-				        rs.close();
-				        pst.close();
-		        						        
+				        this.postId = b.getPostAt(b.getToEdit()).getPostId();
+			    						        
 				        pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE blogId = ? AND postID  = ?");  
 			            pst.setString(1, postTitle);
 			            pst.setString(2, postBody);
 			            pst.setBoolean(3, isPublic);
-			            pst.setInt(4, b.getPostAt(b.getToEdit()).blogId);
+			            pst.setInt(4, b.getBlogId());
 			            pst.setInt(5, postId);
 		        		pst.executeUpdate(); 
 			            //closing the connection to prepare for the next prepared statement.
 			            pst.close();
 			            b.getPostAt(b.getToEdit()).postTitle = postTitle;
 			            b.getPostAt(b.getToEdit()).postBody = postBody;
-		            
-		       
-		            /*
-		            //insert postid and user id into user_post
-		            pst = connectionManager.getConnection().prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
-		            pst.executeUpdate();
-		            pst.close();
-		            
-		           // b.setNewPost(true);
-		            * 
-		            */
-	        	}
+	        		}
 	        } catch (SQLException sqlE) {  
 	        	
 	        	connectionManager.closeConnection();
-	        	System.out.println("Post field missing, throwing SQLException");
+	        	//System.out.println("Post field missing, throwing SQLException");
 	        	sqlE.printStackTrace();
 	        	status = false;
 	        }

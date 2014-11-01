@@ -95,9 +95,7 @@
 							<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
 					
 							<p style="font-size:20px; text-decoration:underline;">Current Post Content</p> 
-							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10>
-								<%=b.getPostAt(toEdit).getPostBody() %>
-							</textarea>
+							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10><%=b.getPostAt(toEdit).getPostBody() %></textarea>
 					<%
 						}
 					%>

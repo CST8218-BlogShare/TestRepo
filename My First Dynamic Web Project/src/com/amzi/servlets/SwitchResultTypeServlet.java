@@ -12,7 +12,7 @@ import com.amzi.dao.SearchResult;
 /**
  * Servlet implementation class switchResultTypeServlet
  */
-public class switchResultTypeServlet extends HttpServlet {
+public class SwitchResultTypeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
    
