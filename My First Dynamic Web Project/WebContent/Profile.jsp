@@ -41,7 +41,7 @@ contentType="text/html; charset=ISO-8859-1"
 %>
 
 
-<title><%=u.getUsername()%>'s Profile Page</title>
+<title><%=u.getUsername()%> Profile Page</title>
 </head>
 <body>
 
@@ -62,7 +62,7 @@ contentType="text/html; charset=ISO-8859-1"
 					<div class="panel-heading">
 							<% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%>
 					</div>
-					<% 	if(session.getAttribute("loggedIn") != null){ %>
+					<% 	if(session.getAttribute("currentProfile") == null){ %>
 						<div class="panel-body">
 							<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 100%">
 								<% out.println(lang.getString("edit")); %>
