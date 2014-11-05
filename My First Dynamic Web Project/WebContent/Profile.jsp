@@ -28,6 +28,8 @@ contentType="text/html; charset=ISO-8859-1"
 			session.setAttribute("language","EN");
 		}
 	}		
+	
+	String test =(String) session.getAttribute("currentPage");
 
 	User u = null;
 	
