@@ -31,10 +31,11 @@ contentType="text/html; charset=ISO-8859-1"
 
 	User u = null;
 	
-	if(session.getAttribute("loggedIn") != null){
+	if(session.getAttribute("currentProfile") == null){
 		u =  (User) session.getAttribute("currentUser");	
 	}else{
 		u = (User) session.getAttribute("currentProfile");
+		session.setAttribute("currentProfile", null);
 	}
 	
 %>

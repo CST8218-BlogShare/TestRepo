@@ -36,7 +36,6 @@ public class LoginServlet extends HttpServlet{
         if(u != null){   
         	getServletContext().setAttribute("errorCode", 0);
         	
-        	userSession.setAttribute("loggedIn",true);
         	userSession.setAttribute("currentUser", u);
         	
         	RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
