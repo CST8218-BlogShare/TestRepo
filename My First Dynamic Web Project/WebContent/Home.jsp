@@ -13,7 +13,7 @@
 <%
 
 //for generating the french/english page link
-session.setAttribute("currentpage","Home");
+session.setAttribute("currentPage","Home");
 
 if(getServletContext().getAttribute("errorCode") == null){
 	getServletContext().setAttribute("errorCode",0);
@@ -70,6 +70,8 @@ if (request.getParameter("language") != null){
 		<br>
 		<br>
 	
+		<!-- If the user is logged in and has navigated back to the home page, display a greeting message that directs them back to their profile -->
+		
 		<% if(session.getAttribute("currentUser") != null){%>
 			
 			<div class="FillScreenTextCentered" style="color:LightBlue;">
@@ -78,8 +80,10 @@ if (request.getParameter("language") != null){
 			</div>
 			
 			
-		<%} %>
+		<% } %>
 	
+		<!-- if the user is not logged in, display the login and registration tables on the page  -->
+		
 		<% if(session.getAttribute("currentUser") == null){ %>
 	
 		<div class="FillScreenTextCentered">

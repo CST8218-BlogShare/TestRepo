@@ -15,9 +15,9 @@ public class SearchResult {
 	 								*/
 	
 	
-	/*public SearchResult() {
+	public SearchResult() {
 		
-	}*/
+	}
 	
 	
 	public SearchResult(String searchTerm, ArrayList<Integer> searchResultsBlog, ArrayList<Integer> searchResultsPost, ArrayList<Integer> searchResultsUser ){

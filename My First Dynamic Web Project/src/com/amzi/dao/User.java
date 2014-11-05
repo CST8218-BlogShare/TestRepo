@@ -14,7 +14,7 @@ public class User{
 	private String dateRegistered = "";
 	
 	public User() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	public User(int userId, String username, String password, String dateRegistered){
@@ -56,6 +56,44 @@ public class User{
 		return dateRegistered;
 	}
 
+	public void buildUserFromId(int userId){
+		 PreparedStatement pst = null; 
+	     ResultSet rs = null;
+	     DbConnection connectionManager = null;
+	     
+	     connectionManager = DbConnection.getInstance();
+	     this.userId = userId;
+	     
+	     try {
+			pst = connectionManager.getConnection().prepareStatement("select username, dateRegistered from user where userid = "+this.userId+"");
+		    rs = pst.executeQuery();
+		    rs.first();
+		    this.username = rs.getString("username");
+		    this.dateRegistered = rs.getString("dateRegistered");
+		    rs.close();
+		    pst.close();
+	     } catch (SQLException sqlE) {
+			sqlE.printStackTrace();
+	     }finally { 
+	        //we now have to manage closing the connection a different way...at logout...
+	        if (pst != null) {  
+	        	try {  
+	        		pst.close();  
+	            } catch (SQLException e) {  
+	                e.printStackTrace();  
+	            }  
+	        }  
+	           
+	        if(rs != null) {  
+	        	try {  
+	        		rs.close();  
+	            } catch (SQLException e) {  
+	            	e.printStackTrace();  
+	            }  
+	        }  
+	     }     
+	}
+	
 	public boolean changePass(String newUsername, String newPass) {
 		boolean status = false;
 		

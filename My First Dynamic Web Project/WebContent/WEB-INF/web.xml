@@ -93,11 +93,19 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>switchResultType</servlet-name>
-    <servlet-class>com.amzi.servlets.switchResultTypeServlet</servlet-class>
+    <servlet-class>com.amzi.servlets.SwitchResultTypeServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>switchResultType</servlet-name>
     <url-pattern>/switchResultTypeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>loadSearchResult</servlet-name>
+    <servlet-class>com.amzi.servlets.LoadSearchResultServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>loadSearchResult</servlet-name>
+    <url-pattern>/loadSearchResultServlet</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>Logout</servlet-name>

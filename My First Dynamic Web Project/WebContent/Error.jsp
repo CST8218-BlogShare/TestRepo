@@ -22,7 +22,6 @@
 		<!--creating space -->
 		
 		<br>
-		<br>
 		
 		<!--
 		 	
@@ -50,8 +49,6 @@
 		
 		        // Display error details for the user
 		        if(ed != null) {
-		            out.println("<p /> An error has occurred <br /><br />");
-		            
 		            switch(ed.getStatusCode()){
 		            	case 400:
 		            		errorDescription="Bad Request Error";
@@ -90,6 +87,7 @@
 		            		errorDescription = "HTTP version not supported error";
 		            }
 		            
+		            out.println("<p class=\"ErrorMessageOutput\" /> An error has occurred <br /><br />");
 		            out.println("Description: " + errorDescription);
 		            out.println("<br/ >ErrorCode: " + ed.getStatusCode());
 		            out.println("<br />URL: " + ed.getRequestURI());
@@ -101,10 +99,11 @@
 		    
 		    // Check if the error was handled
 		    if(!handled){
-		    	out.println("<p style=\"font-size:16px;\" />No information about this error is available.");
+		    	out.println("<p class=\"ErrorMessageOutput\" style=\"font-size:16px;\" />No information about this error is available.");
 		    }
 		%>
-		
+		<br>
+		<br>
 		</div>
 </body>
 </html>
