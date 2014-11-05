@@ -129,7 +129,7 @@
 			<br>
 	
 			<!-- enables the user to change the language preference for the pages content -->
-			<form name="langForm" action="<%= session.getAttribute("currentpage") %>.jsp" method="post" >
+			<form name="langForm" action="<%= session.getAttribute("currentPage") %>.jsp" method="post" >
 				<input type=hidden name=language value="<%=languageSwitch%>"/>
 				<input type=submit name=langbutton maxlength=100 value="<%=lang.getString("gotolang")%>"/>
 			</form>
