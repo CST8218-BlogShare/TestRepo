@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 
 <% 
-	session.setAttribute("currentpage","Blog");
+	session.setAttribute("currentPage","Blog");
 	ResourceBundle lang = ResourceBundle.getBundle("Blog_EN");
 	
 	//if the session language is FR switch to french, otherwise remains english as set above
@@ -38,9 +38,8 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - Blog</title>
-</head>
-	<body>	
-	<% 
+
+<% 
 		
 		/* 
 			Retrieving the user and blog objects accociated with the 
@@ -50,8 +49,31 @@
 		*/
 		Blog b = (Blog) session.getAttribute("currentBlog");
 		User u = (User) session.getAttribute("currentUser");
+		String postTitle = (String) session.getAttribute("postToView");
 					
-   %>
+%>
+
+<!--  If the user is navigating from the searchResults page causing the sessionVariable postToView to be set.
+      The value is retrieved and is used to navigate to that specific post within the current blog being shown. -->
+<% if(postTitle != null) { %>
+		<script>
+			function linkToPost(){
+				var postTitle = '<%= postTitle %>';
+				//navigating to the element of the page with id that corresponds with the value held in postTitle.
+				window.location.hash=postTitle;
+			}
+			//this function will be called when the javascript window object has finished loading. 
+			window.onLoad = linkToPost();
+		</script>
+<% 
+       /* Clearing the postToView attribute in anticipation of the next time the Blog page will be accessed.*/
+		session.setAttribute("postToView", null);
+	}
+
+%>
+
+</head>
+	<body><!-- end of body -->
 	
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 
@@ -135,17 +157,19 @@
 			 
 			 <tr>
 				<td>
-					<p title="<%=lang.getString("posttitle")%> <%= p.getAuthor() %>" style="font-size:20px; text-decoration:underline;"> <%= p.getPostTitle() %> </p>
+					<!-- The postTitle is set as an id for each post in order to enable dynamic navigation to each,
+					     in case that specific post is retrieved as a searchResult when the search bar is used. -->
+					<p id="<%=p.getPostTitle()%>" title="<%=lang.getString("posttitle")%> <%= p.getAuthor() %>" style="font-size:20px; text-decoration:underline;"> <%= p.getPostTitle() %> </p>
 				</td>
 				
 				<td>
 					<% if(editEnabled == true){
 						%>
-					<a href="PostCreate.jsp?editEnabled=true&post=<%=i%>"><img title="<%=lang.getString("editenabled")%>" src="images/edit.jpg"  alt="<%=lang.getString("clicktoedit")%>"> </a>
+						<a href="PostCreate.jsp?editEnabled=true&post=<%=i%>"><img title="<%=lang.getString("editenabled")%>" src="images/edit.jpg"  alt="<%=lang.getString("clicktoedit")%>"> </a>
 					<% } %>
 					
 					<% if(editEnabled == false){ %>
-					<a href="PostCreate.jsp?editEnabled=false"><img title="<%=lang.getString("editdisabled")%>" src="images/read.jpg"  alt="<%=lang.getString("clicktoview")%>"> </a>
+						<img title="<%=lang.getString("editdisabled")%>" src="images/read.jpg"  alt="<%=lang.getString("clicktoview")%>">
 					<% } %>	
 				</td>
 			</tr>
@@ -166,8 +190,6 @@
 			 
 		<%
 			 }
-			
-
 		%>
 		
 		</table>

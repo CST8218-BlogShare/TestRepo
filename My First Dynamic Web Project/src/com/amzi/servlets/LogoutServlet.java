@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.amzi.dao.DbConnection;
 
 /**
  * Servlet implementation class LogoutServlet
@@ -16,6 +17,7 @@ public class LogoutServlet extends HttpServlet {
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		
+		DbConnection.getInstance().closeConnection();
 		request.getSession().invalidate();
 		
 		RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");

@@ -10,7 +10,7 @@ contentType="text/html; charset=ISO-8859-1"
 
 <%
 
-	session.setAttribute("currentpage","Profile");
+	session.setAttribute("currentPage","Profile");
 	ResourceBundle lang = ResourceBundle.getBundle("Profile_EN");
 	
 	//if the session language is FR switch to french, otherwise remains english as set above
@@ -29,8 +29,13 @@ contentType="text/html; charset=ISO-8859-1"
 		}
 	}		
 
-	User u =  (User) session.getAttribute("currentUser");
+	User u = null;
 	
+	if(session.getAttribute("loggedIn") != null){
+		u =  (User) session.getAttribute("currentUser");	
+	}else{
+		u = (User) session.getAttribute("currentProfile");
+	}
 	
 %>
 
@@ -44,7 +49,7 @@ contentType="text/html; charset=ISO-8859-1"
 	
 		<h1 class="row" style="color:white">
 			<span class="glyphicon glyphicon-user" style="fontSize:50px; color:lightgrey"></span>
-			<%=u.getUsername()%>'s <% out.println(lang.getString("profilepage")); %>
+			<%=u.getUsername()%> <% out.println(lang.getString("profilepage")); %>
 		</h1>		
 		
 		<div class="row">
@@ -56,15 +61,17 @@ contentType="text/html; charset=ISO-8859-1"
 					<div class="panel-heading">
 							<% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%>
 					</div>
-					<div class="panel-body">
-						<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 100%">
-							<% out.println(lang.getString("edit")); %>
-						</button>
-						<br style="clear: left;" /> 
-						<a href="BlogCreate.jsp">
-						<button type="button" class="btn btn-default btn-lrg" style="width: 100%">
-							<% out.println(lang.getString("create")); %>
-						</button></a>
+					<% 	if(session.getAttribute("loggedIn") != null){ %>
+						<div class="panel-body">
+							<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 100%">
+								<% out.println(lang.getString("edit")); %>
+							</button>
+							<br style="clear: left;" /> 
+							<a href="BlogCreate.jsp">
+							<button type="button" class="btn btn-default btn-lrg" style="width: 100%">
+								<% out.println(lang.getString("create")); %>
+							</button></a>
+					<% } %>
 					</div>
 				</div>
 			</div>
@@ -182,7 +189,7 @@ contentType="text/html; charset=ISO-8859-1"
 					loginPassword: $('#loginPassword').val(),
 					newPass: $('#newPass').val()
 				},
-				function ( response) {
+				function (response) {
 					//edituserservlet responds with one of three basic strings: SUCCESS, WRONG_PASS, SQL_ERROR
 					//load the appropriate error message into the alert and make the alert visible
 					//if success then reload the profile page

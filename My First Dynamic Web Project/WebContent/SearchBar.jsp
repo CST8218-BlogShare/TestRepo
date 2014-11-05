@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
-    import="java.util.Locale, java.util.ResourceBundle, com.amzi.dao.User"
+    import="java.util.Locale, java.util.ResourceBundle, com.amzi.dao.User, com.amzi.dao.SearchResult"
     %>
 <!-- Navigation and Search Bar -->
 
@@ -15,6 +15,8 @@
 			lang = ResourceBundle.getBundle("SearchBar_FR");
 		}
 	}
+	
+	SearchResult searchResult = (SearchResult) session.getAttribute("currentSearchResult");
 %>
 
 <script>
@@ -102,30 +104,38 @@
 				<table style="width:90%; margin-right:auto; margin-left:auto;">
 					<tr style="height:50%;">
 						<td><h3><a href="Home.jsp">BLOGSHARE</a></h3></td>
-						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name="navBarSearchTerm" maxlength=100/></td>
+						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name="navBarSearchTerm" maxlength=100 <% /* If a search has been made, keep the search term available */ if(searchResult != null) { %> value=<%=searchResult.getSearchTerm() %> <% } %>/></td>
 						<td style="width:10%"> <input type=checkbox id="navBarBlogsCheck" name="navBarBlogsCheck" checked="checked" OnClick="BlogClicked(this)"/><% out.println(lang.getString("blogs")); %>  </td>
 						<td style="width:10%"> <input type=checkbox id="navBarTitleCheck" name="navBarTitleCheck" checked="checked"/><% out.println(lang.getString("titles")); %></td>
 						<td style="width:10%"> <input type=checkbox id="navBarEditableCheck" name="navBarEditableCheck" /><% out.println(lang.getString("editable")); %> </td>
 						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch value="<%=lang.getString("search") %>"/></td>
 					</tr>
 					<tr style="height:50%;">
-						<% if(session.getAttribute("currentUser") == null){ %>
-							<td> Welcome!</td>
+						<% /* If the user is not logged in, display a basic greeting. 
+							  If not display a personal greeting. */
+							
+						   if(session.getAttribute("currentUser") == null){ %>
+						   		<td> Welcome!</td>
 						<% }else{ %>
-							<td> <a href="Profile.jsp"> <% out.println(lang.getString("welcome")); %> <%= ((User)session.getAttribute("currentUser")).getUsername() %>!</a></td>
+								<td> <a href="Profile.jsp"> <% out.println(lang.getString("welcome")); %> <%= ((User)session.getAttribute("currentUser")).getUsername() %>!</a></td>
 						<% } %>
+						
 						<td style="width:10%"> <input type=checkbox id="navBarPostsCheck" name="navBarPostsCheck" checked="checked" OnClick="PostClicked(this)"/><% out.println(lang.getString("posts")); %><p> </td>
 						<td style="width:10%"> <input type=checkbox id="navBarBodyCheck" name="navBarBodyCheck" checked="checked"/><% out.println(lang.getString("content")); %><p></td>
-						<td style="width:10%"> <input type=checkbox name="navBarUsersCheck" /><% out.println(lang.getString("users")); %><p> </td>
+						<td style="width:10%"> <input type=checkbox name="navBarUsersCheck" checked="checked" /><% out.println(lang.getString("users")); %><p> </td>
 					</tr>
 				</table>
 			</form>
 			<br>
+	
+			<!-- enables the user to change the language preference for the pages content -->
 			<form name="langForm" action="<%= session.getAttribute("currentpage") %>.jsp" method="post" >
 				<input type=hidden name=language value="<%=languageSwitch%>"/>
 				<input type=submit name=langbutton maxlength=100 value="<%=lang.getString("gotolang")%>"/>
 			</form>
 			
+			<!-- If a user is currently logged in, a button is displayed allowing the user to log out of the application 
+			     this also causes the current session object to be invalidated and database connection to be closed. --> 
 			<% if(session.getAttribute("currentUser") != null){ %>
 			<form name="logoutForm" action="logoutServlet" method="post">
 				<input type=submit name=navBarSearch value="Logout"/>

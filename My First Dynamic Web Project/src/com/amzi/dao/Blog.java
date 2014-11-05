@@ -22,7 +22,7 @@ public class Blog {
 	public Blog(){
 		
 	}
-	
+		
 	public Blog(String blogTitle, String username, Boolean isPublic){
 		Exception blogCreateError = new Exception();
 		
@@ -116,7 +116,203 @@ public class Blog {
 		 postList.add(p);
 	 }
 	 
+	 public void buildBlogFromId(int id){
+		 PreparedStatement pst = null; 
+	     ResultSet rs = null;
+	     DbConnection connectionManager = null;
+	     int userId = -1;
+	        
+	     connectionManager = DbConnection.getInstance();
+	        
+	     this.blogId = id;
+	        
+	     try{
+	    	 //retrieve userId based on blogId value within user_blog table
+	         pst = connectionManager.getConnection().prepareStatement("select b.title as blogTitle, b.isPublic as isPublic, u.userId as userId from blog b, user_blog ub, user u where b.blogId = '"+blogId+"' AND b.blogId = ub.blogId AND u.userId = ub.userId");
+	         rs = pst.executeQuery();
+	         rs.first();
+	         userId = rs.getInt("userid");
+	         blogTitle = rs.getString("blogTitle");
+	         isPublic = rs.getBoolean("isPublic");
+	         rs.close();
+	         pst.close();
+	        	
+	         //retrieve username from user table based on the retrieved value of userId and assign value to blog's author data member.
+	         pst = connectionManager.getConnection().prepareStatement("select username from user where userId = '"+userId+"' ");
+	         rs = pst.executeQuery();
+	         rs.first();
+	         this.author = rs.getString("username");
+	         rs.close();
+	         pst.close();
+	        	
+	         //get the blog's posts and their bodies from the database using the blogid
+	         pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = '"+blogId+"' ");
+	         rs = pst.executeQuery();
+	         rs.last();
+	         postCount = rs.getRow();
+	         rs.beforeFirst();
+	        	
+	         while(rs.next()){
+	        	 Post p = new Post();
+	        	 p.setBlogId(blogId);
+	        	 p.setPostId(rs.getInt("postId"));
+	        	 p.setPostTitle(rs.getString("title"));
+	        	 p.setPostBody(rs.getString("content"));
+	        	 p.setIsPublic(rs.getBoolean("isPublic"));
+	        	 //p.setCreationDateTime(rs.getString("creationDateTime"));
+	        			
+	        	 //selecting the author of the current post, by checking the contents of the user_post table to retireve, the userId associated with the post, and then selecting the username based on that userId. 
+	        	 PreparedStatement authorPst = connectionManager.getConnection().prepareStatement("select username from user where userId = (select u.userId from user u, post p, user_post up where p.postId = '"+p.getPostId()+"' AND u.userId = up.userId AND p.postId = up.postId)");
+	        	 ResultSet authorRs = authorPst.executeQuery();
+	        	 authorRs.first();
+	        	 p.setAuthor(authorRs.getString("username")); 
+	        	 authorPst.close();
+	        	 authorRs.close();
+	        			
+	        	addPost(p);
+	        }
+	        
+	        rs.close();
+	        pst.close();
+	        
+	        }catch(Exception e){
+	        	 e.printStackTrace(); //may not be necessary
+	             //status = false;
+	        }
+	         finally { 
+	        	//we now have to manage closing the connection a different way...at logout...
+	            if (pst != null) {  
+	                try {  
+	                    pst.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace();  
+	                }  
+	            }  
+	            if (rs != null) {  
+	                try {  
+	                    rs.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace();  
+	                }  
+	            }  
+	        }     	
+	 }
 	 
+	 //load the blog's id, author and posts from the database from the blogs unique title
+	 public boolean buildBlogFromTitle(String blogTitle) {          
+	        
+	    	boolean status = true;  
+	        PreparedStatement pst = null; 
+	        ResultSet rs = null;
+	        DbConnection connectionManager = null;
+	        int userId = -1;
+	        
+	        //need to instantiate postId,blogId,title,content,creationDate,author
+	        
+	        	//gaining access to the shared database connection.
+	        	connectionManager = DbConnection.getInstance();
+	        try { 
+	        	
+	        	/*
+	    	 	algorithm to retrieve author of blog, whether user is logged in or using searchBar as public user. 
+	    	 	
+	    	 	retrieve blogId from blog table based on the title value
+	    		retrieve userId based on blogid value within the user_blog table 
+	    		retrieve username from user table based on the retrieved value of userId
+	    	*/
+	        	this.blogTitle = blogTitle;
+	        	
+	        	
+	        	//get the blog's id and isPubic value using the value of the title
+	        	pst = connectionManager.getConnection().prepareStatement("select blogid, isPublic from blog where title = ?");
+	        	pst.setString(1, blogTitle);
+	            rs = pst.executeQuery();
+	            rs.first();
+	            this.blogId = rs.getInt("blogid");
+	            this.isPublic = rs.getBoolean("isPublic");
+	            rs.close();
+	            pst.close();
+	        	
+	        	
+	        	//retrieve userId based on blogId value within user_blog table
+	        	pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u where b.blogId = '"+blogId+"' AND b.blogId = ub.blogId AND u.userId = ub.userId");
+	        	rs = pst.executeQuery();
+	        	rs.first();
+	        	userId = rs.getInt("userid");
+	        	rs.close();
+	        	pst.close();
+	        	
+	        	//retrieve username from user table based on the retrieved value of userId and assign value to blog's author data member.
+	        	pst = connectionManager.getConnection().prepareStatement("select username from user where userId = '"+userId+"' ");
+	        	rs = pst.executeQuery();
+	        	rs.first();
+	        	this.author = rs.getString("username");
+	        	rs.close();
+	        	pst.close();
+	        	
+	        	//get the blog's posts and their bodies from the database using the blogid
+	        	pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = '"+blogId+"' ");
+	        	rs = pst.executeQuery();
+	        	rs.last();
+	        	postCount = rs.getRow();
+	        	rs.beforeFirst();
+	        	
+	        	while(rs.next()){
+	        			Post p = new Post();
+	        			p.setBlogId(blogId);
+	        			p.setPostId(rs.getInt("postId"));
+	        			p.setPostTitle(rs.getString("title"));
+	        			p.setPostBody(rs.getString("content"));
+	        			p.setIsPublic(rs.getBoolean("isPublic"));
+	        			//p.setCreationDateTime(rs.getString("creationDateTime"));
+	        			
+	        			//selecting the author of the current post, by checking the contents of the user_post table to retireve, the userId associated with the post, and then selecting the username based on that userId. 
+	        			PreparedStatement authorPst = connectionManager.getConnection().prepareStatement("select username from user where userId = (select u.userId from user u, post p, user_post up where p.postId = '"+p.getPostId()+"' AND u.userId = up.userId AND p.postId = up.postId)");
+	        			ResultSet authorRs = authorPst.executeQuery();
+	        			authorRs.first();
+	        			p.setAuthor(authorRs.getString("username")); 
+	        			authorPst.close();
+	        			authorRs.close();
+	        			
+	        			addPost(p);
+	        	}
+	        	rs.close();
+	        	pst.close();
+	        	
+	        } catch (SQLException sqlE) {  
+	        	
+	        	sqlE.printStackTrace();
+	        	connectionManager.closeConnection();
+	        	
+	        	
+	        	/*System.out.println("Blog field missing, throwing SQLException");
+	        	sqlE.printStackTrace();
+	        	setErrorMessage("Error with previous login attempt. Incorrect Username and Password.");*/
+	        	
+	        	status = false;
+	        }catch(Exception e){
+	        	 e.printStackTrace(); //may not be necessary
+	             status = false;
+	        }
+	         finally { 
+	        	//we now have to manage closing the connection a different way...at logout...
+	            if (pst != null) {  
+	                try {  
+	                    pst.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace();  
+	                }  
+	            }  
+	            if (rs != null) {  
+	                try {  
+	                    rs.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace();  
+	                }  
+	            }  
+	        }  
+	        return status;  
+	    }
 	
     public boolean insertBlogInDatabase(int userId) {          
 	
@@ -205,122 +401,6 @@ public class Blog {
         }  
         return status;  
     } 
-     
-    //load the blog's id, author and posts from the database from the blogs unique title
-    public boolean buildBlogFromTitle(String blogTitle) {          
-        
-    	boolean status = true;  
-        PreparedStatement pst = null; 
-        ResultSet rs = null;
-        DbConnection connectionManager = null;
-        int userId = -1;
-        
-        //need to instantiate postId,blogId,title,content,creationDate,author
-        
-        	//gaining access to the shared database connection.
-        	connectionManager = DbConnection.getInstance();
-        try { 
-        	
-        	/*
-    	 	algorithm to retrieve author of blog, whether user is logged in or using searchBar as public user. 
-    	 	
-    	 	retrieve blogId from blog table based on the title value
-    		retrieve userId based on blogid value within the user_blog table 
-    		retrieve username from user table based on the retrieved value of userId
-    	*/
-        	this.blogTitle = blogTitle;
-        	
-        	
-        	//get the blog's id and isPubic value using the value of the title
-        	pst = connectionManager.getConnection().prepareStatement("select blogid, isPublic from blog where title = ?");
-        	pst.setString(1, blogTitle);
-            rs = pst.executeQuery();
-            rs.first();
-            this.blogId = rs.getInt("blogid");
-            this.isPublic = rs.getBoolean("isPublic");
-            rs.close();
-            pst.close();
-        	
-        	
-        	//retrieve userId based on blogId value within user_blog table
-        	pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u where b.blogId = '"+blogId+"' AND b.blogId = ub.blogId AND u.userId = ub.userId");
-        	rs = pst.executeQuery();
-        	rs.first();
-        	userId = rs.getInt("userid");
-        	rs.close();
-        	pst.close();
-        	
-        	//retrieve username from user table based on the retrieved value of userId and assign value to blog's author data member.
-        	pst = connectionManager.getConnection().prepareStatement("select username from user where userId = '"+userId+"' ");
-        	rs = pst.executeQuery();
-        	rs.first();
-        	this.author = rs.getString("username");
-        	rs.close();
-        	pst.close();
-        	
-        	//get the blog's posts and their bodies from the database using the blogid
-        	pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = '"+blogId+"' ");
-        	rs = pst.executeQuery();
-        	rs.last();
-        	postCount = rs.getRow();
-        	rs.beforeFirst();
-        	
-        	while(rs.next()){
-        			Post p = new Post();
-        			p.setBlogId(blogId);
-        			p.setPostId(rs.getInt("postId"));
-        			p.setPostTitle(rs.getString("title"));
-        			p.setPostBody(rs.getString("content"));
-        			p.setIsPublic(rs.getBoolean("isPublic"));
-        			//p.setCreationDateTime(rs.getString("creationDateTime"));
-        			
-        			//selecting the author of the current post, by checking the contents of the user_post table to retireve, the userId associated with the post, and then selecting the username based on that userId. 
-        			PreparedStatement authorPst = connectionManager.getConnection().prepareStatement("select username from user where userId = (select u.userId from user u, post p, user_post up where p.postId = '"+p.getPostId()+"' AND u.userId = up.userId AND p.postId = up.postId)");
-        			ResultSet authorRs = authorPst.executeQuery();
-        			authorRs.first();
-        			p.setAuthor(authorRs.getString("username")); 
-        			authorPst.close();
-        			authorRs.close();
-        			
-        			addPost(p);
-        	}
-        	rs.close();
-        	pst.close();
-        	
-        } catch (SQLException sqlE) {  
-        	
-        	sqlE.printStackTrace();
-        	connectionManager.closeConnection();
-        	
-        	
-        	/*System.out.println("Blog field missing, throwing SQLException");
-        	sqlE.printStackTrace();
-        	setErrorMessage("Error with previous login attempt. Incorrect Username and Password.");*/
-        	
-        	status = false;
-        }catch(Exception e){
-        	 e.printStackTrace(); //may not be necessary
-             status = false;
-        }
-         finally { 
-        	//we now have to manage closing the connection a different way...at logout...
-            if (pst != null) {  
-                try {  
-                    pst.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-            if (rs != null) {  
-                try {  
-                    rs.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-        }  
-        return status;  
-    }
     
 }  
 

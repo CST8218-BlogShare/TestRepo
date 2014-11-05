@@ -20,7 +20,7 @@ public class Post {
 	public Post() {
 		
 	}
-
+	
 	public Post(String postTitle, String postBody, String username, boolean isPublic) {
 		Exception postCreateError = new Exception();
 		try {
@@ -119,8 +119,28 @@ public class Post {
 		this.creationDateTime = creationDateTime;
 	}*/
 	
-	
-	
+	//author is not initialized in this method, as it is not a value in the post table.
+	public void buildPostFromId(int postId){
+		 PreparedStatement pst = null; 
+	     ResultSet rs = null;
+	     DbConnection connectionManager = null;
+	     
+	     this.postId = postId;
+	     connectionManager = DbConnection.getInstance();
+	     
+	     try {
+			pst = connectionManager.getConnection().prepareStatement("select blogid, title, content, isPublic from post where postid = "+this.postId+" ");
+			rs = pst.executeQuery();
+			rs.first();
+			this.blogId = rs.getInt("blogId");
+			this.postTitle = rs.getString("title");
+			this.postBody = rs.getString("content");
+			this.isPublic = rs.getBoolean("isPublic");
+		} catch (SQLException sqlE) {
+			sqlE.printStackTrace();
+		}
+	}
+		
 	 public boolean insertPostInDatabase(int userId, Blog b, boolean editMode) {          
 		 
 	        PreparedStatement pst = null; 
@@ -288,37 +308,50 @@ public class Post {
 		 PreparedStatement pst = null;
 		 ResultSet rs = null;
 			
-			//If the post is not public and the current user is not the author of the post.
-			if( isPublic == false && author.equals(u.getUsername()) == false){
+		 //if the post is public, it will always be editable.
+		 if(isPublic == true){
+		 	return editEnabled;
+		 }
+		 	
+		 //if the post is not public and there is no user logged in, the post will never be editable.
+		 if(u == null){
+		 	editEnabled = false;
+		 	return editEnabled;
+		 }
+		 
+		/* 
+		   If the current user is not the author of the post and the post is not publicly editable
+		   An attempt is made to match current userId with a userId that is associated to the privilegeId of this post.
+		 */
+		if(!author.equals(u.getUsername()) == false){
+			
+					
+			DbConnection connectionManager = DbConnection.getInstance(); 					
+			editEnabled = false;
 				
-				//An attempt is made to match current userId with a userId that is associated to the privilegeId of this post. 
-				
-				DbConnection connectionManager = DbConnection.getInstance(); 					
-				editEnabled = false;
-				
-				try{
-					pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
-																			 " where u.userid = upep.userid AND " +
-																			 " upep.postEditPrivilegeId = pep.postEditPrivilegeId AND " +
-																		     " pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND " +
-																			 " p.postId = ppep.postid AND " +
-																			 " u.userid = up.userid AND " +
-																			 " P.postid = up.postid AND " +
-																			 " p.postid = '"+postId+"'"); 
-					rs = pst.executeQuery();
-					while(rs.next()){
-						//if the user does not have a corresponding entry for the post within postEditPrivilege
-						if(u.getUserId() == rs.getInt("userId")){
-							editEnabled = true;
-							break;
-						}
+			try{
+				pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
+																		 " where u.userid = upep.userid AND " +
+																		 " upep.postEditPrivilegeId = pep.postEditPrivilegeId AND " +
+																	     " pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND " +
+																		 " p.postId = ppep.postid AND " +
+																		 " u.userid = up.userid AND " +
+																		 " P.postid = up.postid AND " +
+																		 " p.postid = '"+postId+"'"); 
+				rs = pst.executeQuery();
+				while(rs.next()){
+					//if the user has a corresponding entry for the post within postEditPrivilege
+					if(u.getUserId() == rs.getInt("userId")){
+						editEnabled = true;
+						break;
 					}
-				}catch(SQLException sqlE){
-					System.out.println("An exception was thrown while attempting to associate the current user with the edit privileges granted granted for this post.");
-					sqlE.printStackTrace();
 				}
+			}catch(SQLException sqlE){
+				System.out.println("An exception was thrown while attempting to associate the current user with the edit privileges granted granted for this post.");
+				sqlE.printStackTrace();
 			}
-			return editEnabled;
+		}
+		return editEnabled;
 	 }
 }  
 
