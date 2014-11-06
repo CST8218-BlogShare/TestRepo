@@ -66,6 +66,7 @@ contentType="text/html; charset=ISO-8859-1"
 		<jsp:include page="SearchBar.jsp"></jsp:include>
 	
 		<h1 class="row" style="color:white">
+			<div class="col-sm-1"></div><!-- end col-sm-1-->
 			<span class="glyphicon glyphicon-user" style="fontSize:50px; color:lightgrey"></span>
 			<%=u.getUsername()%> <% out.println(lang.getString("profilepage")); %>
 		</h1>		
@@ -111,6 +112,8 @@ contentType="text/html; charset=ISO-8859-1"
 													</div>
 												</td>
 											<% if(usersProfile == true){ %>
+												
+												<!-- creating horizontal space between the Blog Title and Edit Button -->
 												<td style="width:2%;">
 												  
 												</td>
