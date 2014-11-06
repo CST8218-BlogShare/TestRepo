@@ -111,7 +111,11 @@ contentType="text/html; charset=ISO-8859-1"
 													</div>
 												</td>
 											<% if(usersProfile == true){ %>
-												<td style="width:20%">
+												<td style="width:2%;">
+												  
+												</td>
+												
+												<td style="width:18%;">
 													<div class="list-group">
 														<li class="list-group-item"> Edit Blog </li>
 													</div>
