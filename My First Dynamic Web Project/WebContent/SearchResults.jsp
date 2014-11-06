@@ -31,6 +31,7 @@
 	</form>
 
 	<section class="FillScreenTextCentered" style="background-color:LightGrey; height:auto; padding-top:0.5%; padding-bottom:0.5%;">
+		<br>
 		<div class="FillScreenTextCentered" style= "width:95%; font-size:18px;">
 		<b>
 			<%
@@ -45,6 +46,8 @@
 				}
 			%>
 		</b>
+		<br>
+		<br>
 		</div>
 		
 		<% 
@@ -66,7 +69,7 @@
 															
 		<article style= "width:95%; margin-left:auto; margin-right:auto; border-style:dashed; border-width:medium; border-color:white; background:DodgerBlue">
 			<form name="loadSearchResultForm" action="loadSearchResultServlet" method="post">
-				<table style="width:100%; margin-right:auto; margin-left:auto; text-align:center;" >
+				<table style="width:100%; margin-right:auto; margin-left:auto; text-align:center; color:white" >
 				<% 
 					try{
 						switch(result.getResultType()){

@@ -1,7 +1,7 @@
 <%@ page language="java" 
 contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="java.util.ArrayList, java.io.IOException, com.amzi.dao.User,java.util.Locale, java.util.ResourceBundle"  %>
+	import="java.util.ArrayList, java.io.IOException, com.amzi.dao.User, java.util.Locale, java.util.ResourceBundle"  %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +9,10 @@ contentType="text/html; charset=ISO-8859-1"
 <jsp:include page="BootstrapInclude.html" />
 
 <%
+	User u = null;
+	Boolean usersProfile;
+	String test =(String) session.getAttribute("currentPage");
+	
 
 	session.setAttribute("currentPage","Profile");
 	ResourceBundle lang = ResourceBundle.getBundle("Profile_EN");
@@ -29,19 +33,30 @@ contentType="text/html; charset=ISO-8859-1"
 		}
 	}		
 	
-	String test =(String) session.getAttribute("currentPage");
-
-	User u = null;
+	u = (User) session.getAttribute("currentUser");
+	usersProfile = true;
 	
-	if(session.getAttribute("currentProfile") == null){
-		u =  (User) session.getAttribute("currentUser");	
-	}else{
-		u = (User) session.getAttribute("currentProfile");
-		session.setAttribute("currentProfile", null);
+	/* If the user has navigated to Profile.jsp from searchResults.jsp, currentProfile will be initailized 
+	   as an attempt will be made to display the profile associated with the search result.  
+	   
+	   If not then the profile page has been accessed by a logged in user, using the functionality of SearchBar.jsp. 
+	*/
+	if(session.getAttribute("currentProfile") != null){
+		//If the user object inialized with the currentUser attribute is null, this means that an user has not logged in. 
+		if(u == null){
+			u = (User) session.getAttribute("currentProfile"); //The profile associated with the search result will be used to populate the page. 
+			usersProfile = false; //Set to false to prevent display of the additional functionality related to the logged in user. 
+		}else if(u != null){ //If there is a currently logged in user. 
+			//If the logged in user is not the same as the user profile that is associated with the current search result.
+			if(!u.getUsername().contentEquals(((User) session.getAttribute("currentProfile")).getUsername())){
+				u = (User) session.getAttribute("currentProfile");
+				usersProfile = false; 
+			}
+		}
 	}
 	
+	ArrayList<String> userBlogList = u.getUserBlogs(u.getUserId());
 %>
-
 
 <title><%=u.getUsername()%> Profile Page</title>
 </head>
@@ -59,12 +74,12 @@ contentType="text/html; charset=ISO-8859-1"
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
 		
 			<div class="col-sm-11">
-			<div style="max-width:600px">
+			<div style="max-width:700px">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 							<% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%>
 					</div>
-					<% 	if(session.getAttribute("currentProfile") == null){ %>
+					<% 	if(usersProfile == true) { %>
 						<div class="panel-body">
 							<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-default btn-lrg" style="width: 100%">
 								<% out.println(lang.getString("edit")); %>
@@ -75,39 +90,50 @@ contentType="text/html; charset=ISO-8859-1"
 								<% out.println(lang.getString("create")); %>
 							</button></a>
 					<% } %>
-					</div>
+						</div>
 				</div>
 			</div>
 			</div><!-- end col-sm-11-->
 		</div><!-- End row -->
 		<div class="row">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
-			<div class="col-sm-10">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title"><%=lang.getString("blogs") %>:</h3>
-					</div>
-					<div class="panel-body">
-					    <!-- the dynamic list of user blogs is generated here -->
-						<div class="list-group ">
-							<%
-								//ArrayList<String> userBlogList = (ArrayList<String>) session.getAttribute("userBlogList");
-							
-								ArrayList<String> userBlogList = u.getUserBlogs(u.getUserId());
-					
-								if (userBlogList != null) {
-									for (String blogTitle: userBlogList){
-										out.print("<li");
-										out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>");
-									}		
-								} else {
-								out.println(lang.getString("noblog"));
-								}
-							%>
+				<div class="col-sm-10">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><%=lang.getString("blogs") %>:</h3>
 						</div>
-					</div>
-				</div>
-			</div><!-- end col-sm-10-->
+						<div class="panel-body"> <!-- need to center this content -->
+							<table>
+								<% if(userBlogList != null){ 
+										for(String blogTitle: userBlogList){ %>
+											<tr>
+												<td>
+													<div class="list-group">
+														<li class="blog-link list-group-item" blogTitle="<%=blogTitle%>"> <%=blogTitle %></li>
+													</div>
+												</td>
+											<% if(usersProfile == true){ %>
+												<td>
+													<div class="list-group">
+														<li class="list-group-item"> Edit Blog </li>
+													</div>
+												</td>
+											<% } %>
+											</tr>
+								<%		}
+								    } else { %> 
+											<tr>
+												<td>
+								    				<div class="list-group">
+								    					<%= lang.getString("noblog") %>
+								    				</div>
+								    			</td>
+								    		</tr>
+								<%  } %>
+							</table>
+						</div>
+						</div>
+				</div><!-- end col-sm-10-->
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
 		</div><!-- End row -->
 	</div><!-- End container fluid -->	
@@ -209,4 +235,7 @@ contentType="text/html; charset=ISO-8859-1"
 
 	</script>
 </body>
+
+<% session.setAttribute("currentProfile", null); %>
+
 </html>

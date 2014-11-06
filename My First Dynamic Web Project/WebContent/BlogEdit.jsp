@@ -1,12 +1,66 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"  
-    pageEncoding="ISO-8859-1"%>  
+<%@ page language="java" contentType="text/html;" import="com.amzi.dao.Blog, com.amzi.dao.Post"%>
+<!DOCTYPE html>
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
+<meta charset="UTF-8">
 <head>
 <link rel="stylesheet" href="Styles/LookAndFeel.css">
 <title>BlogShare - BlogEdit</title>
 </head>
-		<!--table to hold pages content -->
+
+<%
+
+ Blog b = (Blog) session.getAttribute("currentBlogToEdit");
+
+%>
+
+<div class="FullScreenCentered">
+	<h2><%= b.getBlogTitle() %></h2>
+</div>
+
+<form name="changeBlogTitleForm" action="changeBlogTitleServlet" method="post">
+	<table>
+		<tr>
+			<td>
+				Title:
+			</td>
+			
+			<td>
+				<input type="text" value= <%=b.getBlogTitle()%> />	
+			</td>
+			
+			<td>
+				<input type="submit" value="Edit Title"/>
+			</td>
+		</tr>
+	</table>
+</form>
+	
+<form name="deletePostForm" action="deletePostServlet" method="post">
+	<table>
+		<tr>
+			<td>
+				<h3>Posts</h3>
+			</td>
+		</tr>
+		<% for(int i = 0; i < b.getPostCount(); ++i) { %>
+			
+			<tr>
+				<td>
+					<%= b.getPostAt(i).getPostTitle() %>
+				</td>
+				<td>
+					<input type="submit" value="Delete Post"/>
+				</td>
+				<td>
+					Edit History
+				</td>
+			</tr>
+			
+		<% } %>
+	</table>
+</form>
+
+		<!--table to hold pages content 
 		<table style="width:80%;  margin-left:10%; marin-right:10%;">
 			 	
 			 	<!-- blog title -->
@@ -24,7 +78,9 @@
 					</td>
 				</tr>
 				
-				<!-- first post -->
+				
+				
+				<!-- first post 
 				<tr>
 						<td>
 							<p>Post Title </p>
@@ -32,7 +88,7 @@
 						</td>
 				</tr>
 				
-				<!-- creating space -->
+				<!-- creating space 
 				<tr>
 					<td>
 						<br>
@@ -49,7 +105,7 @@
 						</td>
 				</tr>
 				
-				<!-- creating space -->
+				<!-- creating space 
 				<tr>
 					<td>
 						<br>
@@ -57,7 +113,7 @@
 				</tr>
 				
 		
-				<!-- additional posts -->
+				<!-- additional posts 
 			 
 <tr>
 						<td>
@@ -68,7 +124,7 @@
 						</td>
 					</tr>
 					
-					<!-- creating space -->
+					<!-- creating space 
 				<tr>
 					<td>
 						<form action="Profile.jsp">
@@ -76,7 +132,7 @@
 						</form>
 					</td>
 				</tr>
-				
+				-->
 			
 		</table>
 	<body>
