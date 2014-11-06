@@ -16,6 +16,12 @@ p{
 	 text-align:center;
 }
 
+.FillScreen90{
+	 width:90%;
+	 margin-right:auto; 
+	 margin-left:auto;
+}
+
 p.ErrorMessageOutput{
 	width:80%;
 	margin-left:10%;
