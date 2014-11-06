@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta  charset="UTF-8">
-<link rel="stylesheet" href="Styles/LookAndFeel.css">
+<jsp:include page="BootstrapInclude.html" />
 
 <title>BlogShare - Search Results</title>
 </head>

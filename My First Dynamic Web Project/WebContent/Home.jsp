@@ -5,7 +5,7 @@
 <!-- The home page of BLOGSHARE, the user is brought here when the site is accessed. -->
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="Styles/LookAndFeel.css">
+<jsp:include page="BootstrapInclude.html" />
 <title>BlogShare - Home</title>
 
 
@@ -49,10 +49,11 @@ if (request.getParameter("language") != null){
 
 %>
 
+<jsp:include page="SearchBar.jsp"></jsp:include>
+
 </head>
 <body>
 
-	<jsp:include page="SearchBar.jsp"></jsp:include>
 		
 		<!-- "BlogShare" banner -->
 		<div class="FillScreenTextCentered" style="margin-bottom:2%;"> 
