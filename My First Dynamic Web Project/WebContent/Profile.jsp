@@ -73,11 +73,10 @@ contentType="text/html; charset=ISO-8859-1"
 		<div class="row">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
 		
-			<div class="col-sm-11">
-			<div style="max-width:700px">
+			<div class="col-sm-11" class="FillScreenTextCentered">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-							<% out.println(lang.getString("joined")); %>: <%=u.getDateRegistered()%>
+							<div class="panel-title"> <%= lang.getString("joined") %>: <%=u.getDateRegistered()%></div>
 					</div>
 					<% 	if(usersProfile == true) { %>
 						<div class="panel-body">
@@ -92,28 +91,27 @@ contentType="text/html; charset=ISO-8859-1"
 					<% } %>
 						</div>
 				</div>
-			</div>
 			</div><!-- end col-sm-11-->
 		</div><!-- End row -->
 		<div class="row">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
-				<div class="col-sm-10">
+				<div class="col-sm-10" class="FillScreenTextCentered">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title"><%=lang.getString("blogs") %>:</h3>
+							<div class="panel-title"><%=lang.getString("blogs") %>:</div>
 						</div>
-						<div class="panel-body"> <!-- need to center this content -->
-							<table>
+						<div class="panel-body FillScreenTextCentered"> <!-- need to center this content -->
+							<table style="width:100%;">
 								<% if(userBlogList != null){ 
 										for(String blogTitle: userBlogList){ %>
 											<tr>
-												<td>
+												<td style="width:80%">
 													<div class="list-group">
 														<li class="blog-link list-group-item" blogTitle="<%=blogTitle%>"> <%=blogTitle %></li>
 													</div>
 												</td>
 											<% if(usersProfile == true){ %>
-												<td>
+												<td style="width:20%">
 													<div class="list-group">
 														<li class="list-group-item"> Edit Blog </li>
 													</div>
@@ -132,7 +130,7 @@ contentType="text/html; charset=ISO-8859-1"
 								<%  } %>
 							</table>
 						</div>
-						</div>
+					</div>
 				</div><!-- end col-sm-10-->
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
 		</div><!-- End row -->
