@@ -1,3 +1,16 @@
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
+
+.blogshare-logo {
+	border: 5px solid white !important;
+	border-radius: 50px !important;
+	font-size: 35px !important;
+	
+}
+
+.blogshare-logo:hover {
+	background-color: #ddd !important;
+}
+
 body{
 	
 	width:100%; 

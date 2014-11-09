@@ -3,7 +3,6 @@
     import="java.util.Locale, java.util.ResourceBundle, com.amzi.dao.User, com.amzi.dao.SearchResult"
     %>
 <!-- Navigation and Search Bar -->
-
 <% 
 	
 	//EN language is the default, then check if needs to be changed to FR
@@ -20,7 +19,6 @@
 %>
 
 <script>
-	
 		function BlogClicked(elementClicked){
 			var postCheckBox = document.getElementById("navBarPostsCheck");
 			var titleCheckBox = document.getElementById("navBarTitleCheck");
@@ -96,11 +94,12 @@
 				}
 			}
 		}
+			
 	</script>
 		<!-- Navigation and Search Bar -->
 		<header class="FillScreenTextCentered" style="background-color:lightgrey; height:auto; margin-bottom:2%;">
 			<br>
-			<form name="searchForm" action="searchServlet" method="post" >
+			<form name="searchFormA" action="searchServlet" method="post" >
 				<table style="width:90%; margin-right:auto; margin-left:auto;">
 					<tr style="height:50%;">
 						<td><h3><a href="Home.jsp">BLOGSHARE</a></h3></td>
@@ -131,7 +130,7 @@
 			<!-- enables the user to change the language preference for the pages content -->
 			<form name="langForm" action="<%= session.getAttribute("currentPage") %>.jsp" method="post" >
 				<input type=hidden name=language value="<%=languageSwitch%>"/>
-				<input type=submit name=langbutton maxlength=100 value="<%=lang.getString("gotolang")%>"/>
+				<input class="btn" type=submit name=langbutton maxlength=100 value="<%=lang.getString("gotolang")%>"/>
 			</form>
 			
 			<!-- If a user is currently logged in, a button is displayed allowing the user to log out of the application 
@@ -142,3 +141,66 @@
 			</form>
 			<% } %>
 		</header>
+
+
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand blogshare-logo" href="Home.jsp">Blogshare</a>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+			<% if(session.getAttribute("currentUser") != null){ %>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=lang.getString(session.getAttribute("currentPage").toString()) %> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li id="Home"><a href="Home.jsp"><%=lang.getString("Home")%></a></li>
+						<li id="Profile"><a href="Profile.jsp"><%=lang.getString("Profile")%></a></li>
+					</ul>
+				</li>	
+			<% } %>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=lang.getString("language") %> <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#" onclick="document.forms['langForm'].submit();"><%=lang.getString("gotolang")%></a></li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<form class="navbar-form" name="searchForm" action="searchServlet" method="post">
+						<div class="form-group has-feedback">
+							<span id="searchButton" class="glyphicon glyphicon-search form-control-feedback"></span>
+							<input type="text" name="navBarSearchTerm" class="form-control" placeholder="<%=lang.getString("search") %>">
+						</div>
+					</form>
+				</li>
+				<li>
+				<% if(session.getAttribute("currentUser") != null){ %>
+					<form class="navbar-form" name="logoutForm" action="logoutServlet" method="post"></form>
+					<a href="#" onclick="document.forms['logoutForm'].submit();"><%=lang.getString("logout") %></a>
+				<% } %>
+				</li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+
+<script>
+
+	$('#searchButton').click( function () {
+		$(this).closest('form').submit();
+	});
+	
+	$("<%= new String("#" + session.getAttribute("currentPage")) %>").addClass('disabled');
+</script>
+		
+</html>
+		
