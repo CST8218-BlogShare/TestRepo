@@ -46,7 +46,6 @@ if (request.getParameter("language") != null){
 	}
 }		
 
-
 %>
 
 <jsp:include page="SearchBar.jsp"></jsp:include>
@@ -54,11 +53,24 @@ if (request.getParameter("language") != null){
 </head>
 <body>
 
-		
-		<!-- "BlogShare" banner -->
-		<div class="FillScreenTextCentered" style="margin-bottom:2%;"> 
-			<p style="font-size:48px;">BLOGSHARE </p>
+	<!--Output area for error messages related to registration and login -->
+	
+	<%  
+		//Clearing the previous error
+		if( (int)getServletContext().getAttribute("errorCode") == 0)
+		{
+			getServletContext().setAttribute("errorMessage", "");
+		} else { %>
+			<div class="alert alert-danger alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<%= getServletContext().getAttribute("errorMessage") %>
 		</div>
+	<%	}	%>
+
+	<!-- "BlogShare" banner -->
+	<div class="FillScreenTextCentered" style="margin-bottom:2%;"> 
+		<p style="font-size:48px;">BLOGSHARE </p>
+	</div>
 
 		
 <!--  A brief explanation of the user's options -->
@@ -154,25 +166,5 @@ if (request.getParameter("language") != null){
 		</div>
 	
 		<% } %>
-		<br>
-		<br>
-		<!--Output area for error messages related to registration and login -->
-		<div>
-			<p class="ErrorMessageOutput" id="errorOutput">
-				<br>
-				
-				<%  
-					//Clearing the previous error
-					if( (int)getServletContext().getAttribute("errorCode") == 0)
-					{
-						getServletContext().setAttribute("errorMessage", "");
-					}
-				%>
-				
-				<%= getServletContext().getAttribute("errorMessage") %>
-				<br>
-				<br>
-			</p>
-		</div>
 	</body>
 </html>
