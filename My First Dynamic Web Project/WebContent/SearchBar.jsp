@@ -174,12 +174,43 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li>
+				<li class="dropdown">
 					<form class="navbar-form" name="searchForm" action="searchServlet" method="post">
 						<div class="form-group has-feedback">
 							<span id="searchButton" class="glyphicon glyphicon-search form-control-feedback"></span>
-							<input type="text" name="navBarSearchTerm" class="form-control" placeholder="<%=lang.getString("search") %>">
+							<input type="text" id="filterDrpdown" data-toggle="dropdown" name="navBarSearchTerm" class="form-control dropdown-toggle" placeholder="<%=lang.getString("search") %>">
+							<ul class="dropdown-menu" role="menu">
+								<li>
+									<div class="btn-group" data-toggle="buttons">
+										<label class="filterBtn btn btn-primary active"> <input
+											type="checkbox" checked> Filter 1 <span
+											class="glyphicon glyphicon-ok"></span>
+										</label> <label class="filterBtn btn btn-primary active"> <input
+											type="checkbox" checked> Filter 2 <span
+											class="glyphicon glyphicon-ok"></span>
+										</label> 
+										<label class="filterBtn btn btn-primary active"> <input
+											type="checkbox" checked> Filter 3 <span
+											class="glyphicon glyphicon-ok"></span>
+										</label>
+									</div>
+									<div class="btn-group" data-toggle="buttons">
+										<label class="filterBtn btn btn-primary active"> <input
+											type="checkbox" checked> Filter 1 <span
+											class="glyphicon glyphicon-ok"></span>
+										</label> <label class="filterBtn btn btn-primary active"> <input
+											type="checkbox" checked> Filter 2 <span
+											class="glyphicon glyphicon-ok"></span>
+										</label> 
+										<label class="filterBtn btn btn-primary active"> <input
+											type="checkbox" checked> Filter 3 <span
+											class="glyphicon glyphicon-ok"></span>
+										</label>
+									</div>
+								</li>
+							</ul>
 						</div>
+						<a href="#" id="filterDrpdown" class="dropdown-toggle" data-toggle="dropdown"></a>
 					</form>
 				</li>
 				<li>
@@ -193,7 +224,12 @@
 	</div><!-- /.container-fluid -->
 </nav>
 
+
 <script>
+	$('label.filterBtn').click(
+		function() {
+			$(this).find('span').toggleClass('glyphicon-ok').toggleClass('glyphicon-remove');
+	});
 
 	$('#searchButton').click( function () {
 		$(this).closest('form').submit();
