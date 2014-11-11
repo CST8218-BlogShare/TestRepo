@@ -62,8 +62,8 @@ contentType="text/html; charset=ISO-8859-1"
 </head>
 <body>
 
+	<jsp:include page="SearchBar.jsp"></jsp:include>
 	<div class="container">
-		<jsp:include page="SearchBar.jsp"></jsp:include>
 	
 		<h1 class="row" style="color:white">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
@@ -223,6 +223,8 @@ contentType="text/html; charset=ISO-8859-1"
 
 	<!-- this is all the javascript which controls profile.jsp -->
 	<script>
+	
+	//$('#test').css('border', '2px solid blue');
 	
 	//Attach an onclick event to list elements with class blog-link: turns the dynamic blog list into links
 	//this event gets the list item's blogTitle attribute and places it into the input with id gotoblog
