@@ -109,8 +109,6 @@ public class Post {
 		this.isPublic = b;
 	}
 	
-	
-	
 	/*public String getCreationDateTime() {
 		return creationDateTime;
 	}
@@ -141,13 +139,12 @@ public class Post {
 		}
 	}
 		
-	 public boolean insertPostInDatabase(int userId, Blog b, boolean editMode) {          
+	public boolean insertPostInDatabase(int userId, Blog b, boolean editMode) {          
 		 
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
 	        DbConnection connectionManager = null;
 	        Connection conn = null;
-	        boolean status = true;  
 	       
 	        /*
 	         * The post object used to call this function needs to call the appropriate constructor to have its
@@ -227,29 +224,20 @@ public class Post {
 	        		}
 	        		
 	        		if(!editMode){
-		        		//insert post title, blogid content, creation date into post table -- The SQL function now(), retrieves the current dateTime value.
-		        		//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
+		        		/* Insert post title, blogid content, creation date into post table 
+		        		 * The SQL function now(), retrieves the current dateTime value.
+		        		 * the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.*/
 				        pst = conn.prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', now(), '"+getIsPublicAsInt()+"' )");  
 				        pst.executeUpdate();
 				        pst.close();
 				            
 				        //selecting value of postId column generated from previous statement.
-				        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as PostId");
+				        pst = conn.prepareStatement("select last_insert_id() as PostId");
 				        rs = pst.executeQuery();
 				        rs.first();
 				        postId = rs.getInt("PostId");
 				        rs.close();
 				        pst.close();
-				        
-				        /*
-				        //select postid from post table where blogid and title is the same
-				        pst = conn.prepareStatement("select postId from post where blogId = '"+blogId+"' AND title = '"+postTitle+"' ");
-				        rs = pst.executeQuery();
-				        rs.first();
-				        this.postId = rs.getInt("postId");
-				        //this.creationDateTime = rs.getString("creationDateTime");
-				        rs.close();
-				        pst.close(); */
 				            
 				        //insert postid and user id into user_post
 				        pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
@@ -257,34 +245,86 @@ public class Post {
 				        pst.close();
 				        		        	
 				        //b.addPost(postTitle, postBody);
-				        b.addPost(this);
-				        b.setPostCount(b.getPostCount()+1);  
+				        b.addPost(this); 
 	        		}else if( editMode ){
-			        
-		        		//select postid from post table where blogid and title is the same
+	        			int postEditId = -1;
+	        			String titleBeforeEdit = "";
+	        			String contentBeforeEdit = "";
+	        			boolean isPublicBeforeEdit; 
+	        			
 				        this.postId = b.getPostAt(b.getToEdit()).getPostId();
-			    						        
-				        pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE blogId = ? AND postID  = ?");  
+				        
+				        /*In order to accurately track edits, the values of postTitle, postBody, and isPublic
+				         need to captured before the update to the post within the post table is made*/
+				        
+				        pst = conn.prepareStatement("select title, content, isPublic from post where postid = ?");
+				        pst.setInt(1, postId);
+				        rs = pst.executeQuery();
+				        rs.first();
+				        
+				        titleBeforeEdit = rs.getString("title");
+				        contentBeforeEdit = rs.getString("content");
+				        isPublicBeforeEdit = rs.getBoolean("isPublic");
+				        
+				        rs.close();
+				        pst.close();
+
+				        if(titleBeforeEdit == "" || contentBeforeEdit == ""){
+				        	return false;
+				        }
+				        
+				        //Inserting the new postEdit row into the postEdit table.
+				        pst = conn.prepareStatement("insert into postEdit values (0,?,now(),?,?,?)");
+				        pst.setInt(1, postId);
+				        pst.setString(2, titleBeforeEdit);
+				        pst.setString(3, contentBeforeEdit);
+				        pst.setBoolean(4, isPublicBeforeEdit);
+				        
+				        pst.execute();
+				        pst.close();
+				        
+				        //Retrieving the generated value for PostEdit id from the last insert into the postEdit table.
+				        
+				        pst = conn.prepareStatement("select last_insert_id() as postEditId");
+				        rs = pst.executeQuery();
+				        rs.first();
+				        postEditId = rs.getInt("postEditId");
+				        
+				        rs.close();
+				        pst.close();
+				        
+				        //Inserting a new row into the User_PostEdit table. 
+				        
+				        pst = conn.prepareStatement("insert into user_postedit values(?,?)");
+				        pst.setInt(1,userId);
+				        pst.setInt(2, postEditId);
+				        
+				        pst.execute();
+				        pst.close();
+				        
+				        pst = conn.prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
 			            pst.setString(1, postTitle);
 			            pst.setString(2, postBody);
 			            pst.setBoolean(3, isPublic);
-			            pst.setInt(4, b.getBlogId());
-			            pst.setInt(5, postId);
-		        		pst.executeUpdate(); 
-			            //closing the connection to prepare for the next prepared statement.
+			            pst.setInt(4, postId);
+		        		
+			            pst.executeUpdate(); 
 			            pst.close();
+			            
+			            
 			            b.getPostAt(b.getToEdit()).postTitle = postTitle;
 			            b.getPostAt(b.getToEdit()).postBody = postBody;
+			            b.getPostAt(b.getToEdit()).isPublic = isPublic;
 	        		}
 	        } catch (SQLException sqlE) {  
 	        	
 	        	connectionManager.closeConnection();
 	        	//System.out.println("Post field missing, throwing SQLException");
 	        	sqlE.printStackTrace();
-	        	status = false;
+	        	return false;
 	        }
-	         finally { 
-	        	//we now have to manage closing the connection a different way...at logout...
+	         finally {
+	        	//the connection the connectionManager object interacts with, is closed at logout. 
 	            if (pst != null) {  
 	                try {  
 	                    pst.close();  
@@ -300,10 +340,10 @@ public class Post {
 	                }  
 	            }  
 	        }  
-	        return status;  
+	        return true;  
 	    }
-	 
-	 public boolean determinePostEditPrivilege(User u){
+	
+	public boolean determinePostEditPrivilege(User u){
 		 Boolean editEnabled = true;
 		 PreparedStatement pst = null;
 		 ResultSet rs = null;
@@ -352,6 +392,50 @@ public class Post {
 			}
 		}
 		return editEnabled;
-	 }
-}  
+	 }  
+	
+	public boolean removePostFromDatabase(Blog b, int postPos){
+		
+		 PreparedStatement pst = null; 
+	     ResultSet rs = null;
+	     DbConnection connectionManager = null;
+	     int postId = -1; 
+		
+	     connectionManager = DbConnection.getInstance();
+	     
+	     postId = b.getPostAt(postPos).getPostId();
+	     
+	     if(postId == -1){
+	    	 return false;
+	     }
+	     
+	     try{
+	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
+	    	 pst.setInt(1, postId);
+	    	 if(pst.executeUpdate() == 1){
+	    		 b.removePost(postPos);
+	    	 }
+	     }catch(SQLException sqlE){	
+	    	 sqlE.printStackTrace();
+	    	 return false;
+	     }finally {
+	        	//the connection the connectionManager object interacts with, is closed at logout. 
+	            if (pst != null) {  
+	                try {  
+	                    pst.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace(); 
+	                }  
+	            }  
+	            if (rs != null) {  
+	                try {  
+	                    rs.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace();  
+	                }  
+	            }
+		 }
+		return true;
+	}
+}
 

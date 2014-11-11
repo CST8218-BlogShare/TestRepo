@@ -48,8 +48,10 @@
 			<tr>
 				<td>
 					<p style="font-size:17px;">
-					The Title and Post shown below are from the first post of this blog.<br>
-					They should contain a general explanation of the blog, and are shown to help you create your post. <br>
+					The title and post shown below are the first post of this Blog.<br>
+					<br>
+					The content shown contains a general explanation of the Blog,<br>
+					and it is displayed to help create the content of your post. <br>
 					</p>
 					<br>
 				</td>
@@ -80,21 +82,32 @@
 			<!-- post to be added -->
 			<tr>
 				<td>
-					<p style="font-size:20px; text-decoration:underline;">New Post Title</p>
 					<%
+						//if in post creation mode.
 						if( isEditMode == false){
 					%>
-							<input type=text name=postTitle maxlength=100/>	
+							<p style="font-size:20px; text-decoration:underline;">Enter New Post Title</p>
 					
-							<p style="font-size:20px; text-decoration:underline;">New Post Content</p> 
+							<input type=text name=postTitle maxlength=100 value=""/>	
+					
+							<p style="font-size:20px; text-decoration:underline;">Enter New Post Content</p> 
 							
 							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea>
 					<%
+						//If in post editing mode
 						}else if(isEditMode == true){
 					%>
-							<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
-					
-							<p style="font-size:20px; text-decoration:underline;">Current Post Content</p> 
+							<% //if editing the first post of the blog, the title cannot be modified.
+								if(toEdit == firstPostIndex) { %>
+									<p style="font-size:20px; text-decoration:underline;">Post Title</p>
+									<p style="font-size:28px"> <b> Explanation of Blog </b> </p>
+									<input type=hidden name=postTitle value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
+							<% }else{ %>
+									<p style="font-size:20px; text-decoration:underline;">Post Title</p>
+									<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
+							<% } %>
+						
+							<p style="font-size:20px; text-decoration:underline;">Post Content</p> 
 							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10><%=b.getPostAt(toEdit).getPostBody() %></textarea>
 					<%
 						}
@@ -110,6 +123,8 @@
 			
 			
 			<!-- option to enable public editing of content  -->
+			<% 	//if the post being edited is not the first post, display this option.
+				if(toEdit != firstPostIndex) { %>
 			
 			<tr>
 				<td class="FillScreenTextCentered">
@@ -120,24 +135,30 @@
 					</p>
 				</td>
 			</tr>
+			
+			<% } %>	
 					
 			<tr>
 				<td>
-					<%
+					<%	//if in post creation mode
 						if(isEditMode == false){
 					%>
 					<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;">Allow Public Editing</p>
 					<%
+						//If in post editing mode
 						}else if(isEditMode == true){
-							if(b.getPostAt(toEdit).getIsPublic()){
-					%>
-								<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;">Allow Public Editing</p>
+							//If the post being edited, is the first post of the blog. Don't show the option to make the post publicly editable.
+							if(toEdit != firstPostIndex){
+								//Determining if the value of isPublic has been set to true. Which means that the associated checkBox should be checked.
+								if(b.getPostAt(toEdit).getIsPublic()){
+					%>				
+									<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;">Allow Public Editing</p>
 					<%		
-							}else{ 
+								}else{ 
 					%>
-								<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;">Allow Public Editing</p>
-						<% } %>
-					<%
+									<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;">Allow Public Editing</p>
+					<% 			}
+							}		
 						}
 					%>
 				</td>

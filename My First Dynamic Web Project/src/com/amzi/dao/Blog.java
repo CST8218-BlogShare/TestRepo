@@ -85,6 +85,10 @@ public class Blog {
 		return blogTitle;
 	}
 	
+	protected void setBlogTitle(String title){
+		this.blogTitle = title;
+	}
+	
 	public Post getPostAt(int i){
 		return postList.get(i);
 	}
@@ -112,8 +116,14 @@ public class Blog {
 		this.isPublic = b;
 	}
 		 
-	 public void addPost(Post p){
+	 protected void addPost(Post p){
 		 postList.add(p);
+		 ++postCount;
+	 }
+	 
+	 protected void removePost(int postAt){
+		 postList.remove(postAt);
+		 --postCount;
 	 }
 	 
 	 public void buildBlogFromId(int id){
@@ -148,9 +158,6 @@ public class Blog {
 	         //get the blog's posts and their bodies from the database using the blogid
 	         pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = '"+blogId+"' ");
 	         rs = pst.executeQuery();
-	         rs.last();
-	         postCount = rs.getRow();
-	         rs.beforeFirst();
 	        	
 	         while(rs.next()){
 	        	 Post p = new Post();
@@ -253,9 +260,6 @@ public class Blog {
 	        	//get the blog's posts and their bodies from the database using the blogid
 	        	pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = '"+blogId+"' ");
 	        	rs = pst.executeQuery();
-	        	rs.last();
-	        	postCount = rs.getRow();
-	        	rs.beforeFirst();
 	        	
 	        	while(rs.next()){
 	        			Post p = new Post();
@@ -293,8 +297,7 @@ public class Blog {
 	        }catch(Exception e){
 	        	 e.printStackTrace(); //may not be necessary
 	             status = false;
-	        }
-	         finally { 
+	        } finally { 
 	        	//we now have to manage closing the connection a different way...at logout...
 	            if (pst != null) {  
 	                try {  
@@ -318,9 +321,7 @@ public class Blog {
 	
         PreparedStatement pst = null; 
         ResultSet rs = null;
-        DbConnection connectionManager = null;
-        
-        boolean status = true;  
+        DbConnection connectionManager = null; 
         
         /*
          * The blog object used to call this function needs to call the appropriate constructor to have
@@ -380,10 +381,10 @@ public class Blog {
         	sqlE.printStackTrace();
         	//errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
         	
-        	status = false;
+        	return false;
         }
          finally { 
-        	//we now have to manage closing the connection a different way...at logout...
+        	//the connection the connectionManager object interacts with, is closed at logout. 
             if (pst != null) {  
                 try {  
                     pst.close();  
@@ -399,8 +400,40 @@ public class Blog {
                 }  
             }  
         }  
-        return status;  
+        return true;  
     } 
     
+    public boolean updateTitleInDatabase(int blogId, String newTitle){
+    	PreparedStatement pst = null; 
+    	DbConnection connectionManager = null;
+          
+        connectionManager = DbConnection.getInstance();
+        
+       try {
+			pst = connectionManager.getConnection().prepareStatement("UPDATE Blog set title = ? where blogid = ?");
+			pst.setString(1, newTitle);
+			pst.setInt(2, blogId);
+			//if one row was affected by the update, change the title of this blog to the new value..
+			if(pst.executeUpdate() == 1){
+				setBlogTitle(newTitle);
+			}
+			
+			
+			
+       } catch (SQLException sqlE) {
+    	   sqlE.printStackTrace();
+    	   return false;
+       }finally{
+			//the connection the connectionManager object interacts with, is closed at logout. 
+	        if (pst != null) {  
+	            try {  
+	                pst.close();  
+	            } catch (SQLException sqlE) {  
+	                sqlE.printStackTrace();  
+	            }  
+	        } 
+       }
+    	return true;
+   }
 }  
 

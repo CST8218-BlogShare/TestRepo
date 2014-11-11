@@ -11,22 +11,24 @@ import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.Blog;
 
-@WebServlet("/GetBlogServlet")
 public class GetBlogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	//load the requested blog into the session and forward to blog.jsp
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
+		HttpSession userSession = request.getSession(false);
 		Blog b = null;
 		String blogTitle = null;
-		HttpSession userSession = request.getSession(false);
+		Boolean isBlogEdit = false;
 		
 		if(userSession == null){
-			//do something
-			return;
+			System.out.println("Session state could not be retrieved, closing BlogShare");
+			//exiting in error state
+			System.exit(1);
 		}
 		
 		blogTitle = request.getParameter("blogTitle");
+		isBlogEdit =  Boolean.parseBoolean(request.getParameter("isBlogEdit"));
 		
 		if(blogTitle == null){
 			return;
@@ -43,19 +45,43 @@ public class GetBlogServlet extends HttpServlet {
 			b = new Blog();
 			
 			if (b.buildBlogFromTitle(blogTitle)){
-				userSession.setAttribute("currentBlog", b);  
+				userSession.setAttribute("currentBlog", b); 
 			}else{
-				//throw some error
-				return;
+				System.out.print("Error building blog with name: " + blogTitle + ".");
+				
+				//User stays on profile page. 
+				try {
+					request.getRequestDispatcher("Profile.jsp").forward(request, response); 
+				} catch (ServletException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+				
 			}
 		}
 		
-		try {
-			request.getRequestDispatcher("Blog.jsp").forward(request, response); 
-		} catch (ServletException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}  
-	}
+		if(isBlogEdit == false){
+			
+			try {
+				request.getRequestDispatcher("Blog.jsp").forward(request, response); 
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}else{
+			
+			try {
+				request.getRequestDispatcher("BlogEdit.jsp").forward(request, response); 
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}  
+			
+		}
+	}//end of doPost
+		
 }

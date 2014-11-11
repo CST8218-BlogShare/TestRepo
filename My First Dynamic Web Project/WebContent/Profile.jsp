@@ -106,23 +106,35 @@ contentType="text/html; charset=ISO-8859-1"
 								<% if(userBlogList != null){ 
 										for(String blogTitle: userBlogList){ %>
 											<tr>
-												<td style="width:80%">
+												<td style="width:60%">
 													<div class="list-group">
 														<li class="blog-link list-group-item" blogTitle="<%=blogTitle%>"> <%=blogTitle %></li>
 													</div>
 												</td>
 											<% if(usersProfile == true){ %>
 												
-												<!-- creating horizontal space between the Blog Title and Edit Button -->
+												<!-- creating horizontal space between the Blog Title and Edit buttons -->
 												<td style="width:2%;">
 												  
 												</td>
 												
 												<td style="width:18%;">
 													<div class="list-group">
-														<li class="list-group-item"> Edit Blog </li>
+														<li class="blogedit-link list-group-item" blogTitle="<%=blogTitle%>">Edit</li>
 													</div>
 												</td>
+												
+												<!-- creating horizontal space between the Edit and Delete buttons -->
+												<td style="width:2%;">
+												  
+												</td>
+												
+												<td style="width:18%;">
+													<div class="list-group">
+														<li class="blogdelete-link list-group-item" blogTitle="<%=blogTitle%>">Delete</li>
+													</div>
+												</td>
+												
 											<% } %>
 											</tr>
 								<%		}
@@ -143,10 +155,22 @@ contentType="text/html; charset=ISO-8859-1"
 		</div><!-- End row -->
 	</div><!-- End container fluid -->	
 
-	<!-- form used to request a blog by title from getblogservlet -->
-	<form id="goToBlog" action="GetBlogServlet" method="post">
+	<!-- Form used to call GetBlogServlet in order to initialize a Blog object based on title and then load Blog.jsp -->
+	<form id="goToBlog" action="getBlogServlet" method="post">
 		<input type="hidden" id="goToBlogName" name="blogTitle" value="">
 	</form>
+	
+	
+	<form id="goToEditBlog" action="getBlogServlet" method="post">
+		<input type="hidden" id="goToEditBlogName" name="blogTitle" value="">
+		<!-- used in GetBlogServlet to determine in the page being loaded is Blog or BlogEdit -->
+		<input type="hidden" id="goToEditBlogIsEdit" name="isBlogEdit" value="true">
+	</form>
+	
+	<form id="deleteBlog" action="blogDeleteServlet" method="post">
+		<input type="hidden" id="blogToDeleteName" name="blogTitle" value="">
+	</form>
+	
 	<form id="reloadProfileForm" action="LoadProfileServlet" method="post"></form>
 	
 	<!-- profileedit is shown in this modal window -->
@@ -210,6 +234,18 @@ contentType="text/html; charset=ISO-8859-1"
 		$(this).toggleClass('active');
 	});
 	
+	$('li.blogedit-link').click(function(){
+		$('input#goToEditBlogName').val($(this).attr('blogTitle'));
+		$('form#goToEditBlog').submit();
+		$(this).toggleClass('active');
+	});
+	
+	$('li.blogdelete-link').click(function(){
+		$('input#blogToDeleteName').val($(this).attr('blogTitle'));
+		$('form#deleteBlog').submit();
+		$(this).toggleClass('active');
+	});
+	
 	//This selects the submit button in profileedit and adds a method to its onclick event
 	$('#submitChangesButton').click(function(){
 		//if the passwords dont match display error, otherwise send post to edituserservlet
@@ -241,6 +277,7 @@ contentType="text/html; charset=ISO-8859-1"
 	</script>
 </body>
 
+<!-- Removing the value for current Profile, since it should only be viewed once by the current user. -->
 <% session.setAttribute("currentProfile", null); %>
 
 </html>

@@ -146,10 +146,12 @@ desc User_Post;
 -- creating PostEdit table
 CREATE TABLE PostEdit 
     ( 
-     PostEditID        INT  NOT NULL , 
-     PostID            INT , 
-     EditDateTime      DATETIME  NOT NULL , 
-     ContentBeforeEdit LONGTEXT  NOT NULL -- LONGTEXT is equivalent to oracle's CLOB
+     PostEditID         INT  NOT NULL , 
+     PostID             INT , 
+     EditDateTime       DATETIME  NOT NULL , 
+     TitleBeforeEdit    VARCHAR(100) NOT NULL ,
+     ContentBeforeEdit  LONGTEXT  NOT NULL, -- LONGTEXT is equivalent to oracle's CLOB
+     isPublicBeforeEdit BOOL NOT NULL
     ) 
 ;
 

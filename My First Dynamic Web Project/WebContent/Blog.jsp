@@ -83,11 +83,11 @@
 			 	<!-- blog title -->
 			 	<tr>
 					<td>					
-						<p title="<%=lang.getString("blogtitle")%>" style="font-size:28px"> <b> <%= b.getBlogTitle() %> </b> </p>
+						<p title="<%=lang.getString("blogtitle")%>" style="font-size:36px"> <b> <%= b.getBlogTitle() %> </b> </p>
 					</td>
 					<td>
-						<!-- space for edit logo -->
-						<a href="BlogEdit.jsp"><img title="<%=lang.getString("readonlyelement")%>" src="images/read.jpg" alt="<%=lang.getString("readonly")%>"> </a>
+						<!-- space for edit logo 
+						<a href="BlogEdit.jsp"><img title="<%=lang.getString("readonlyelement")%>" src="images/read.jpg" alt="<%=lang.getString("readonly")%>"> </a> -->
 					</td>
 				</tr>
 				
@@ -105,8 +105,8 @@
 						<br>
 					</td>
 				</tr>
-				
-	
+					
+		
 	
 		<!-- Displaying posts, either created by the author or by another user -->
 		<%

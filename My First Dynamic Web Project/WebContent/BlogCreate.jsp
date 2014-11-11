@@ -57,7 +57,9 @@
 						<p style="font-size:20px; text-decoration:underline">
 						   Post Title
 						</p>
-						<input type=text name=postTitle readonly="readonly" value="Explanation of Blog"/></td>
+						<p style="font-size:28px"> <b> Explanation of Blog </b> </p>
+						<input type=hidden name=postTitle value="Explanation of Blog"/>
+					</td>
 				</tr>
 		
 				<!-- creating space -->
