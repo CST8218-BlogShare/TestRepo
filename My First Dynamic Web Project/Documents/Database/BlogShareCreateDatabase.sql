@@ -149,9 +149,8 @@ CREATE TABLE PostEdit
      PostEditID         INT  NOT NULL , 
      PostID             INT , 
      EditDateTime       DATETIME  NOT NULL , 
-     TitleBeforeEdit    VARCHAR(100) NOT NULL ,
-     ContentBeforeEdit  LONGTEXT  NOT NULL, -- LONGTEXT is equivalent to oracle's CLOB
-     isPublicBeforeEdit BOOL NOT NULL
+     TitleBeforeEdit    VARCHAR(100) NOT NULL ,  -- LONGTEXT is equivalent to oracle's CLOB
+     ContentBeforeEdit  LONGTEXT  NOT NULL,
     ) 
 ;
 

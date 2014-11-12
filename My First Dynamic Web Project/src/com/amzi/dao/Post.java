@@ -274,11 +274,10 @@ public class Post {
 				        }
 				        
 				        //Inserting the new postEdit row into the postEdit table.
-				        pst = conn.prepareStatement("insert into postEdit values (0,?,now(),?,?,?)");
+				        pst = conn.prepareStatement("insert into postEdit values (0,?,now(),?,?)");
 				        pst.setInt(1, postId);
 				        pst.setString(2, titleBeforeEdit);
 				        pst.setString(3, contentBeforeEdit);
-				        pst.setBoolean(4, isPublicBeforeEdit);
 				        
 				        pst.execute();
 				        pst.close();

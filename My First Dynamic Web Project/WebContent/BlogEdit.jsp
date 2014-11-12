@@ -73,7 +73,7 @@
 	
 	<!-- the attributes of the goToPostEdit form must have the same name as those retrieved from the session in PostCreate.jsp  -->
 	<form id="goToPostEdit" action="PostCreate.jsp" method="get">
-		<input type="hidden" id="editEnabled" name="editEnabled" value="true">]
+		<input type="hidden" id="editEnabled" name="editEnabled" value="true">
 		<input type="hidden" id="post" name="post" value="">
 	</form>
 	<script>
@@ -99,7 +99,7 @@
 		function editHistoryClick(elementClicked){
 			var form = document.forms['goToPostEditHistory'];
 			form.postToRetrieveEditsPostPos.value = elementClicked.parentNode.parentNode.getAttribute("postPosition");
-				alert(form.postToRetrieveEditsPostId.value);
+			alert(form.postToRetrieveEditsPostPos.value);
 			form.submit();
 		}
 	</script>

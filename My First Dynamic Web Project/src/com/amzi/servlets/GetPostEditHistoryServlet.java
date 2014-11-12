@@ -1,6 +1,7 @@
 package com.amzi.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amzi.dao.Blog;
+import com.amzi.dao.PostEdit;
 
 /**
  * Servlet implementation class GetPostEditHistoryServlet
@@ -22,20 +24,24 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
-		//Blog b = null;
+		Blog b = null;
 		int postPos = -1;
-				
-		//b = (Blog) request.getSession().getAttribute("currentBlog");
+			
+		b = (Blog) request.getSession().getAttribute("currentBlog");
 		postPos = Integer.parseInt(request.getParameter("postPos"));
-		
+	
 		/*to track postEdit history, we want to initialze a list with a post, 
 		 * but because we do not want to bog down the system, with keeping all postEdits in memory,
 		 * this list will only be initialized when needed and is set to null after the page is navigated away from???
 		 */
 		
-		if(postPos != -1){
+		if(postPos != -1 && b != null){
 			
-			//b.getPostAt(postPos).getPostEditAt();
+			ArrayList<PostEdit> postEdits = PostEdit.getResultsFromDatabase(b.getPostAt(postPos).getPostId());
+			request.getSession().setAttribute("currentPostEditList", postEdits);
+			request.getSession().setAttribute("currentPostTitle", b.getPostAt(postPos).getPostTitle());
+			request.getSession().setAttribute("currentPostBody", b.getPostAt(postPos).getPostBody());
+			request.getSession().setAttribute("currentPostEditPos", 0);
 			
 			try {
 				request.getRequestDispatcher("PostEditHistory.jsp").forward(request, response); 

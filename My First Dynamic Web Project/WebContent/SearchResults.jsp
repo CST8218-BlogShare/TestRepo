@@ -120,7 +120,7 @@
 								<tr>
 									<td colspan="2">
 										<input type="hidden" name="blogId" value="<%= result.getResultIdAt(i) %>">
-										<input type="submit" name="loadSearchResult" value="Load Blog"/>
+										<input  style="color:black;" type="submit" name="loadSearchResult" value="Load Blog"/>
 									</td>
 								</tr>
 				<% 				break;
@@ -206,7 +206,7 @@
 								<tr>
 									<td colspan="2">
 										<input type="hidden" name="postId" value="<%= result.getResultIdAt(i) %>">
-										<input type="submit" name="loadSearchResult" value="Load Post"/>
+										<input style="color:black;" type="submit" name="loadSearchResult" value="Load Post"/>
 									</td>
 								</tr>
 								
@@ -233,7 +233,7 @@
 								<tr>
 									<td colspan="2">
 										<input type="hidden" name="userId" value="<%= result.getResultIdAt(i) %>">
-										<input type="submit" name="loadSearchResult" value="Load User Profile"/>
+										<input style="color:black;" type="submit" name="loadSearchResult" value="Load User Profile"/>
 									</td>
 								</tr>		
 				<% 		

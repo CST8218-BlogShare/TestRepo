@@ -75,6 +75,14 @@
     <servlet-name>postCreate</servlet-name>
     <url-pattern>/postCreateServlet</url-pattern>
   </servlet-mapping>
+   <servlet>
+    <servlet-name>PostDelete</servlet-name>
+    <servlet-class>com.amzi.servlets.PostDeleteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PostDelete</servlet-name>
+    <url-pattern>/postDeleteServlet</url-pattern>
+  </servlet-mapping>
     <servlet>
     <servlet-name>GetPostEditHistory</servlet-name>
     <servlet-class>com.amzi.servlets.GetPostEditHistoryServlet</servlet-class>
@@ -83,13 +91,13 @@
     <servlet-name>GetPostEditHistory</servlet-name>
     <url-pattern>/getPostEditHistoryServlet</url-pattern>
   </servlet-mapping>
-   <servlet>
-    <servlet-name>PostDelete</servlet-name>
-    <servlet-class>com.amzi.servlets.PostDeleteServlet</servlet-class>
+  <servlet>
+    <servlet-name>ReversePostEdit</servlet-name>
+    <servlet-class>com.amzi.servlets.ReversePostEditServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>PostDelete</servlet-name>
-    <url-pattern>/postDeleteServlet</url-pattern>
+    <servlet-name>ReversePostEdit</servlet-name>
+    <url-pattern>/reversePostEditServlet</url-pattern>
   </servlet-mapping>
    <servlet>
     <servlet-name>blog</servlet-name>
