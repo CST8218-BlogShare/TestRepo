@@ -12,7 +12,9 @@ import javax.servlet.http.HttpSession;
   
 
 
+
 import com.amzi.dao.Blog;
+import com.amzi.dao.Login;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
 import com.amzi.dao.User;
@@ -59,13 +61,41 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		blogTitle=request.getParameter("blogTitle");
 		
-		if(request.getParameter("blogEditableCheckBox") != null){
-			blogIsPublic = true;
+		if (blogTitle.length() == 0){
+			
+	        request.setAttribute("errorMessage", "Error: You cannot leave the Blog Title empty.");
+			RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
+			try {
+				rd.forward(request,response);
+				return;
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		postTitle=request.getParameter("postTitle");
+		postBody=request.getParameter("postBody");
+		
+		if (postTitle.length() == 0 || postBody.length() == 0){
+			
+			request.setAttribute("errorMessage", "Error: You cannot leave the Post Title or Body empty.");
+			RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
+			try {
+				rd.forward(request,response);
+				return;
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
-		postTitle=request.getParameter("postTitle");
-	    postBody=request.getParameter("postBody");
+		if(request.getParameter("blogEditableCheckBox") != null){
+			blogIsPublic = true;
+		}
 		
 		b = new Blog(blogTitle,u.getUsername(),blogIsPublic);
 		//the first post is never publicly editable. 
@@ -104,7 +134,7 @@ public class BlogCreateServlet extends HttpServlet{
 		 }
 		 else{
 			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
-		 
+			 request.setAttribute("errorMessage", "Error: Your blog title is not unique.");
 			 try {
 				rd.include(request,response);
 			} catch (ServletException e) {

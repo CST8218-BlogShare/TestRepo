@@ -3,13 +3,20 @@
 <html>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<head>
-		<link rel="stylesheet" href="Styles/LookAndFeel.css">
+		<jsp:include page="BootstrapInclude.html" />
 		<title>BlogShare - BlogCreate</title>
 	</head>
 	
 	<body>
 	
-	
+		<%  
+		if( request.getAttribute("errorMessage") != null)
+		{ %>
+		<div class="alert alert-danger alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<%= request.getAttribute("errorMessage") %>
+		</div>
+	<%	}	%>
 		 <!--table to hold pages content -->
 		<form name="blogCreateForm" action="BlogCreateServlet" method="post">
 			<table class="centered80W">
@@ -24,7 +31,7 @@
 						</div>
 					</td>
 				</tr>
-		
+				
 				<!-- blog title -->
 				<tr style="margin-bottom: 5%;">
 					<td>
