@@ -12,9 +12,11 @@
 		<%  
 		if( request.getAttribute("errorMessage") != null)
 		{ %>
-		<div class="alert alert-danger alert-dismissible" role="alert">
-			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			<%= request.getAttribute("errorMessage") %>
+		<div class="container">
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<%= request.getAttribute("errorMessage") %>
+			</div>
 		</div>
 	<%	}	%>
 		 <!--table to hold pages content -->
