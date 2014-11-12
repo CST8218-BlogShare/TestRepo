@@ -63,37 +63,42 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		blogTitle=request.getParameter("blogTitle");
 		
+		if (blogTitle.length() == 0){
+			
+	        request.setAttribute("errorMessage", "Error: You cannot leave the Blog Title empty.");
+			RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
+			try {
+				rd.forward(request,response);
+				return;
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		postTitle=request.getParameter("postTitle");
+		postBody=request.getParameter("postBody");
+		
+		if (postTitle.length() == 0 || postBody.length() == 0){
+			
+			request.setAttribute("errorMessage", "Error: You cannot leave the Post Title or Body empty.");
+			RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
+			try {
+				rd.forward(request,response);
+				return;
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
 		if(request.getParameter("blogEditableCheckBox") != null){
 			blogIsPublic = true;
 		}
 		
-		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
-		postTitle=request.getParameter("postTitle");
-	    postBody=request.getParameter("postBody");
-		/*
-		if(userSession.getAttribute("language").toString().equals("EN")){
-            getServletContext().setAttribute("errorCode", 1);
-        	getServletContext().setAttribute("errorMessage", Blog.errorMessage);
-    		
-    	}else{
-    		 getServletContext().setAttribute("errorCode", 1);
-	         getServletContext().setAttribute("errorMessage", Blog.errorMessageFR);
-    	}
-		if(blogTitle == null || postTitle == null || postBody == null){
-			 RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
-	            
-	            try {
-					rd.include(request,response);
-				} catch (ServletException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-		}
-		*/
-	    
 		b = new Blog(blogTitle,u.getUsername(),blogIsPublic);
 		//the first post is never publicly editable. 
 		p = new Post(postTitle,postBody, u.getUsername(),false);
@@ -131,7 +136,7 @@ public class BlogCreateServlet extends HttpServlet{
 		 }
 		 else{
 			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
-		 
+			 request.setAttribute("errorMessage", "Error: Your blog title is not unique.");
 			 try {
 				rd.include(request,response);
 			} catch (ServletException e) {
