@@ -17,8 +17,8 @@ public class Blog {
 	private boolean isEditableMode = false;
 	private int toEdit = 0;
 	
-	private String errorMessage = null;
-	
+	public static String errorMessage = null;
+	public static String errorMessageFR = null;
 	public Blog(){
 		
 	}
@@ -32,13 +32,15 @@ public class Blog {
     	try{
 	    	if(blogTitle.equals("")){
 	    		System.out.println("Blog does not have a title, throwing blogCreateError.");
-	    		//errorMessage = "Error with Post. No Post Title was not entered";
+	    		errorMessage = "Error with Post. Missing information";
+            	errorMessageFR = "Il y a eu une erreur lors de la creation du Post. Vérifer que toute l'information est present.";
 	    		throw blogCreateError;
 	    	}
 	   
 	    	if(username.equals("")){
 	    		System.out.println("Username contains no characters, throwing blogCreateError.");
-	    		//errorMessage = "Error with Post. No Post Title was not entered";
+	    		errorMessage = "Problem with User";
+            	errorMessageFR = "Il y a eu une erreur lors de la creation du Post.";
 	    		throw blogCreateError;
 	    	}
 	    	

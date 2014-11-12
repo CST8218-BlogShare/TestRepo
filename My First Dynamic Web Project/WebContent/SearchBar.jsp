@@ -137,7 +137,7 @@
 			     this also causes the current session object to be invalidated and database connection to be closed. --> 
 			<% if(session.getAttribute("currentUser") != null){ %>
 			<form name="logoutForm" action="logoutServlet" method="post">
-				<input type=submit name=navBarSearch value="Logout"/>
+				<input type=submit name=navBarSearch value="<%=lang.getString("logout")%>"/>
 			</form>
 			<% } %>
 		</header>
