@@ -77,6 +77,10 @@ fixed-panel{
 	padding-bottom:2%;
 }
 
+.postEditListElement:hover{
+	background-color:white;
+}
+
 /*tr{
 	background-color:grey;
 }*/

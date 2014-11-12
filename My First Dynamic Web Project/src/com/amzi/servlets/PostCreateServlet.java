@@ -35,63 +35,66 @@ public class PostCreateServlet extends HttpServlet {
 		userSession = request.getSession(false);
 		response.setContentType("text/html");
 		
-		try{
+		u = (User) userSession.getAttribute("currentUser");
+		b = (Blog) userSession.getAttribute("currentBlog");
 		
-			u = (User) userSession.getAttribute("currentUser");
-			b = (Blog) userSession.getAttribute("currentBlog");
-			
-			try{
-				isEditMode = Boolean.parseBoolean((userSession.getAttribute("editMode").toString()));
-			}catch(Exception e){
-				isEditMode = false;
-			}
-			
-			try{
-				toEdit = Integer.parseInt(userSession.getAttribute("toEdit").toString());
-			}catch(Exception e){
-				toEdit = -1;
-			}
-			
-			}catch(NumberFormatException nfE){
-			nfE.printStackTrace();
-			return;
-		}catch(IllegalStateException isE){
-			isE.printStackTrace();
-			return;
-		}
+		if( u != null && b != null){
 		
-		postTitle = request.getParameter("postTitle");
-		postBody = request.getParameter("postBody");
+			try{
+			
+				try{
+					isEditMode = Boolean.parseBoolean((userSession.getAttribute("editMode").toString()));
+				}catch(Exception e){
+					isEditMode = false;
+				}
 				
-		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
-		if(request.getParameter("postEditableCheckBox") != null){
-			postIsPublic = true;
-		}
-		
-		p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
-		pep = new PostEditPrivilege();
-		
-		 if(p.insertPostInDatabase(u.getUserId(), b, isEditMode) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
-			
-			 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
-			 
-			try {
-				rd.include(request, response);
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				try{
+					toEdit = Integer.parseInt(userSession.getAttribute("toEdit").toString());
+				}catch(Exception e){
+					toEdit = -1;
+				}
+				
+				}catch(NumberFormatException nfE){
+				nfE.printStackTrace();
+				return;
+			}catch(IllegalStateException isE){
+				isE.printStackTrace();
+				return;
 			}
-		} else {
-			RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
 			
-			// modify
-			try {
-				rd.include(request, response);
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			postTitle = request.getParameter("postTitle");
+			postBody = request.getParameter("postBody");
+					
+			//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
+			if(request.getParameter("postEditableCheckBox") != null){
+				postIsPublic = true;
+			}
+			
+			p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
+			pep = new PostEditPrivilege();
+			
+			 if(p.insertPostInDatabase(u.getUserId(), b, isEditMode) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
+				
+				 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
+				 
+				try {
+					rd.include(request, response);
+				} catch (ServletException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
+				
+				// modify
+				try {
+					rd.include(request, response);
+				} catch (ServletException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

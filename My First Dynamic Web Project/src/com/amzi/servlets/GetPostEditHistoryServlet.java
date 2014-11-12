@@ -39,8 +39,8 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 			
 			ArrayList<PostEdit> postEdits = PostEdit.getResultsFromDatabase(b.getPostAt(postPos).getPostId());
 			request.getSession().setAttribute("currentPostEditList", postEdits);
-			request.getSession().setAttribute("currentPostTitle", b.getPostAt(postPos).getPostTitle());
-			request.getSession().setAttribute("currentPostBody", b.getPostAt(postPos).getPostBody());
+			request.getSession().setAttribute("currentPostPos", postPos);
+			request.getSession().setAttribute("currentPost", b.getPostAt(postPos));
 			request.getSession().setAttribute("currentPostEditPos", 0);
 			
 			try {

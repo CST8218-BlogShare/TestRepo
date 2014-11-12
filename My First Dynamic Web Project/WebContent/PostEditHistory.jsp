@@ -8,10 +8,10 @@
 </head>
 <body>
 	<% 
-		int postEditsPos = (int) session.getAttribute("currentPostEditPos");
-		String currentPostTitle = (String) session.getAttribute("currentPostTitle");
-		String currentPostContent = (String) session.getAttribute("currentPostContent");
-		ArrayList<PostEdit> postEdits = (ArrayList<PostEdit>) session.getAttribute("currentPostEditList");		
+		int postEditPos = (int) session.getAttribute("currentPostEditPos");
+		Post currentPost= (Post) session.getAttribute("currentPost");
+		ArrayList<PostEdit> postEdits = (ArrayList<PostEdit>) session.getAttribute("currentPostEditList");	
+		session.setAttribute("currentPostEdit", postEdits.get(postEditPos));
 	%>
 	
 	<p class="FillScreenTextCentered" style="font-size:36px">Edit History</p>
@@ -21,21 +21,21 @@
 	<table class="FillScreen90">
 		<tr>
 			<td style="width:35%; ">
-				<table>
+				<table>				
 					<%  for(int i = 0; i < postEdits.size(); ++i){ 	%>
 						<tr>
-							<td>
-								<!-- include info on 
-									
-									author
-									date of modification
-									
-								 -->
+							<td class="postEditListElement" <% if(i == postEditPos) { %> style="background:black;" <% } %>  >
 								 <div style="text-align:left"><p> <b> Edit By: </b> <%= postEdits.get(i).getAuthor() %></p></div>
-								 <div style="text-align:right"><p> <b> Edit Date: </b> <%= postEdits.get(i).getEditDateTime() %></p></div>
-								<br> <!-- making space between each row -->
+								 <div style="text-align:left"><p> <b> Edit Date: </b> <%= postEdits.get(i).getEditDateTime() %></p></div>
 							</td>
 						</tr>	
+						
+						<!-- making space -->
+						<tr>
+							<td>
+								<br>
+							</td>
+						</tr>
 					
 					<% } %>
 				</table>
@@ -54,14 +54,14 @@
 						<tr>
 							<td>
 								<p style="font-size:24px">	
-									<b> <%=postEdits.get(postEditsPos).getTitleBeforeEdit() %> </b>
+									<b> <%=postEdits.get(postEditPos).getTitleBeforeEdit() %> </b>
 								</p>
 							</td>
 						</tr>
 						<tr>
 							<td style="background:white; text-align:left;">
 								<p style="margin:5%; color:black;"> 
-									<%=postEdits.get(postEditsPos).getContentBeforeEdit() %>
+									<%=postEdits.get(postEditPos).getContentBeforeEdit() %>
 								</p>
 							</td>
 						</tr>
@@ -84,13 +84,13 @@
 						<tr>	
 							<td>
 								<p style="font-size:24px">
-									<b><% if(postEditsPos == postEdits.size()-1){ %>
+									<b><% if(postEditPos == 0){ %>
 															 
-											 <%=currentPostTitle %> 	
+											 <%=currentPost.getPostTitle() %> 	
 																 		
 									   <% }else{ %>
 															 	
-											 <%=postEdits.get(postEditsPos+1).getTitleBeforeEdit()%>
+											 <%=postEdits.get(postEditPos+1).getTitleBeforeEdit()%>
 															 	
 									   <% } %>
 									</b>
@@ -100,13 +100,13 @@
 						<tr>
 							<td style="background:white; text-align:left;">
 								<p style="margin:5%; color:black;"> 
-									<% if(postEditsPos == postEdits.size()-1){ %>
+									<% if(postEditPos == 0){ %>
 										
-										<%= currentPostContent %>
+											<%= currentPost.getPostBody() %>
 									
 									 <% }else{ %>
 									 
-											<%=postEdits.get(postEditsPos+1).getContentBeforeEdit() %> 	
+											<%=postEdits.get(postEditPos+1).getContentBeforeEdit() %> 	
 									 
 									 <% } %>
 									

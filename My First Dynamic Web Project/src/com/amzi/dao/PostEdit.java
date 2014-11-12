@@ -87,7 +87,7 @@ public class PostEdit {
 			pst = connectionManager.getConnection().prepareStatement("select postEditId, postId, editDateTime, titleBeforeEdit, contentBeforeEdit" 
 					  												 + " from postEdit where Postid = ? " 
 																	 + " order by editDateTime desc");
-																	//need to order by EditDateTime in descending older, newest first	
+																
 			pst.setInt(1, postId);
 			rs = pst.executeQuery();
 			

@@ -21,32 +21,65 @@ public class Post {
 		
 	}
 	
-	public Post(String postTitle, String postBody, String username, boolean isPublic) {
-		Exception postCreateError = new Exception();
-		try {
-			postTitle = postTitle.trim();
-			postBody = postBody.trim();
-			username = username.trim();
-			
-			if (postTitle.equals("")) {
-				System.out.println("Post has no tittle, throwing postCreateError.");
-				throw postCreateError;
-			}
-			
-			if (postBody.equals("")) {
-				System.out.println("Post has no body,  throwing postCreateError.");
-				throw postCreateError;
-			}
-			
-			if (username.equals("")) {
-				System.out.println("Username contains no characters,  throwing postCreateError.");
-				throw postCreateError;
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+	/*public Post(int postId, int blogId, String postTitle, String postBody, String username, boolean isPublic) {
+		
+		postTitle = postTitle.trim();
+		postBody = postBody.trim();
+		username = username.trim();
+		
+		if(postId == -1){
+			System.out.println("PostId value has not been initialized.");
 			return;
 		}
+		
+		if(blogId == -1){
+			System.out.println("BlogId value has not been initialized.");
+			return;
+		}
+		
+		if (postTitle.equals("")) {
+			System.out.println("Post has no title.");
+			return;
+		}
+			
+		if (postBody.equals("")) {
+			System.out.println("Post has no body.");
+			return;
+		}
+			
+		if (username.equals("")) {
+			System.out.println("Username contains no characters.");
+			return;
+		}
+		
+		this.postId = postId;
+		this.blogId = blogId;
+		this.postTitle = postTitle;
+		this.postBody = postBody;
+		this.author = username;
+		this.isPublic = isPublic;
+	}*/
+	
+	public Post(String postTitle, String postBody, String username, boolean isPublic) {
+		postTitle = postTitle.trim();
+		postBody = postBody.trim();
+		username = username.trim();
+			
+		if (postTitle.equals("")) {
+			System.out.println("Post has no title.");
+			return;
+		}
+			
+		if (postBody.equals("")) {
+			System.out.println("Post has no body.");
+			return;
+		}
+			
+		if (username.equals("")) {
+			System.out.println("Username contains no characters.");
+			return;
+		}
+		
 		this.postTitle = postTitle;
 		this.postBody = postBody;
 		this.author = username;
@@ -341,6 +374,116 @@ public class Post {
 	        }  
 	        return true;  
 	    }
+
+    public boolean editPostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
+    	PreparedStatement pst = null;
+		ResultSet rs = null;
+		DbConnection connectionManager = null;
+		int postEditId = -1;
+		
+		connectionManager = DbConnection.getInstance();
+    	
+		//postId, postTitle and postBody must be initialized must be initialized
+		
+    	try {
+			pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ? WHERE postID  = ?");
+			pst.setString(1, currentPostEdit.getTitleBeforeEdit());
+			pst.setString(2, currentPostEdit.getContentBeforeEdit());
+			pst.setInt(3, this.getPostId());
+			pst.execute();
+			
+			pst.close();
+			
+			 //Inserting the new postEdit row into the postEdit table.
+	        pst = connectionManager.getConnection().prepareStatement("insert into postEdit values (0,?,now(),?,?)");
+	        pst.setInt(1, this.getPostId());
+	        pst.setString(2, this.getPostTitle());
+	        pst.setString(3, this.getPostBody());
+	        pst.execute();
+	        
+	        pst.close();
+	        
+	        //Retrieving the generated value for PostEdit id from the last insert into the postEdit table.
+	        
+	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as postEditId");
+	        rs = pst.executeQuery();
+	        rs.first();
+	        postEditId = rs.getInt("postEditId");
+	        
+	        rs.close();
+	        pst.close();
+	        
+	        //Inserting a new row into the User_PostEdit table. 
+	        
+	        pst = connectionManager.getConnection().prepareStatement("insert into user_postedit values(?,?)");
+	        pst.setInt(1,currentUserId);
+	        pst.setInt(2, postEditId);
+	        pst.execute();
+	        
+	        pst.close();
+	        
+	        b.getPostAt(postPosInBlog).setPostTitle(currentPostEdit.getTitleBeforeEdit());
+	        b.getPostAt(postPosInBlog).setPostBody(currentPostEdit.getContentBeforeEdit());
+	        				
+		} catch (SQLException sqlE) {
+			sqlE.printStackTrace();
+			return false;
+		}finally{
+			try {
+				pst.close();
+				rs.close();
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
+			}
+			
+		}
+    	
+    	return true;
+    }
+	
+	public boolean removePostFromDatabase(Blog b, int postPos){
+		
+		 PreparedStatement pst = null; 
+	     ResultSet rs = null;
+	     DbConnection connectionManager = null;
+	     int postId = -1; 
+		
+	     connectionManager = DbConnection.getInstance();
+	     
+	     postId = b.getPostAt(postPos).getPostId();
+	     
+	     if(postId == -1){
+	    	 return false;
+	     }
+	     
+	     try{
+	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
+	    	 pst.setInt(1, postId);
+	    	 if(pst.executeUpdate() == 1){
+	    		 b.removePost(postPos);
+	    	 }
+	     }catch(SQLException sqlE){	
+	    	 sqlE.printStackTrace();
+	    	 return false;
+	     }finally {
+	        	//the connection the connectionManager object interacts with, is closed at logout. 
+	            if (pst != null) {  
+	                try {  
+	                    pst.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace(); 
+	                }  
+	            }  
+	            if (rs != null) {  
+	                try {  
+	                    rs.close();  
+	                } catch (SQLException e) {  
+	                    e.printStackTrace();  
+	                }  
+	            }
+		 }
+		return true;
+	}
 	
 	public boolean determinePostEditPrivilege(User u){
 		 Boolean editEnabled = true;
@@ -393,48 +536,5 @@ public class Post {
 		return editEnabled;
 	 }  
 	
-	public boolean removePostFromDatabase(Blog b, int postPos){
-		
-		 PreparedStatement pst = null; 
-	     ResultSet rs = null;
-	     DbConnection connectionManager = null;
-	     int postId = -1; 
-		
-	     connectionManager = DbConnection.getInstance();
-	     
-	     postId = b.getPostAt(postPos).getPostId();
-	     
-	     if(postId == -1){
-	    	 return false;
-	     }
-	     
-	     try{
-	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
-	    	 pst.setInt(1, postId);
-	    	 if(pst.executeUpdate() == 1){
-	    		 b.removePost(postPos);
-	    	 }
-	     }catch(SQLException sqlE){	
-	    	 sqlE.printStackTrace();
-	    	 return false;
-	     }finally {
-	        	//the connection the connectionManager object interacts with, is closed at logout. 
-	            if (pst != null) {  
-	                try {  
-	                    pst.close();  
-	                } catch (SQLException e) {  
-	                    e.printStackTrace(); 
-	                }  
-	            }  
-	            if (rs != null) {  
-	                try {  
-	                    rs.close();  
-	                } catch (SQLException e) {  
-	                    e.printStackTrace();  
-	                }  
-	            }
-		 }
-		return true;
-	}
 }
 

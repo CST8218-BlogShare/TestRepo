@@ -59,11 +59,12 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		blogTitle=request.getParameter("blogTitle");
 		
+		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
 		if(request.getParameter("blogEditableCheckBox") != null){
 			blogIsPublic = true;
 		}
 		
-		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
+		
 		postTitle=request.getParameter("postTitle");
 	    postBody=request.getParameter("postBody");
 		
@@ -78,7 +79,7 @@ public class BlogCreateServlet extends HttpServlet{
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */
 		
-		 if(b.insertBlogInDatabase(u.getUserId()) && p.insertPostInDatabase(u.getUserId(),b, false) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId()) ){
+		 if(b.insertBlogInDatabase(u.getUserId()) && p.insertPostInDatabase(u.getUserId(),b,false) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId()) ){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 
