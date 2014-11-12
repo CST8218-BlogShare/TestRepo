@@ -12,7 +12,10 @@ import javax.servlet.http.HttpSession;
   
 
 
+
+
 import com.amzi.dao.Blog;
+import com.amzi.dao.Login;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
 import com.amzi.dao.User;
@@ -21,7 +24,8 @@ import com.amzi.dao.User;
 public class BlogCreateServlet extends HttpServlet{  
   
 	 private static final long serialVersionUID = 1L;
-	 
+	 public static String errorMessege = null;
+	 public static String errorMessegeFR = null;
 	 
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		 
@@ -66,7 +70,30 @@ public class BlogCreateServlet extends HttpServlet{
 		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
 		postTitle=request.getParameter("postTitle");
 	    postBody=request.getParameter("postBody");
-		
+		/*
+		if(userSession.getAttribute("language").toString().equals("EN")){
+            getServletContext().setAttribute("errorCode", 1);
+        	getServletContext().setAttribute("errorMessage", Blog.errorMessage);
+    		
+    	}else{
+    		 getServletContext().setAttribute("errorCode", 1);
+	         getServletContext().setAttribute("errorMessage", Blog.errorMessageFR);
+    	}
+		if(blogTitle == null || postTitle == null || postBody == null){
+			 RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
+	            
+	            try {
+					rd.include(request,response);
+				} catch (ServletException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+		}
+		*/
+	    
 		b = new Blog(blogTitle,u.getUsername(),blogIsPublic);
 		//the first post is never publicly editable. 
 		p = new Post(postTitle,postBody, u.getUsername(),false);
