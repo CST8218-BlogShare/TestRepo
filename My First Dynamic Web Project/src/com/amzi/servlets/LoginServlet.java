@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;  
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
-  
 import com.amzi.dao.Login; 
 import com.amzi.dao.User;
   
@@ -50,9 +49,14 @@ public class LoginServlet extends HttpServlet{
 				e.printStackTrace();
 			}    
         }    
-        else{    
-            getServletContext().setAttribute("errorCode", 1);
-        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
+        else{
+        	if(userSession.getAttribute("language").toString().equals("EN")){
+	            getServletContext().setAttribute("errorCode", 1);
+	        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
+        	}else{
+        		 getServletContext().setAttribute("errorCode", 1);
+ 	        	getServletContext().setAttribute("errorMessage", Login.errorMessegeFR);
+        	}
 
             RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
             
