@@ -1,10 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1" import="com.amzi.dao.User, java.util.Locale, java.util.ResourceBundle"%>
 <html>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<head>
 		<jsp:include page="BootstrapInclude.html" />
-		<title>BlogShare - BlogCreate</title>
+<%
+
+//for generating the french/english page link
+session.setAttribute("currentPage","BlogCreate");
+
+if(getServletContext().getAttribute("errorCode") == null){
+	getServletContext().setAttribute("errorCode",0);
+}
+
+if(getServletContext().getAttribute("errorMessage") == null){
+	getServletContext().setAttribute("errorMessage","");	
+}
+
+//used to set keep the language consistent between pages
+if(session.getAttribute("language") == null){
+	session.setAttribute("language","EN");
+}
+
+ResourceBundle lang = ResourceBundle.getBundle("BlogCreate_EN");
+
+//if the session language is FR switch to french, otherwise remains english as set above
+if (session.getAttribute("language").toString().equals("FR")){
+	lang = ResourceBundle.getBundle("BlogCreate_FR");
+} 
+
+//if the user clicked change language, set to appropriate language
+if (request.getParameter("language") != null){	
+	if (request.getParameter("language").equals("FR")){
+		lang = ResourceBundle.getBundle("BlogCreate_FR");
+		session.setAttribute("language","FR");
+	} else {
+		lang = ResourceBundle.getBundle("BlogCreate_EN");
+		session.setAttribute("language","EN");
+	}
+}		
+
+%>
+		<title><%= lang.getString("title")%></title>
 	</head>
 	
 	<body>
@@ -28,7 +65,7 @@
 					<td>
 						<div class="centered80W" style="margin-bottom:3%;">
 							<p style="font-size:32px;">
-							   	<b>Create Your Blog</b> <br>
+							   	<b><%= lang.getString("createblog")%></b> <br>
 							</p> 
 						</div>
 					</td>
@@ -38,7 +75,7 @@
 				<tr style="margin-bottom: 5%;">
 					<td>
 						<p style="font-size:20px; text-decoration:underline"> 
-						Blog Title
+						<%= lang.getString("blogTitle")%>
 						</p>
 						<input type=text name=blogTitle maxlength=100 />
 					</td>
@@ -53,7 +90,8 @@
 					<td>
 						<div class="centered80W" style="margin-bottom:2%;">
 							<p style="font-size:18px">
-								Please use the first post to describe the purpose of your Blog.<br>
+								<%= lang.getString("instructions1")%>
+								<br>
 							</p>
 						</div>
 					<td>
@@ -64,10 +102,10 @@
 				<tr>
 					<td>
 						<p style="font-size:20px; text-decoration:underline">
-						   Post Title
+						   <%= lang.getString("postTitle")%>
 						</p>
-						<p style="font-size:28px"> <b> Explanation of Blog </b> </p>
-						<input type=hidden name=postTitle value="Explanation of Blog"/>
+						<p style="font-size:28px"> <b> <%= lang.getString("explanation")%> </b> </p>
+						<input type=hidden name=postTitle value="<%= lang.getString("explanation")%>"/>
 					</td>
 				</tr>
 		
@@ -80,7 +118,7 @@
 				<tr>
 					<td>
 						<p style="font-size:20px; text-decoration:underline">
-							Post Body<br>
+							 <%= lang.getString("postBody")%><br>
 						</p>
 						<textarea name="postBody" WRAP=soft COLS=80 ROWS=10></textarea> <br> <br>
 					</td>
@@ -89,19 +127,14 @@
 				<tr>
 					<td class="centered80W" style="font-size:18px;">
 						<p>
-							The title of your Blog and the title and content of your first Post.<br> 
-							Are editable only by you, the author of the Blog.<br>
-							<br>
-							<br>
-							Additional posts may be made editable by any BlogShare visitor.<br>
-							By selecting the option below.<br>
+							<%= lang.getString("instructions2")%><br>
 						</p>
 					</td>
 				</tr>
 				
 				<tr>
 					<td>
-						<input type=checkbox name="blogEditableCheckBox"/><p style="font-size:18px;">Allow Public Editing</p>
+						<input type=checkbox name="blogEditableCheckBox"/><p style="font-size:18px;"><%= lang.getString("allow")%></p>
 					</td>
 				</tr>
 		
@@ -111,13 +144,13 @@
 				</tr>
 				
 				<tr>
-					<td><input type="submit" class=button value="Create Blog">
+					<td><input type="submit" class=button value="<%= lang.getString("createblog")%>">
 				</tr>
 		
 			</table>
 		</form>
 		<form action="Profile.jsp">
-			<input class="centered80W" type="submit" width="wrap_content" value="Cancel" style="font-size:18px;">		
+			<input class="centered80W" type="submit" width="wrap_content" value="<%= lang.getString("cancel")%>" style="font-size:18px;">		
 		</form>
 	</body>
 </html>
