@@ -85,6 +85,11 @@ public class PostCreateServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} else {
+				if(userSession.getAttribute("language").equals("EN"))
+					request.setAttribute("errorMessage", "Error: Unable to create Post. Make sure all fields have been modified.");
+				else if(userSession.getAttribute("language").equals("FR")){
+					request.setAttribute("errorMessage", "Erreur: Impossible de créer le Post. Assurez-vous d'avoir modifier tout les champs.");	
+				}
 				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
 				
 				// modify
