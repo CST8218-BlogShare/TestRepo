@@ -29,6 +29,8 @@ public class PostCreateServlet extends HttpServlet {
 		int toEdit = -1;
 		boolean isEditMode  = false;
 		
+		
+		
 		// If a session has not been created, none will be created
 		userSession = request.getSession(false);
 		response.setContentType("text/html");
@@ -60,26 +62,8 @@ public class PostCreateServlet extends HttpServlet {
 				return;
 			}
 			
-			postTitle = request.getParameter("postTitle").trim();
-			postBody = request.getParameter("postBody").trim();
-			
-			//if the title/body are empty make the response PostCreate, with corresponding error
-			if (postTitle.length() == 0 || postBody.length() == 0) {
-				
-				request.setAttribute("errorMessage", "alert.emptyfields");
-				
-				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
-				try {
-					rd.forward(request, response);
-					return;
-				} catch (ServletException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				
-			}
+			postTitle = request.getParameter("postTitle");
+			postBody = request.getParameter("postBody");
 					
 			//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
 			if(request.getParameter("postEditableCheckBox") != null){
@@ -101,7 +85,11 @@ public class PostCreateServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			} else {
-				request.setAttribute("errorMessage", "alert.sqlerror");
+				if(userSession.getAttribute("language").equals("EN"))
+					request.setAttribute("errorMessage", "Error: Unable to create Post. Make sure all fields have been modified.");
+				else if(userSession.getAttribute("language").equals("FR")){
+					request.setAttribute("errorMessage", "Erreur: Impossible de créer le Post. Assurez-vous d'avoir modifier tout les champs.");	
+				}
 				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
 				
 				// modify
