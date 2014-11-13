@@ -134,9 +134,12 @@
 									<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("posttitle") %></p>
 									<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
 							<% } %>
-						
+							
+							<br>
+							<br>
+							
 							<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("postcontent") %></p> 
-							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10><%=b.getPostAt(toEdit).getPostBody() %></textarea>
+							<textarea NAME="postBody" WRAP=soft COLS=100 ROWS=10><%=b.getPostAt(toEdit).getPostBody() %></textarea>
 					<%
 						}
 					%>

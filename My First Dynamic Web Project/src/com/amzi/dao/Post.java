@@ -476,7 +476,7 @@ public class Post {
 		   If the current user is not the author of the post and the post is not publicly editable
 		   An attempt is made to match current userId with a userId that is associated to the privilegeId of this post.
 		 */
-		if(!author.equals(u.getUsername()) == false){
+		if(!author.equals(u.getUsername())){
 			
 					
 			DbConnection connectionManager = DbConnection.getInstance(); 					
