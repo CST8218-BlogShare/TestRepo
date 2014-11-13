@@ -1,7 +1,7 @@
 <%@ page language="java" 
 	contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="com.amzi.dao.Blog, java.util.ResourceBundle"
+	import="com.amzi.dao.Blog, com.amzi.dao.User, java.util.ResourceBundle"
 	%>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -16,7 +16,20 @@
 	boolean isEditMode;
 	int toEdit = -1;
 	
+	
+	
+	if(session.getAttribute("language") == null){
+		session.setAttribute("language","EN");
+	}
+	
+	ResourceBundle lang = ResourceBundle.getBundle("PostCreate_EN");
+	
+	if (session.getAttribute("language").toString().equals("FR")){
+		lang = ResourceBundle.getBundle("PostCreate_FR");
+	} 
+	
 	Blog b = (Blog) session.getAttribute("currentBlog");
+	
 	
 	try{
 		isEditMode = Boolean.parseBoolean((request.getParameter("editEnabled")));
@@ -28,18 +41,7 @@
 	}
 	session.setAttribute("editMode", isEditMode);
 	session.setAttribute("toEdit", toEdit);
-
 	b.setEditMode(isEditMode, toEdit);
-	
-	if(session.getAttribute("language") == null){
-		session.setAttribute("language","EN");
-	}
-	
-	ResourceBundle lang = ResourceBundle.getBundle("PostCreate_EN");
-	
-	if (session.getAttribute("language").toString().equals("FR")){
-		lang = ResourceBundle.getBundle("PostCreate_FR");
-	} 
 	
 %>
 <body>
