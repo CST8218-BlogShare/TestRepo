@@ -112,7 +112,6 @@
 				
 				<tr>
 					<td><input type="submit" class=button value="Create Blog">
-					<td></td>
 				</tr>
 		
 			</table>

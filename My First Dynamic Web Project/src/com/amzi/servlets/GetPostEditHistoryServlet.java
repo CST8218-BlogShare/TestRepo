@@ -25,6 +25,7 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		Blog b = null;
+		String url = "";
 		int postPos = -1;
 			
 		b = (Blog) request.getSession().getAttribute("currentBlog");
@@ -43,8 +44,15 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 			request.getSession().setAttribute("currentPost", b.getPostAt(postPos));
 			request.getSession().setAttribute("currentPostEditPos", 0);
 			
+			
+			if(postEdits.size() == 0){
+				url = "BlogEdit.jsp";
+			}else{
+				url = "PostEditHistory.jsp";
+			}
+			
 			try {
-				request.getRequestDispatcher("PostEditHistory.jsp").forward(request, response); 
+				request.getRequestDispatcher(url).forward(request, response); 
 			} catch (ServletException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

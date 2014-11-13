@@ -35,6 +35,12 @@ p{
 	 margin-left:auto;
 }
 
+.whiteDashedBorder{
+	border-style:dashed; 
+	border-width:medium; 
+	border-color:white;	
+}
+
 p.ErrorMessageOutput{
 	width:80%;
 	margin-left:10%;

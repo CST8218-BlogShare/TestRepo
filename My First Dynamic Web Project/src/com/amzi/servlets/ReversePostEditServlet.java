@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 import com.amzi.dao.User;
 import com.amzi.dao.PostEdit;
 import com.amzi.dao.Blog;
@@ -27,9 +25,9 @@ public class ReversePostEditServlet extends HttpServlet {
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-		RequestDispatcher rd = null;
 		Blog currentBlog = null;
 		PostEdit currentPostEdit = null;
+		String url = "";
 		int currentPostPos = -1;
 		int currentUserId = -1;
 		
@@ -41,13 +39,13 @@ public class ReversePostEditServlet extends HttpServlet {
 		//If the parameters passed to getPostAt are not initialized, editPostInDatabase will throw an error 
 		
 		if(currentBlog.getPostAt(currentPostPos).editPostInDatabase(currentBlog,currentPostPos,currentPostEdit,currentUserId)){
-			rd = request.getRequestDispatcher("Blog.jsp");
+			url = "Blog.jsp";
 		}else{
-			rd = request.getRequestDispatcher("PostEditHistory.jsp");
+			url = "PostEditHistory.jsp";
 		}
 		
 		try {
-			rd.forward(request, response);
+			request.getRequestDispatcher(url).forward(request, response);
 		} catch (ServletException se) {
 			se.printStackTrace();
 		} catch (IOException ioe) {

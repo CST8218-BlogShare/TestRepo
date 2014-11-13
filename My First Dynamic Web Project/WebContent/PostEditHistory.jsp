@@ -14,7 +14,7 @@
 		session.setAttribute("currentPostEdit", postEdits.get(postEditPos));
 	%>
 	
-	<p class="FillScreenTextCentered" style="font-size:36px">Edit History</p>
+	<p class="FillScreenTextCentered" style="font-size:42px"><b>Edit History</b></p>
 	
 	<br>	
 	
@@ -23,8 +23,8 @@
 			<td style="width:35%; ">
 				<table>				
 					<%  for(int i = 0; i < postEdits.size(); ++i){ 	%>
-						<tr>
-							<td class="postEditListElement" <% if(i == postEditPos) { %> style="background:black;" <% } %>  >
+						<tr postEditPos = <%=i%> >
+							<td class="postEditListElement whiteDashedBorder" onClick="postEditListClick(this)" <% if(i == postEditPos) { %> style="background:black;" <% } %>  >
 								 <div style="text-align:left"><p> <b> Edit By: </b> <%= postEdits.get(i).getAuthor() %></p></div>
 								 <div style="text-align:left"><p> <b> Edit Date: </b> <%= postEdits.get(i).getEditDateTime() %></p></div>
 							</td>
@@ -42,9 +42,9 @@
 			</td>
 			
 			
-			<td style="width:65%;">
+			<td class="whiteDashedBorder" style="width:65%;">
 				<form name="reversePostEditForm" action="reversePostEditServlet" method="post">
-					<table>
+					<table class="FillScreen90">
 						<tr>
 							<td>
 								<p style="font-size:32px"><b>Content Before Edit</b></p>
@@ -90,7 +90,7 @@
 																 		
 									   <% }else{ %>
 															 	
-											 <%=postEdits.get(postEditPos+1).getTitleBeforeEdit()%>
+											 <%=postEdits.get(postEditPos-1).getTitleBeforeEdit()%>
 															 	
 									   <% } %>
 									</b>
@@ -106,7 +106,7 @@
 									
 									 <% }else{ %>
 									 
-											<%=postEdits.get(postEditPos+1).getContentBeforeEdit() %> 	
+											<%=postEdits.get(postEditPos-1).getContentBeforeEdit() %> 	
 									 
 									 <% } %>
 									
@@ -123,7 +123,14 @@
 						
 						<tr>
 							<td>
-								<input class=button type=submit value="Reverse Edit"/>
+								<input class=button type=submit value="Reverse To Edit"/>
+							</td>
+						</tr>
+						
+						<!-- does not work -->
+						<tr>
+							<td>
+								<a href="BlogEdit"><input class=button type="button" value="Cancel"/></a>
 							</td>
 						</tr>
 					</table>
@@ -132,6 +139,18 @@
 		</tr>
 	</table>
 	
+	<!-- form used to request a blog by title from getblogservlet -->
+	<form id="switchCurrentPostEdit" action="switchPostEditServlet" method="post">
+		<input type="hidden" id="postEditPos" name="postEditPos" value="">
+	</form>
+	
+	<script>
+		function postEditListClick(elementClicked){
+			var form = document.forms['switchCurrentPostEdit'];
+			form.postEditPos.value = elementClicked.parentNode.getAttribute("postEditPos");
+			form.submit();
+		}
+	</script>
 
 </body>
 </html>

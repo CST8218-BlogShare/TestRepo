@@ -99,7 +99,6 @@
 		function editHistoryClick(elementClicked){
 			var form = document.forms['goToPostEditHistory'];
 			form.postToRetrieveEditsPostPos.value = elementClicked.parentNode.parentNode.getAttribute("postPosition");
-			alert(form.postToRetrieveEditsPostPos.value);
 			form.submit();
 		}
 	</script>

@@ -73,8 +73,6 @@ public class PostEdit {
 	public static ArrayList<PostEdit> getResultsFromDatabase(int postId){
 		PreparedStatement pst = null;
 		ResultSet rs = null;
-		PreparedStatement authorPst = null;
-		ResultSet authorRs = null;
 		DbConnection connectionManager = null;
 		ArrayList<PostEdit> postEdits = new ArrayList<PostEdit>();
 		
@@ -93,6 +91,8 @@ public class PostEdit {
 			
 			while(rs.next()){
 				PostEdit pe = new PostEdit();
+				PreparedStatement authorPst = null;
+				ResultSet authorRs = null;
 				
 				pe.setPostEditId(rs.getInt("postEditId"));
 				pe.setPostId(rs.getInt("postId"));
@@ -100,27 +100,36 @@ public class PostEdit {
 				pe.setTitleBeforeEdit(rs.getString("titleBeforeEdit"));
 				pe.setContentBeforeEdit(rs.getString("contentBeforeEdit"));
 				
-				authorPst = connectionManager.getConnection().prepareStatement("select u.username as username from user u, postedit pe, user_postedit upe"
-																			+ " where u.userId = upe.userid AND"
-																			+ " pe.postEditid = upe.postEditid AND"
-																			+ " pe.postEditId = ?;");
-				authorPst.setInt(1, pe.getPostEditId());
-				authorRs = authorPst.executeQuery();
-				authorRs.first();
-				
-				pe.setAuthor(authorRs.getString("username"));
+				try{
+					
+					authorPst = connectionManager.getConnection().prepareStatement("select u.username as username from user u, postedit pe, user_postedit upe"
+																				+ " where u.userId = upe.userid AND"
+																				+ " pe.postEditid = upe.postEditid AND"
+																				+ " pe.postEditId = ?;");
+					authorPst.setInt(1, pe.getPostEditId());
+					authorRs = authorPst.executeQuery();
+					authorRs.first();
+					
+					pe.setAuthor(authorRs.getString("username"));
+				}catch(SQLException sqlE) {
+					sqlE.printStackTrace();
+				}finally{
+					try {
+						authorPst.close();
+						authorRs.close();
+					}catch(SQLException sqlE){
+						sqlE.printStackTrace();
+					}
+				}
 				
 				postEdits.add(pe);
 			}
-			
 		} catch (SQLException sqlE) {
 			sqlE.printStackTrace();
 		}finally{
 			try {
 				pst.close();
 				rs.close();
-				authorPst.close();
-				authorRs.close();
 				
 			} catch (SQLException sqlE) {
 				sqlE.printStackTrace();

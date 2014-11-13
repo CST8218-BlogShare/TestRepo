@@ -91,8 +91,7 @@ if (request.getParameter("language") != null){
 				<p style="font-size:18px;"> 	<%= lang.getString("content.4")%>, <%= ((User) session.getAttribute("currentUser")).getUsername() %>.<br>
 				<%= lang.getString("content.5")%></p>
 			</div>
-			
-			
+				
 		<% } %>
 	
 		<!-- if the user is not logged in, display the login and registration tables on the page  -->

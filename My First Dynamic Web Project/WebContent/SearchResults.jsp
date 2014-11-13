@@ -67,7 +67,7 @@
 		
 		<!--  out.println( " class=\"blog-link list-group-item\" blogTitle=\"" + blogTitle + "\">"+ blogTitle +"</li>"); -->		
 															
-		<article style= "width:95%; margin-left:auto; margin-right:auto; border-style:dashed; border-width:medium; border-color:white; background:DodgerBlue">
+		<article class="whiteDashedBorder" style="width:95%; margin-left:auto; margin-right:auto; background:DodgerBlue">
 			<form name="loadSearchResultForm" action="loadSearchResultServlet" method="post">
 				<table style="width:100%; margin-right:auto; margin-left:auto; text-align:center; color:white" >
 				<% 
