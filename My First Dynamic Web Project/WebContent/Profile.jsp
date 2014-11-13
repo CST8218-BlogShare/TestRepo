@@ -123,7 +123,7 @@ contentType="text/html; charset=ISO-8859-1"
 												
 												<td style="width:18%;">
 													<div class="list-group">
-														<li class="blogedit-link list-group-item" blogTitle="<%=blogTitle%>">Edit</li>
+														<li class="blogedit-link list-group-item" blogTitle="<%=blogTitle%>"><%=lang.getString("editbtn") %></li>
 													</div>
 												</td>
 												
@@ -134,7 +134,7 @@ contentType="text/html; charset=ISO-8859-1"
 												
 												<td style="width:18%;">
 													<div class="list-group">
-														<li class="blogdelete-link list-group-item" blogTitle="<%=blogTitle%>">Delete</li>
+														<li class="blogdelete-link list-group-item" blogTitle="<%=blogTitle%>"><%=lang.getString("deletebtn") %></li>
 													</div>
 												</td>
 												
@@ -194,23 +194,23 @@ contentType="text/html; charset=ISO-8859-1"
 					<h3><span class="label label-default"><%=lang.getString("joined")%>: <%= u.getDateRegistered() %></span></h3>
 						<div style="padding:30px">	
 							<div class="input-group">
-							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("username")%>:</span>
-							 	<input id="loginUsername" name="loginUsername" type="text" class="form-control" readonly="true" value="<%= u.getUsername() %>" >
+							  	<span class="input-group-addon" style="min-width:<%=lang.getString("mintextfieldwidth") %>"><%=lang.getString("username")%>:</span>
+							 	<input id="loginUsername" name="loginUsername" type="text" class="form-control" readonly value="<%= u.getUsername() %>" >
 							</div>
 							<div class="input-group">
-							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("newusername")%>:</span>
+							  	<span class="input-group-addon" style="min-width:<%=lang.getString("mintextfieldwidth") %>"><%=lang.getString("newusername")%>:</span>
 							 	<input id="newUsername" name="newUsername" type="text" class="form-control">
 							</div>
 							<div class="input-group">
-							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("password")%>:</span>
+							  	<span class="input-group-addon" style="min-width:<%=lang.getString("mintextfieldwidth") %>"><%=lang.getString("password")%>:</span>
 							 	<input id="loginPassword" name="loginPassword" type="password" class="form-control" >
 							</div>
 							<div class="input-group">
-							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("newpassword")%>:</span>
+							  	<span class="input-group-addon" style="min-width:<%=lang.getString("mintextfieldwidth") %>"><%=lang.getString("newpassword")%>:</span>
 							 	<input id="newPass" name="newPass" type="password" class="form-control" >
 							</div>
 							<div class="input-group">
-							  	<span class="input-group-addon" style="min-width:200px"><%=lang.getString("reenter")%>: </span>
+							  	<span class="input-group-addon" style="min-width:<%=lang.getString("mintextfieldwidth") %>"><%=lang.getString("reenter")%>: </span>
 							 	<input id="newPassConfirm" name="newPassConfirm" type="password" class="form-control" >
 							</div>
 							<div class="btn-group" style="padding:30px">
