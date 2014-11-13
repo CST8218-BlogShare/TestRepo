@@ -31,8 +31,8 @@
 	Blog b = (Blog) session.getAttribute("currentBlog");
 	User u = (User) session.getAttribute("currentUser");
 	
-	if(b == null || u == null){
-		//System.out.println("The session is  invalid");
+	if(b == null){
+		//System.out.println("The session is invalid");
 		System.exit(1);
 	}
 	
@@ -56,7 +56,7 @@
 	
 			<!-- blog title -->
 			<tr style="margin-bottom: 5%;">
-				<td> <p style="font-size:32px;"> <b> <%= b.getBlogTitle() %> </b></p></td>
+				<td> <p style="font-size:48px;"> <b> <%= b.getBlogTitle() %> </b></p></td>
 			</tr>
 	
 			<!-- creating space -->
@@ -115,9 +115,12 @@
 					
 							<input type=text name=postTitle maxlength=100 value=""/>	
 					
+							<br>
+							<br>
+							
 							<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("enterpost") %></p> 
 							
-							<textarea NAME="postBody" WRAP=soft COLS=80 ROWS=10></textarea>
+							<textarea  NAME="postBody" WRAP=soft COLS=100 ROWS=10></textarea>
 					<%
 						//If in post editing mode
 						}else if(isEditMode == true){
@@ -145,49 +148,60 @@
 			<tr>
 				<td><br></td>
 			</tr>
-			
-			
-			<!-- option to enable public editing of content  -->
-			<% 	//if the post being edited is not the first post, display this option.
-				if(b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex) { %>
-			
-			<tr>
-				<td class="FillScreenTextCentered">
-					<p style="font-size:18px;">
-					<%= lang.getString("content2") %>
-						<br>
-					</p>
-				</td>
-			</tr>
-			
-			<% } %>	
 					
-			<tr>
-				<td>
-					<%	//if in post creation mode
-						if(isEditMode == false){
+			
+					<%	if(isEditMode == true){ 
+							if(u != null && b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex){
 					%>
-					<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
-					<%
-						//If in post editing mode
-						}else if(isEditMode == true){
-							//Only show the isPublic option if the current user is the author of the post. 
-							//If the post being edited, is the first post of the blog. Don't show the option to make the post publicly editable.
-							if(b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex){
-								//Determining if the value of isPublic has been set to true. Which means that the associated checkBox should be checked.
-								if(b.getPostAt(toEdit).getIsPublic()){
+						 		<!--  Only show the isPublic option if the current user is the author of the post. 
+							  	If the post being edited, is the first post of the blog. Don't show the option to make the post publicly editable. -->
+								<tr>
+									<td class="FillScreenTextCentered">
+										<p style="font-size:18px;">
+											<%= lang.getString("content2") %>
+											<br>
+										</p>
+									</td>
+								</tr>
+						
+					<!--  Determining if the value of isPublic has been set to true. Which means that the associated checkBox should be checked.-->
+					<%			if(b.getPostAt(toEdit).getIsPublic()){
 					%>				
-									<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
-					<%		
+									<tr>
+										<td>
+											<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
+										</td>
+									<tr>		
+					<%				
 								}else{ 
-					%>
+					%>				
+									<tr>
+										<td>
+											<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
+										</td>
+									</tr>
+					<% 			}		
+							}
+						}else{
+					%>		
+							<tr>
+								<td class="FillScreenTextCentered">
+									<p style="font-size:18px;">
+										<%= lang.getString("content2") %>
+										<br>
+									</p>
+								</td>
+							</tr>
+					
+							<tr>
+								<td>
 									<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
-					<% 			}
-							}		
+								</td>
+							</tr>
+					<% 
 						}
-					%>
-				</td>
-			</tr>
+					%>					 	
+						  
 			
 			<!-- creating space -->
 			<tr>
