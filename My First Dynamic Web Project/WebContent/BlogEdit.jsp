@@ -3,7 +3,7 @@
 <html>
 <meta charset="UTF-8">
 <head>
-<link rel="stylesheet" href="Styles/LookAndFeel.css">
+<jsp:include page="BootstrapInclude.html" />
 <title>BlogShare - BlogEdit</title>
 </head>
 
@@ -33,6 +33,16 @@ if (session.getAttribute("language").toString().equals("FR")){
 	<div class="FillScreenTextCentered">
 		<p style="font-size:28px; text-decoration:underline;"><b><%= lang.getString("edittitle")%></b></p>
 	</div>
+	
+	<%  if( request.getAttribute("errorMessage") != null)
+		{ %>
+		<div class="container">
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<%= lang.getString(request.getAttribute("errorMessage").toString()) %>
+			</div>
+		</div>
+	<%	}	%>
 	
 	<form name="changeBlogTitleForm" action="blogChangeTitleServlet" method="post">
 		<table class="FillScreenTextCentered">

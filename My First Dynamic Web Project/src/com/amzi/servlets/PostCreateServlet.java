@@ -60,8 +60,8 @@ public class PostCreateServlet extends HttpServlet {
 				return;
 			}
 			
-			postTitle = request.getParameter("postTitle");
-			postBody = request.getParameter("postBody");
+			postTitle = request.getParameter("postTitle").trim();
+			postBody = request.getParameter("postBody").trim();
 			
 			//if the title/body are empty make the response PostCreate, with corresponding error
 			if (postTitle.length() == 0 || postBody.length() == 0) {
