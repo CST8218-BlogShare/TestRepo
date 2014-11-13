@@ -70,6 +70,58 @@ public class PostEdit {
 		this.titleBeforeEdit = titleBeforeEdit;
 	}
 	
+	public static boolean insertPostEditIntoDatabase(int userId, int postId,String titleBeforeEdit,String contentBeforeEdit){
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		DbConnection connectionManager = null;
+		int postEditId = -1;
+		
+		connectionManager = DbConnection.getInstance();
+		
+		try{
+		
+			//Inserting the new postEdit row into the postEdit table.
+	        pst = connectionManager.getConnection().prepareStatement("insert into postEdit values (0,?,now(),?,?)");
+	        pst.setInt(1, postId);
+	        pst.setString(2, titleBeforeEdit);
+	        pst.setString(3, contentBeforeEdit);
+	        
+	        pst.execute();
+	        pst.close();
+	        
+	        //Retrieving the generated value for PostEdit id from the last insert into the postEdit table.
+	        
+	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as postEditId");
+	        rs = pst.executeQuery();
+	        rs.first();
+	        postEditId = rs.getInt("postEditId");
+	        
+	        rs.close();
+	        pst.close();
+	        
+	        //Inserting a new row into the User_PostEdit table. 
+	        
+	        pst = connectionManager.getConnection().prepareStatement("insert into user_postedit values(?,?)");
+	        pst.setInt(1,userId);
+	        pst.setInt(2, postEditId);
+	        
+	        pst.execute();
+	        pst.close();
+		}catch(SQLException sqlE){
+			sqlE.printStackTrace();
+			return false;
+		}finally{
+			try {
+				pst.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return true;
+	}
+	
 	public static ArrayList<PostEdit> getResultsFromDatabase(int postId){
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -78,8 +130,7 @@ public class PostEdit {
 		
 		connectionManager = DbConnection.getInstance();
 		
-		/*need to select all postEdits based on PostId*/
-		
+		/* selecting all postEdits based on PostId*/
 		
 		try {
 			pst = connectionManager.getConnection().prepareStatement("select postEditId, postId, editDateTime, titleBeforeEdit, contentBeforeEdit" 

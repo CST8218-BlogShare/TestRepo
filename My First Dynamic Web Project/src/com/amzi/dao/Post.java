@@ -280,25 +280,22 @@ public class Post {
 				        //b.addPost(postTitle, postBody);
 				        b.addPost(this); 
 	        		}else if( editMode ){
-	        			int postEditId = -1;
 	        			String titleBeforeEdit = "";
 	        			String contentBeforeEdit = "";
-	        			boolean isPublicBeforeEdit; 
 	        			
 				        this.postId = b.getPostAt(b.getToEdit()).getPostId();
 				        
 				        /*In order to accurately track edits, the values of postTitle, postBody, and isPublic
 				         need to captured before the update to the post within the post table is made*/
 				        
-				        pst = conn.prepareStatement("select title, content, isPublic from post where postid = ?");
+				        pst = conn.prepareStatement("select title, content from post where postid = ?");
 				        pst.setInt(1, postId);
 				        rs = pst.executeQuery();
 				        rs.first();
 				        
 				        titleBeforeEdit = rs.getString("title");
 				        contentBeforeEdit = rs.getString("content");
-				        isPublicBeforeEdit = rs.getBoolean("isPublic");
-				        
+				         
 				        rs.close();
 				        pst.close();
 
@@ -306,43 +303,17 @@ public class Post {
 				        	return false;
 				        }
 				        
-				        //Inserting the new postEdit row into the postEdit table.
-				        pst = conn.prepareStatement("insert into postEdit values (0,?,now(),?,?)");
-				        pst.setInt(1, postId);
-				        pst.setString(2, titleBeforeEdit);
-				        pst.setString(3, contentBeforeEdit);
-				        
-				        pst.execute();
-				        pst.close();
-				        
-				        //Retrieving the generated value for PostEdit id from the last insert into the postEdit table.
-				        
-				        pst = conn.prepareStatement("select last_insert_id() as postEditId");
-				        rs = pst.executeQuery();
-				        rs.first();
-				        postEditId = rs.getInt("postEditId");
-				        
-				        rs.close();
-				        pst.close();
-				        
-				        //Inserting a new row into the User_PostEdit table. 
-				        
-				        pst = conn.prepareStatement("insert into user_postedit values(?,?)");
-				        pst.setInt(1,userId);
-				        pst.setInt(2, postEditId);
-				        
-				        pst.execute();
-				        pst.close();
+				        if(PostEdit.insertPostEditIntoDatabase(userId,postId,titleBeforeEdit,contentBeforeEdit) == false){
+				        	return false;
+				        }
 				        
 				        pst = conn.prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
 			            pst.setString(1, postTitle);
 			            pst.setString(2, postBody);
 			            pst.setBoolean(3, isPublic);
 			            pst.setInt(4, postId);
-		        		
-			            pst.executeUpdate(); 
+		        		pst.executeUpdate(); 
 			            pst.close();
-			            
 			            
 			            b.getPostAt(b.getToEdit()).postTitle = postTitle;
 			            b.getPostAt(b.getToEdit()).postBody = postBody;

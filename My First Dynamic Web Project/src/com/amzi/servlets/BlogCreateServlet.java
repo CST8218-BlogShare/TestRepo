@@ -80,8 +80,8 @@ public class BlogCreateServlet extends HttpServlet{
 			}
 		}
 		
-		postTitle=request.getParameter("postTitle");
-		postBody=request.getParameter("postBody");
+		postTitle=request.getParameter("postTitle").trim();
+		postBody=request.getParameter("postBody").trim();
 		
 		if (postTitle.length() == 0 || postBody.length() == 0){
 			

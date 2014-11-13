@@ -32,12 +32,12 @@ public class BlogChangeTitleServlet extends HttpServlet {
 		
 		newBlogTitle = newBlogTitle.trim();
          
-	    if(newBlogTitle != ""){
+	    if(newBlogTitle.length() != 0){
 	    	if(b.updateTitleInDatabase(b.getBlogId(),newBlogTitle) == false){
 				//create error message about sql error
 			}
 	    }else{
-	    	//create error message about new title being blank
+	    	request.setAttribute("errorMessage", "alert.emptyfields");
 	    }
 		
 		RequestDispatcher rd=request.getRequestDispatcher("BlogEdit.jsp");
