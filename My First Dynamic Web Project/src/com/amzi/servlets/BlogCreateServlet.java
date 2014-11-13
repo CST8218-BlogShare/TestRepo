@@ -64,8 +64,11 @@ public class BlogCreateServlet extends HttpServlet{
 		blogTitle=request.getParameter("blogTitle");
 		
 		if (blogTitle.length() == 0){
-			
-	        request.setAttribute("errorMessage", "Error: You cannot leave the Blog Title empty.");
+			if(userSession.getAttribute("language").equals("EN"))
+				request.setAttribute("errorMessage", "Error: You cannot leave the Blog Title empty.");
+			else if(userSession.getAttribute("language").equals("FR")){
+				request.setAttribute("errorMessage", "Erreur: Il manque un titre au Blog.");	
+			}
 			RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
 			try {
 				rd.forward(request,response);
@@ -82,7 +85,11 @@ public class BlogCreateServlet extends HttpServlet{
 		
 		if (postTitle.length() == 0 || postBody.length() == 0){
 			
-			request.setAttribute("errorMessage", "Error: You cannot leave the Post Title or Body empty.");
+			if(userSession.getAttribute("language").equals("EN"))
+				request.setAttribute("errorMessage", "Error: You cannot leave the Post Title or Body empty.");
+			else if(userSession.getAttribute("language").equals("FR")){
+				request.setAttribute("errorMessage", "Erreur: Il vous manque le Titre ou le contenu du Post.");	
+			}
 			RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
 			try {
 				rd.forward(request,response);
