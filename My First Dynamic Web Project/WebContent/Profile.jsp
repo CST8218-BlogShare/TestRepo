@@ -65,11 +65,14 @@ contentType="text/html; charset=ISO-8859-1"
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 	<div class="container">
 	
-		<h1 class="row" style="color:white">
+		<h1 class="row" style="color:lightblue; margin-left:1%">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
-			<span class="glyphicon glyphicon-user" style="fontSize:50px; color:lightgrey"></span>
+			<!--  <span class="glyphicon glyphicon-user" style="fontSize:50px; color:lightblue"></span> -->
 			<%=u.getUsername()%> <% out.println(lang.getString("profilepage")); %>
 		</h1>		
+		
+		<!-- making space -->
+		<br>
 		
 		<div class="row">
 			<div class="col-sm-1"></div><!-- end col-sm-1-->
@@ -182,9 +185,9 @@ contentType="text/html; charset=ISO-8859-1"
 					<button type="button" class="close" data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h3 class="modal-title" id="myModalLabel">
-						<span class="glyphicon glyphicon-user" style="fontSize:50px"></span> 
-						<%= u.getUsername() %> <%=lang.getString("profileedit")%>
+					<h3 class="modal-title" id="myModalLabel" style="color:lightblue;">
+						<!-- <span class="glyphicon glyphicon-user" style="fontSize:50px"></span> -->
+						<%=lang.getString("profileedit")%>
 					</h3>
 				</div>
 				<div class="modal-body">

@@ -17,15 +17,20 @@
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 
 	<div class="FillScreenTextCentered">
-		<p style="font-size:36px;"><a href="Blog.jsp" style="color:lightblue;"> <b> <%= b.getBlogTitle() %> </b> </a></p>
+		<p style="font-size:48px;"><a href="Blog.jsp" style="color:lightblue;"> <b> <%= b.getBlogTitle() %> </b> </a></p>
+	</div>
+	
+	<div class="FillScreenTextCentered">
+		<p style="font-size:28px; text-decoration:underline;"><b>Edit Blog Title</b></p>
 	</div>
 	
 	<form name="changeBlogTitleForm" action="blogChangeTitleServlet" method="post">
 		<table class="FillScreenTextCentered">
-			<tr>
+			
+			<!--  <tr>
 				<td colspan=2>
-					<p style="font-size:28px"><b>Blog Title</b></p>
-			</tr>
+					<p style="font-size:28px; text-decoration:underline;"><b>Edit Blog Title</b></p> <!-- make a css class for titles? 
+			</tr> -->
 			
 			<tr>
 				<td style="width:75%;">
@@ -42,12 +47,11 @@
 	<!-- making space between the two elements of the page -->	
 	<br>
 		
-	<table class="FillScreenTextCentered">
-		<tr>
-			<td colspan="4">
-				<p style="font-size:28px;"><b>Posts</b></p>
-			</td>
-		</tr>
+	<div class="FillScreenTextCentered"> 
+		<p style="font-size:28px; text-decoration:underline;"><b>Manage Posts</b></p>
+	</div>	
+			
+	<table class="FillScreenTextCentered blogEditTable" >
 		<% for(int i = 0; i < b.getPostCount(); ++i) { %>
 			<tr postPosition="<%=i%>">
 				<td style="width:50%;">
@@ -60,11 +64,11 @@
 					<input type=button class="PostEditHistory" onClick="editHistoryClick(this)"  value="Edit History">
 				</td>
 				<!-- The first post of the blog, functions as an explanation of the blog and because of this cannot be deleted. --> 
+				<td style="width:20%;">
 				<% if(i != 0){ %>
-					<td style="width:20%;">
 						<input type=button class="PostDelete"  onClick="deletePostClick(this)" value="Delete Post">
-					</td>
 				<% } %>
+				</td>
 			</tr>	
 		<% } %>
 	</table>
