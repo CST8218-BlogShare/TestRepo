@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html;" import="com.amzi.dao.Blog, com.amzi.dao.Post"%>
+<%@ page language="java" contentType="text/html;" import="com.amzi.dao.Blog, com.amzi.dao.Post, java.util.ResourceBundle"%>
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
@@ -11,6 +11,16 @@
 
  Blog b = (Blog) session.getAttribute("currentBlog");
 
+if(session.getAttribute("language") == null){
+	session.setAttribute("language","EN");
+}
+
+ResourceBundle lang = ResourceBundle.getBundle("BlogEdit_EN");
+
+if (session.getAttribute("language").toString().equals("FR")){
+	lang = ResourceBundle.getBundle("BlogEdit_FR");
+} 
+
 %>
 <body>
 
@@ -21,7 +31,7 @@
 	</div>
 	
 	<div class="FillScreenTextCentered">
-		<p style="font-size:28px; text-decoration:underline;"><b>Edit Blog Title</b></p>
+		<p style="font-size:28px; text-decoration:underline;"><b><%= lang.getString("edittitle")%></b></p>
 	</div>
 	
 	<form name="changeBlogTitleForm" action="blogChangeTitleServlet" method="post">
@@ -38,7 +48,7 @@
 				</td>
 				
 				<td style="width:30%;">
-					<input type="submit" value="Change Title"/>
+					<input type="submit" value="<%= lang.getString("changetitle")%>"/>
 				</td>
 			</tr>
 		</table>
@@ -48,7 +58,7 @@
 	<br>
 		
 	<div class="FillScreenTextCentered"> 
-		<p style="font-size:28px; text-decoration:underline;"><b>Manage Posts</b></p>
+		<p style="font-size:28px; text-decoration:underline;"><b><%= lang.getString("manageposts")%></b></p>
 	</div>	
 			
 	<table class="FillScreenTextCentered blogEditTable" >
@@ -58,15 +68,15 @@
 					<p style="font-size:20px;"> <b> <%= b.getPostAt(i).getPostTitle() %> </b> </p>
 				</td>
 				<td style="width:15%;" >
-					<input type=button class="PostEdit" onClick="goToPostEdit(this)" value="Edit Post">
+					<input type=button class="PostEdit" onClick="goToPostEdit(this)" value="<%= lang.getString("editpost")%>">
 				</td>
 				<td style="width:15%;">
-					<input type=button class="PostEditHistory" onClick="editHistoryClick(this)"  value="Edit History">
+					<input type=button class="PostEditHistory" onClick="editHistoryClick(this)"  value="<%= lang.getString("edithistory")%>">
 				</td>
 				<!-- The first post of the blog, functions as an explanation of the blog and because of this cannot be deleted. --> 
 				<td style="width:20%;">
 				<% if(i != 0){ %>
-						<input type=button class="PostDelete"  onClick="deletePostClick(this)" value="Delete Post">
+						<input type=button class="PostDelete"  onClick="deletePostClick(this)" value="<%= lang.getString("deletepost")%>">
 				<% } %>
 				</td>
 			</tr>	
