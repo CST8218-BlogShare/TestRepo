@@ -6,7 +6,7 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <head>
-<link rel="stylesheet" href="Styles/LookAndFeel.css">
+<jsp:include page="BootstrapInclude.html" />
 <title>BlogShare - PostCreate</title>
 </head>
 <!--table to hold pages content -->
@@ -50,6 +50,7 @@
 	
 %>
 <body>
+
 	<form name="postForm" action="postCreateServlet" method="post">
 		<table  class="centered80W">
 	
@@ -97,6 +98,15 @@
 			<!-- post to be added -->
 			<tr>
 				<td>
+					<%  if( request.getAttribute("errorMessage") != null)
+						{ %>
+						<div class="container">
+							<div class="alert alert-danger alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<%= lang.getString(request.getAttribute("errorMessage").toString()) %>
+							</div>
+						</div>
+					<%	}	%>
 					<%
 						//if in post creation mode.
 						if( isEditMode == false){
