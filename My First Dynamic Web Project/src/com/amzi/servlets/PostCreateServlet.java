@@ -30,7 +30,6 @@ public class PostCreateServlet extends HttpServlet {
 		boolean isEditMode  = false;
 		
 		
-		
 		// If a session has not been created, none will be created
 		userSession = request.getSession(false);
 		response.setContentType("text/html");

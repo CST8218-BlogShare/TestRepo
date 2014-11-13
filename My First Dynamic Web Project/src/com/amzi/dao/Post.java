@@ -460,18 +460,19 @@ public class Post {
 		 Boolean editEnabled = true;
 		 PreparedStatement pst = null;
 		 ResultSet rs = null;
-			
-		 //if the post is public, it will always be editable.
-		 if(isPublic == true){
-		 	return editEnabled;
-		 }
-		 	
+		
 		 //if the post is not public and there is no user logged in, the post will never be editable.
 		 if(u == null){
 		 	editEnabled = false;
 		 	return editEnabled;
 		 }
 		 
+		 //if the post is public, it will always be editable.
+		 if(isPublic == true){
+		 	return editEnabled;
+		 }
+		 	
+
 		/* 
 		   If the current user is not the author of the post and the post is not publicly editable
 		   An attempt is made to match current userId with a userId that is associated to the privilegeId of this post.
