@@ -41,6 +41,7 @@ p{
 	border-color:white;	
 }
 
+
 p.ErrorMessageOutput{
 	width:80%;
 	margin-left:10%;
@@ -87,9 +88,17 @@ fixed-panel{
 	background-color:white;
 }
 
-/*tr{
-	background-color:grey;
-}*/
+.blogEditTable{
+	border-collapse:collapse;
+}
+
+.blogEditTable td{
+	border:1%;
+	border-style:dashed; 
+	border-width:medium; 
+	border-color:white;	
+    padding:1%;	
+}
 
 td{
 	text-align:center;
