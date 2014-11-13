@@ -29,7 +29,12 @@
 	} 
 	
 	Blog b = (Blog) session.getAttribute("currentBlog");
+	User u = (User) session.getAttribute("currentUser");
 	
+	if(b == null || u == null){
+		//System.out.println("The session is  invalid");
+		System.exit(1);
+	}
 	
 	try{
 		isEditMode = Boolean.parseBoolean((request.getParameter("editEnabled")));
@@ -134,7 +139,7 @@
 			
 			<!-- option to enable public editing of content  -->
 			<% 	//if the post being edited is not the first post, display this option.
-				if(toEdit != firstPostIndex) { %>
+				if(b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex) { %>
 			
 			<tr>
 				<td class="FillScreenTextCentered">
@@ -156,8 +161,9 @@
 					<%
 						//If in post editing mode
 						}else if(isEditMode == true){
+							//Only show the isPublic option if the current user is the author of the post. 
 							//If the post being edited, is the first post of the blog. Don't show the option to make the post publicly editable.
-							if(toEdit != firstPostIndex){
+							if(b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex){
 								//Determining if the value of isPublic has been set to true. Which means that the associated checkBox should be checked.
 								if(b.getPostAt(toEdit).getIsPublic()){
 					%>				
