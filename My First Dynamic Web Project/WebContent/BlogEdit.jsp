@@ -17,15 +17,20 @@
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 
 	<div class="FillScreenTextCentered">
-		<p style="font-size:36px;"><a href="Blog.jsp" style="color:lightblue;"> <b> <%= b.getBlogTitle() %> </b> </a></p>
+		<p style="font-size:48px;"><a href="Blog.jsp" style="color:lightblue;"> <b> <%= b.getBlogTitle() %> </b> </a></p>
+	</div>
+	
+	<div class="FillScreenTextCentered">
+		<p style="font-size:28px; text-decoration:underline;"><b>Edit Blog Title</b></p>
 	</div>
 	
 	<form name="changeBlogTitleForm" action="blogChangeTitleServlet" method="post">
 		<table class="FillScreenTextCentered">
-			<tr>
+			
+			<!--  <tr>
 				<td colspan=2>
-					<p style="font-size:28px; text-decoration:underline;"><b>Edit Blog Title</b></p> <!-- make a css class for titles? -->
-			</tr>
+					<p style="font-size:28px; text-decoration:underline;"><b>Edit Blog Title</b></p> <!-- make a css class for titles? 
+			</tr> -->
 			
 			<tr>
 				<td style="width:75%;">
