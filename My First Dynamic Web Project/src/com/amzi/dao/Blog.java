@@ -75,8 +75,16 @@ public class Blog {
 		return blogId;
 	}
 	
+	protected void setBlogId(int id){
+		this.blogId = id;
+	}
+	
 	public int getToEdit() {
 		return toEdit;
+	}
+	
+	protected void setToEdit(int toEdit){
+		this.toEdit = toEdit;
 	}
 	
 	public String getErrorMessage(){
@@ -319,26 +327,11 @@ public class Blog {
 	        return status;  
 	    }
 	
-    public boolean insertBlogInDatabase(int userId) {          
+    public static boolean insertBlogInDatabase(Blog b,int userId) {          
 	
         PreparedStatement pst = null; 
         ResultSet rs = null;
         DbConnection connectionManager = null; 
-        
-        /*
-         * The blog object used to call this function needs to call the appropriate constructor to have
-           have its blogTitle initialized before calling the insertBlogInDatabase function.
-        */
-        
-        if(this.blogTitle == null){
-        	System.out.println("The title of the blog object in use, has not been initialized");
-        	return false;
-        }
-        
-        if(userId == -1){
-        	System.out.println("The userId to be assoicated with this blog, has not been initialized");
-        	return false;
-        }
         
         try {  
         	
@@ -357,21 +350,21 @@ public class Blog {
         	
         	//insert blog title and creation date into blog table -- The SQL function now(), retrieves the current dateTime value. 
         	//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
-            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, '"+blogTitle+"', now(), '"+getIsPublicAsInt()+"')" );  
+            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, '"+b.getBlogTitle()+"', now(), '"+b.getIsPublicAsInt()+"')" );  
             pst.executeUpdate(); 
             //closing the connection to prepare for the next prepared statement.
             pst.close();
             
             //select blogid from blog table where title matches inserted value
-            pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = '"+blogTitle+"' ");
+            pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = '"+b.getBlogTitle()+"' ");
             rs = pst.executeQuery();
             rs.first();
-            this.blogId = rs.getInt("blogId");
+            b.setBlogId(rs.getInt("blogId"));
             rs.close();
             pst.close();
              
             //insert blogid and userid into user_blog table
-            pst = connectionManager.getConnection().prepareStatement("insert into user_blog values('"+userId+"', '"+blogId+"')");
+            pst = connectionManager.getConnection().prepareStatement("insert into user_blog values('"+userId+"', '"+b.getBlogId()+"')");
             pst.executeUpdate();
             pst.close();
             

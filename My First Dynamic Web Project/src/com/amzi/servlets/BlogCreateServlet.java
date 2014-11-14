@@ -117,7 +117,7 @@ public class BlogCreateServlet extends HttpServlet{
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */
 		
-		 if(b.insertBlogInDatabase(u.getUserId()) && p.insertPostInDatabase(u.getUserId(),b,false) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId()) ){
+		 if(Blog.insertBlogInDatabase(b, u.getUserId()) && Post.insertPostInDatabase(p,b,u.getUserId(),false) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId()) ){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 

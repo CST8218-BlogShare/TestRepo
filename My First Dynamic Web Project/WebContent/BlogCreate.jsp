@@ -144,13 +144,27 @@ if (request.getParameter("language") != null){
 				</tr>
 				
 				<tr>
-					<td><input type="submit" class=button value="<%= lang.getString("createblog")%>">
+					<td>
+						<input type="submit" class=button style="margin-bottom:1%;" value="<%= lang.getString("createblog")%>">
+					</td>
 				</tr>
-		
+				
+				<tr>
+					<td>
+						<input class="button" type="button" onClick="blogCreateClick()" value="<%= lang.getString("cancel")%>">
+					</td>
+				</tr>
 			</table>
-		</form>
-		<form action="Profile.jsp">
-			<input class="FillScreenTextCentered" type="submit" value="<%= lang.getString("cancel")%>" style="font-size:18px;">		
-		</form>
+		</form>		
 	</body>
+	
+	<form name="BlogCreateCancel" action="Profile.jsp" method="get"></form>
+	
+	<script>
+		function blogCreateClick(){
+			var form = document.forms["BlogCreateCancel"];
+			form.submit();
+		}
+	</script>
+	
 </html>

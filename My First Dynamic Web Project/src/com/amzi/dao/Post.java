@@ -172,153 +172,89 @@ public class Post {
 		}
 	}
 		
-	public boolean insertPostInDatabase(int userId, Blog b, boolean editMode) {          
+	public static boolean insertPostInDatabase(Post p, Blog b, int userId, boolean editMode) {          
 		 
 	        PreparedStatement pst = null; 
 	        ResultSet rs = null;
 	        DbConnection connectionManager = null;
 	        Connection conn = null;
 	       
-	        /*
-	         * The post object used to call this function needs to call the appropriate constructor to have its
-	           postTitle and postBody data members initialized before calling the insertPostInDatabase function.
-	        */
+	        connectionManager = DbConnection.getInstance();
+	        conn = connectionManager.getConnection();
 	        
-	        if(this.postTitle == null){
-	        	System.out.println("The title of the post object in use, has not been initialized");
-	        	return false;
+	        p.setBlogId(b.getBlogId());
+	        
+	        //checking if the post is part of a blog that is publicly editable.
+	        if(b.getIsPublic() && b.getPostCount() != 0){
+	        	p.setIsPublic(true);
 	        }
-	        
-	        if(this.postBody == null){
-	        	System.out.println("The body of the post object in use, has not been initialized");
-				return false;
-	        }
-	        
-	        if(userId == -1){
-				System.out.println("The userId value that is to be related to this post, has not been initialized");
-				return false;
-	        }
-	        
-	        if(b == null){
-				System.out.println("The blog object that will be related to this post, has not been initialized");
-				return false;
-	        }
-	        
-	        try {  
 	        	
-	        	
-	        	//gaining access to the shared database connection.
-	        	connectionManager = DbConnection.getInstance();
-	        	conn = connectionManager.getConnection();
-	        	/*
-	        	 * If the blog object b has been successfully initialized, 
-	        	 * the blogId object is guaranteed to be set to a value other than -1.
-	        	 */
-	        	
-	        	this.blogId = b.getBlogId();
-	        	
-	        	
-	        	/* 
-	        	 *Algorithm used below
-	        	 *  
-	        	 	Removed! 
-	        	 		select title from post table based on a match to the title and blogid of the post to be inserted.
-	        	 			if a match is found, do not insert this post into the database.  
-	        	 		
-	        	 		
-	        	 	insert post title, blogid content, creation date into post table
-				    select postid from post table where blogid and title is the same
-				    insert postid and user id into user_post
-	        	 */
-	        	
-	        	/*
-	        	  
-		        	//checking within current blog for a post with the same title as the one that is to be created.
-	        		pst = conn.prepareStatement("select title from post where title = '"+postTitle+"' AND blogId = '"+blogId+"' ");
-	        		rs = pst.executeQuery();
-	        		
-	        		//If there is an entry within the resultSet, then a post with an identical title already exists within the Blog.
-	        		if(rs.next() == true){
-	        			System.out.println("This post cannot be created.");
-	        			System.out.println("A post with the title " + postTitle  + " already exists within " + b.getBlogTitle());
-	        			//No need to close the ResultSet or PreparedStatement objects as close() is called within the finally clause.
-	        			return false;
-	        		}
-	        		
-	        		//closing the ResultSet and PreparedStatment objects, in order to prepare for the next database query.
-	        		rs.close();
-	        		pst.close();
-	        		
-	        	*/
-	        		
-	        		//checking if the post is part of a blog that is publicly editable.
-	        		if(b.getIsPublic() && b.getPostCount() != 0){
-	        			this.setIsPublic(true);
-	        		}
-	        		
-	        		if(!editMode){
-		        		/* Insert post title, blogid content, creation date into post table 
-		        		 * The SQL function now(), retrieves the current dateTime value.
-		        		 * the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.*/
-				        pst = conn.prepareStatement("insert into post values( 0, '"+blogId+"','"+postTitle+"','"+postBody+"', now(), '"+getIsPublicAsInt()+"' )");  
-				        pst.executeUpdate();
-				        pst.close();
+	        try{
+		        if(!editMode){
+		        	/* Insert post title, blogid content, creation date into post table 
+			         * The SQL function now(), retrieves the current dateTime value.
+			         * the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.*/
+					     
+		        	pst = conn.prepareStatement("insert into post values( 0, '"+p.getBlogId()+"','"+p.getPostTitle()+"','"+p.getPostBody()+"', now(), '"+p.getIsPublicAsInt()+"' )");  
+					pst.executeUpdate();
+					pst.close();
+		            
+					//selecting value of postId column generated from previous statement.
+					pst = conn.prepareStatement("select last_insert_id() as PostId");
+					rs = pst.executeQuery();
+					rs.first();
+					p.setPostId(rs.getInt("PostId"));
+					rs.close();
+					pst.close();
+					            
+					//insert postid and user id into user_post
+					pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+p.getPostId()+"') ");
+					pst.executeUpdate();
+					pst.close();
+					        		        	
+					//b.addPost(postTitle, postBody);
+					b.addPost(p); 
+		        }else if( editMode ){
+		        	String titleBeforeEdit = "";
+		        	String contentBeforeEdit = "";
+		        			
+					p.setPostId(b.getPostAt(b.getToEdit()).getPostId());
+					        
+					/*In order to accurately track edits, the values of postTitle, postBody, and isPublic
+					  need to captured before the update to the post within the post table is made*/
+					        
+					pst = conn.prepareStatement("select title, content from post where postid = ?");
+					pst.setInt(1, p.getPostId());
+					rs = pst.executeQuery();
+					rs.first();
+					        
+					titleBeforeEdit = rs.getString("title");
+					contentBeforeEdit = rs.getString("content");
+					         
+					rs.close();
+					pst.close();
+	
+				    if(titleBeforeEdit == "" || contentBeforeEdit == ""){
+				    	return false;
+					}
+					        
+					if(PostEdit.insertPostEditIntoDatabase(userId,p.getPostId(),titleBeforeEdit,contentBeforeEdit) == false){
+						return false;
+					}
+					        
+					pst = conn.prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
+				    pst.setString(1, p.getPostTitle());
+				    pst.setString(2, p.getPostBody());
+				    pst.setBoolean(3, p.getIsPublic());
+				    pst.setInt(4, p.getPostId());
+				    pst.executeUpdate(); 
+				    pst.close();
 				            
-				        //selecting value of postId column generated from previous statement.
-				        pst = conn.prepareStatement("select last_insert_id() as PostId");
-				        rs = pst.executeQuery();
-				        rs.first();
-				        postId = rs.getInt("PostId");
-				        rs.close();
-				        pst.close();
-				            
-				        //insert postid and user id into user_post
-				        pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+postId+"') ");
-				        pst.executeUpdate();
-				        pst.close();
-				        		        	
-				        //b.addPost(postTitle, postBody);
-				        b.addPost(this); 
-	        		}else if( editMode ){
-	        			String titleBeforeEdit = "";
-	        			String contentBeforeEdit = "";
-	        			
-				        this.postId = b.getPostAt(b.getToEdit()).getPostId();
-				        
-				        /*In order to accurately track edits, the values of postTitle, postBody, and isPublic
-				         need to captured before the update to the post within the post table is made*/
-				        
-				        pst = conn.prepareStatement("select title, content from post where postid = ?");
-				        pst.setInt(1, postId);
-				        rs = pst.executeQuery();
-				        rs.first();
-				        
-				        titleBeforeEdit = rs.getString("title");
-				        contentBeforeEdit = rs.getString("content");
-				         
-				        rs.close();
-				        pst.close();
-
-				        if(titleBeforeEdit == "" || contentBeforeEdit == ""){
-				        	return false;
-				        }
-				        
-				        if(PostEdit.insertPostEditIntoDatabase(userId,postId,titleBeforeEdit,contentBeforeEdit) == false){
-				        	return false;
-				        }
-				        
-				        pst = conn.prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
-			            pst.setString(1, postTitle);
-			            pst.setString(2, postBody);
-			            pst.setBoolean(3, isPublic);
-			            pst.setInt(4, postId);
-		        		pst.executeUpdate(); 
-			            pst.close();
-			            
-			            b.getPostAt(b.getToEdit()).postTitle = postTitle;
-			            b.getPostAt(b.getToEdit()).postBody = postBody;
-			            b.getPostAt(b.getToEdit()).isPublic = isPublic;
-	        		}
+				    b.getPostAt(b.getToEdit()).postTitle = p.getPostTitle();
+				    b.getPostAt(b.getToEdit()).postBody = p.getPostBody();
+				    b.getPostAt(b.getToEdit()).isPublic = p.getIsPublic();
+		        }
+	        
 	        } catch (SQLException sqlE) {  
 	        	
 	        	connectionManager.closeConnection();
