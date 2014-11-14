@@ -35,6 +35,13 @@ p{
 	 margin-left:auto;
 }
 
+.fillScreenTextCentered80{
+	width:80%;
+	margin-left:10%;
+	margin-right:10%;
+	text-align:center;
+}
+
 .whiteDashedBorder{
 	border-style:dashed; 
 	border-width:medium; 
@@ -64,12 +71,7 @@ fixed-panel{
 	max-width: 400px;
 }
 
-.centered80W{
-	width:80%;
-	margin-left:10%;
-	margin-right:10%;
-	text-align:center;
-}
+
 
 .searchSelectButton{
 	height:100%; 

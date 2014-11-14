@@ -58,12 +58,12 @@ if (request.getParameter("language") != null){
 	<%	}	%>
 		 <!--table to hold pages content -->
 		<form name="blogCreateForm" action="BlogCreateServlet" method="post">
-			<table class="centered80W">
+			<table class="FillScreenTextCentered">
 		
 				<!--  description for user about what to do on the page -->
 				<tr>
 					<td>
-						<div class="centered80W" style="margin-bottom:3%;">
+						<div class="FillScreenTextCentered" style="margin-bottom:3%;">
 							<p style="font-size:32px;">
 							   	<b><%= lang.getString("createblog")%></b> <br>
 							</p> 
@@ -88,7 +88,7 @@ if (request.getParameter("language") != null){
 				
 				<tr>
 					<td>
-						<div class="centered80W" style="margin-bottom:2%;">
+						<div class="FillScreenTextCentered" style="margin-bottom:2%;">
 							<p style="font-size:18px">
 								<%= lang.getString("instructions1")%>
 								<br>
@@ -125,7 +125,7 @@ if (request.getParameter("language") != null){
 				</tr>
 		
 				<tr>
-					<td class="centered80W" style="font-size:18px;">
+					<td class="FillScreenTextCentered" style="font-size:18px;">
 						<p>
 							<%= lang.getString("instructions2")%><br>
 						</p>
@@ -150,7 +150,7 @@ if (request.getParameter("language") != null){
 			</table>
 		</form>
 		<form action="Profile.jsp">
-			<input class="centered80W" type="submit" width="wrap_content" value="<%= lang.getString("cancel")%>" style="font-size:18px;">		
+			<input class="FillScreenTextCentered" type="submit" value="<%= lang.getString("cancel")%>" style="font-size:18px;">		
 		</form>
 	</body>
 </html>

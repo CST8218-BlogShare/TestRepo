@@ -50,20 +50,21 @@
 	
 %>
 <body>
-
-	<form name="postForm" action="postCreateServlet" method="post">
-		<table  class="centered80W">
-	
+	<form name="postCreateForm" action="postCreateServlet" method="post">
+		<table  class="FillScreenTextCentered">
 			<!-- blog title -->
 			<tr style="margin-bottom: 5%;">
 				<td> <p style="font-size:48px;"> <b> <%= b.getBlogTitle() %> </b></p></td>
 			</tr>
-	
+		
 			<!-- creating space -->
 			<tr>
-				<td><br><br></td>
+				<td>
+					<br>
+					<br>
+				</td>
 			</tr>
-			
+				
 			<tr>
 				<td>
 					<p style="font-size:17px;">
@@ -72,92 +73,99 @@
 					<br>
 				</td>
 			</tr>
-	
+		
 			<!-- first post -->
 			<tr>
 				<td><p style="font-size:20px; text-decoration:underline;"> <%= lang.getString("explanationofblog") %> </p></td>
 			</tr>
-	
+		
 			<!-- creating space -->
 			<tr>
-				<td><br></td>
-			</tr>
-	
-	
-			<tr>
-				<td style="background:white; text-align:left;">	
-						<p title="<%= lang.getString("contentpopup") %>" style="margin:5%; color:black;"><%= b.getPostAt(firstPostIndex).getPostBody() %></p>
+				<td>
+					<br>
 				</td>
 			</tr>
-	
+		
+			<tr>
+				<td style="background:white; text-align:left;">	
+					<p title="<%= lang.getString("contentpopup") %>" style="margin:5%; color:black;"><%= b.getPostAt(firstPostIndex).getPostBody() %></p>
+				</td>
+			</tr>
+		
 			<!-- creating space -->
 			<tr>
-				<td><br><br></td>
+				<td>
+					<br>
+					<br>
+				</td>
 			</tr>
-			
+				
 			<!-- post to be added -->
 			<tr>
 				<td>
-					<%  if( request.getAttribute("errorMessage") != null)
-						{ %>
-						<div class="container">
-							<div class="alert alert-danger alert-dismissible" role="alert">
-								<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								<%= lang.getString(request.getAttribute("errorMessage").toString()) %>
+					<%  
+						if( request.getAttribute("errorMessage") != null){ 
+					%>
+							<div class="container">
+								<div class="alert alert-danger alert-dismissible" role="alert">
+									<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<%= lang.getString(request.getAttribute("errorMessage").toString()) %>
+								</div>
 							</div>
-						</div>
-					<%	}	%>
+					<%	
+						}
+					%>
 					<%
 						//if in post creation mode.
 						if( isEditMode == false){
 					%>
 							<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("entertitile") %></p>
-					
-							<input type=text name=postTitle maxlength=100 value=""/>	
-					
-							<br>
-							<br>
-							
-							<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("enterpost") %></p> 
-							
-							<textarea  NAME="postBody" WRAP=soft COLS=100 ROWS=10></textarea>
+								<input type=text name=postTitle maxlength=100 value=""/>	
+								<br>
+								<br>
+								<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("enterpost") %></p> 
+								<textarea  NAME="postBody" WRAP=soft COLS=100 ROWS=10></textarea>
 					<%
-						//If in post editing mode
+							//If in post editing mode
 						}else if(isEditMode == true){
+							//if editing the first post of the blog, the title cannot be modified.
+							if(toEdit == firstPostIndex) { 
 					%>
-							<% //if editing the first post of the blog, the title cannot be modified.
-								if(toEdit == firstPostIndex) { %>
-									<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("posttitle") %></p>
-									<p style="font-size:28px"> <b> <%= lang.getString("explanationofblog") %></b> </p>
-									<input type=hidden name=postTitle value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
-							<% }else{ %>
-									<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("posttitle") %></p>
-									<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
-							<% } %>
-							
-							<br>
-							<br>
-							
-							<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("postcontent") %></p> 
-							<textarea NAME="postBody" WRAP=soft COLS=100 ROWS=10><%=b.getPostAt(toEdit).getPostBody() %></textarea>
+							<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("posttitle") %></p>
+							<p style="font-size:28px"> <b> <%= lang.getString("explanationofblog") %></b> </p>
+							<input type=hidden name=postTitle value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
+					<% 
+							}else{ 
+					%>
+								<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("posttitle") %></p>
+								<input type=text name=postTitle maxlength=100 value="<%=b.getPostAt(toEdit).getPostTitle() %>"/>
+					<% 
+							} 
+					%>
+						<br>
+						<br>
+						<p style="font-size:20px; text-decoration:underline;"><%= lang.getString("postcontent") %></p> 
+						<textarea NAME="postBody" WRAP=soft COLS=100 ROWS=10><%=b.getPostAt(toEdit).getPostBody() %></textarea>
 					<%
-						}
-					%>
-				</td>
-			</tr>
-			
-			
-			<!-- creating space -->
-			<tr>
-				<td><br></td>
-			</tr>
-					
+							}
+						%>
+					</td>
+				</tr>
+				
+				
+				<!-- creating space -->
+				<tr>
+					<td><br></td>
+				</tr>
+						
 			
 					<%	if(isEditMode == true){ 
+							/*	
+								If the user is logged in, the user is the author of the post and this is not the first post. 
+								Show the option to make the post publicly editable. 
+							*/
 							if(u != null && b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex){
 					%>
-						 		<!--  Only show the isPublic option if the current user is the author of the post. 
-							  	If the post being edited, is the first post of the blog. Don't show the option to make the post publicly editable. -->
 								<tr>
 									<td class="FillScreenTextCentered">
 										<p style="font-size:18px;">
@@ -167,42 +175,98 @@
 									</td>
 								</tr>
 						
-					<!--  Determining if the value of isPublic has been set to true. Which means that the associated checkBox should be checked.-->
-					<%			if(b.getPostAt(toEdit).getIsPublic()){
-					%>				
+					
+					<%			
+								if(b.getIsPublic()){ 
+					%>
+									<tr>
+										<td class="FillScreenTextCentered">
+											<p style="font-size:18px;">
+												<%=lang.getString("content3") %>
+											</p>
+										
+										</td>
+									</tr>
+							
 									<tr>
 										<td>
-											<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
+											<input type="checkbox" checked="checked" disabled="disabled"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
 										</td>
-									<tr>		
-					<%				
-								}else{ 
+									</tr>
+					<%			
+								}else{
+					
+									/*
+									Determining if the value of isPublic for the post to be edited has been set to true. 
+									If true, the associated checkBox should be checked.
+									*/
+									if(b.getPostAt(toEdit).getIsPublic()){
 					%>				
+										<tr>
+											<td>
+												<input type=checkbox name="postEditableCheckBox" checked="checked"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
+											</td>
+										<tr>		
+					<%				
+									}else{ 
+					%>				
+										<tr>
+											<td>
+												<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
+											</td>
+										</tr>
+					<% 				}//end of if(b.getPostAt(toEdit).getIsPublic())	
+								}//end of if(b.getIsPublic())
+					%>			
+							
+					<% 		}//end of if(u != null && b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex)
+						}else{
+					%>		
+							<% 
+								//If the entire blog is publicly editable, this post is always editable. 
+								if(b.getIsPublic()) { 
+							%>
+									<tr>
+										<td class="FillScreenTextCentered">
+											<p style="font-size:18px;">
+												<%= lang.getString("content2") %>
+												<br>
+												<%=lang.getString("content3") %>
+											</p>
+										
+										</td>
+									</tr>
+								
+									<tr>
+										<td>
+											<input type="checkbox" checked="checked" disabled="disabled"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
+										</td>
+									</tr>
+									
+										
+							<% 
+								//If the post is not publicly editable, the user has the choice of whether to make the post editable or not.
+								}else{ 
+							%>
+									<tr>
+										<td class="FillScreenTextCentered">
+											<p style="font-size:18px;">
+												<%= lang.getString("content2") %>
+												<br>
+											</p>
+										</td>
+									</tr>
+									
 									<tr>
 										<td>
 											<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
 										</td>
 									</tr>
-					<% 			}		
-							}
-						}else{
-					%>		
-							<tr>
-								<td class="FillScreenTextCentered">
-									<p style="font-size:18px;">
-										<%= lang.getString("content2") %>
-										<br>
-									</p>
-								</td>
-							</tr>
-					
-							<tr>
-								<td>
-									<input type=checkbox name="postEditableCheckBox"/><p style="font-size:18px;"><%= lang.getString("allowedit") %></p>
-								</td>
-							</tr>
+							<% 
+								}//end of if(b.getIsPublic())
+							%>	
 					<% 
-						}
+						}//end of if(isEditMode == true)
 					%>					 	
 						  
 			
@@ -213,14 +277,26 @@
 			
 			<tr>
 				<td> 
-					<input type="submit" class=button value="<%= lang.getString("save") %>">
+					<input type="submit" class=button style="margin-bottom:1%;" value="<%= lang.getString("save") %>">
 				</td>
 			</tr>
+			
+			<tr>
+				<td>
+					<input type="button" class="button" onClick="cancelOnClick()" value="<%= lang.getString("cancel") %>"/>
+				</td>
+			</tr>
+				
 		</table>
 	</form>
 	
-	<form action="Blog.jsp">
-		<input class="centered80W" type="submit" width="wrap_content" value="<%= lang.getString("cancel") %>" style="font-size:18px;">
-	</form>
+	<form name="cancelPostCreateForm" action="Blog.jsp" method="get"></form>
+	
+	<script>
+		function cancelOnClick(){
+			var form = document.forms['cancelPostCreateForm'];
+			form.submit();
+		}
+	</script>
 </body>
 </html>

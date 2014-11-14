@@ -73,12 +73,12 @@
 %>
 
 </head>
-	<body><!-- end of body -->
+	<body>
 	
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 
 		<!--table to hold pages content -->
-		<table class="centered80W" style="margin-bottom:2%;">
+		<table class="fillScreenTextCentered80" style="margin-bottom:2%;">
 			 	
 			 	<!-- blog title -->
 			 	<tr>
@@ -187,27 +187,32 @@
 						<br>
 					</td>
 				</tr> 
-			 
+				
 		<%
 			 }
 		%>
 		
+		<% if(u != null){ %>
+				
+				<tr>
+					<td>
+						<input type="submit" class=button onClick="createPostClick()" value="<%=lang.getString("createnew")%>">
+					</td>
+				</tr>
+				
+		<% } %>
+		
 		</table>
 		
-		<!--  Button to create a new post, when pressed the user is linked to PostCreate.jsp -->
-		<form action="PostCreate.jsp">
-			<table class="centered80W">
-				<tr>
-					<td style="width:80%;">
-						<input type="submit" class=button value="<%=lang.getString("createnew")%>">
-					</td>
-					
-					<td style="width:20%;">
-					</td>
-					
-				</tr>
-			</table>
-		</form>
+		<!-- form triggered when the "Create New Post" button is clicked  -->
+		<form name="createPostForm" action="PostCreate.jsp" method="get"></form>
+		
+		<script>
+			function createPostClick(){
+				var form = document.forms['createPostForm'];
+				form.submit();
+			}
+		</script>
 		
 	<body>
 </html>

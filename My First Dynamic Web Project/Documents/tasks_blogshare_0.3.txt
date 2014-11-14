@@ -1,0 +1,35 @@
+things to do
+
+Everyone:
+
+-Implement consistent error checking
+	implement errorMessage creation for blogCreate, postCreate(includes postEdit) pages.
+	fix error checking on insertInto functions.
+	implement error checking on sessionState variables as they are passed.
+	
+- disable searching if no searcTerm is provided or blog, or post option are not chosen.
+
+Derek has started this....but will need help. 
+
+- Create functionality to track post edits and reverse specific edits. 
+	-Edit Profile.jsp 
+		- Add "Edit Blog" to Profile.jsp on all items within Blog List
+			"Edit Blog" button is only visible if the current user is viewing their profile.
+		- Wrap button in form in order to call EditBlogServlet. 
+	- Create BlogEdit.jsp
+		Accessed by clicking "Edit Blog" button from within Profile.jsp
+			"Edit Blog" button is only visible if the current user is viewing their profile.
+	- Create PostEditHistory.jsp
+		Accessed by clicking the "Edit History" button within the BlogEdit.jsp page
+			"Edit History" button is only visible if the post has been edited. 
+ 
+Feel free to start.....specifically the rollBack feature. 
+ 
+- implement database class: 
+	implement rollBack functionality during transactions...
+	implement syncronization of transactions
+
+
+
+
+

@@ -113,7 +113,7 @@ if (request.getParameter("language") != null){
 		
 		<!-- table containing form for user registration and login-->
 		<div>														   
-			<table class="centered80W">
+			<table class="fillScreenTextCentered80">
 				<tr>
 				<!--Registration Form -->
 					<td style="width:40%;">

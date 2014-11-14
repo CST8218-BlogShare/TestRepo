@@ -66,8 +66,7 @@ contentType="text/html; charset=ISO-8859-1"
 	<div class="container">
 	
 		<h1 class="row" style="color:lightblue; margin-left:1%">
-			<div class="col-sm-1"></div><!-- end col-sm-1-->
-			<!--  <span class="glyphicon glyphicon-user" style="fontSize:50px; color:lightblue"></span> -->
+			<!--  <div class="col-sm-1"></div><!-- end col-sm-1-->
 			<%=u.getUsername()%> <% out.println(lang.getString("profilepage")); %>
 		</h1>		
 		
@@ -75,8 +74,7 @@ contentType="text/html; charset=ISO-8859-1"
 		<br>
 		
 		<div class="row">
-			<div class="col-sm-1"></div><!-- end col-sm-1-->
-		
+			<!--  <div class="col-sm-1"></div><!-- end col-sm-1-->
 			<div class="col-sm-11 FillScreen90">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -98,7 +96,7 @@ contentType="text/html; charset=ISO-8859-1"
 			</div><!-- end col-sm-11-->
 		</div><!-- End row -->
 		<div class="row">
-			<div class="col-sm-1"></div><!-- end col-sm-1-->
+			<!--  <div class="col-sm-1"></div><!-- end col-sm-1-->
 				<div class="col-sm-10 FillScreen90">
 					<div class="panel panel-default">
 						<div class="panel-heading">
@@ -154,7 +152,7 @@ contentType="text/html; charset=ISO-8859-1"
 						</div>
 					</div>
 				</div><!-- end col-sm-10-->
-			<div class="col-sm-1"></div><!-- end col-sm-1-->
+			<!--<div class="col-sm-1"></div><!-- end col-sm-1-->
 		</div><!-- End row -->
 	</div><!-- End container fluid -->	
 
