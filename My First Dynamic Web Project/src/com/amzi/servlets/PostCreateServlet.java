@@ -90,7 +90,7 @@ public class PostCreateServlet extends HttpServlet {
 			p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
 			pep = new PostEditPrivilege();
 			
-			 if(Post.insertPostInDatabase(p, b,u.getUserId() ,isEditMode) && pep.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId())){
+			 if(Post.insertPostInDatabase(p, b,u.getUserId() ,isEditMode) && PostEditPrivilege.insertPostEditPrivilegeInDatabase(pep,p.getPostId(), u.getUserId())){
 				
 				 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 				 

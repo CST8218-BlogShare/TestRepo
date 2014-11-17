@@ -18,7 +18,7 @@ public class PostEditPrivilege {
 		return postEditPrivilegeId;
 	}
 	
-	public boolean insertPostEditPrivilegeInDatabase(int postId, int userId){
+	public static boolean insertPostEditPrivilegeInDatabase(PostEditPrivilege pep, int postId, int userId){
 		boolean status = true;
 		DbConnection connectionManager = null;
 		PreparedStatement pst = null;
@@ -49,17 +49,17 @@ public class PostEditPrivilege {
 	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as PrivilegeId");
 	        rs = pst.executeQuery();
 	        rs.first();
-	        postEditPrivilegeId = rs.getInt("PrivilegeId");
+	        pep.postEditPrivilegeId = rs.getInt("PrivilegeId");
 	        rs.close();
 	        pst.close();
 	        
 	        //creating an entry in the post_postEditPrivilege table corresponding to this new post
-	        pst = connectionManager.getConnection().prepareStatement("insert into post_postEditPrivilege values('"+postId+"','"+postEditPrivilegeId+"') ");
+	        pst = connectionManager.getConnection().prepareStatement("insert into post_postEditPrivilege values('"+postId+"','"+pep.getPostEditPrivilegeId()+"') ");
 	        pst.executeUpdate();
 	        pst.close();
 	        
 	       //creating an entry in the user_postEditPrivilege table corresponding to this new post
-	        pst = connectionManager.getConnection().prepareStatement("insert into user_postEditPrivilege values('"+userId+"','"+postEditPrivilegeId+"') ");
+	        pst = connectionManager.getConnection().prepareStatement("insert into user_postEditPrivilege values('"+userId+"','"+pep.getPostEditPrivilegeId()+"') ");
 	        pst.executeUpdate();
 	        pst.close();
 	        
