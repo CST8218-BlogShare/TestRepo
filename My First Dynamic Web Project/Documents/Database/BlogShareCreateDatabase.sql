@@ -13,9 +13,9 @@ where
 
 -- need to be logged in as blogshareuser.
 
-create database blogsharedatatest;
+create database blogsharedata;
 
-use blogsharedatatest;
+use blogsharedata;
 
 -- creating user table
 CREATE TABLE User 
@@ -281,4 +281,4 @@ from INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 where
   CONSTRAINT_NAME LIKE '%fk%';
 
--- breakdown of current session (current database should be blogsharedatatest)
+

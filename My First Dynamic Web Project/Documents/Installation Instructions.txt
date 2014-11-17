@@ -4,6 +4,7 @@ This will create a new user "BlogShareUser" with password "password".
 Log in as this user
 
 Step 3. Run /Documents/Database/BlogShareCreateDatabase.sql
+Step 4. Type: "use BlogShareData;" to use the newly created database. 
 		
 Once Database Is created you can import the project to your IDE.
 

@@ -22,7 +22,7 @@ import java.sql.SQLException;
 public class DbConnection {
 	
 	private String url = "jdbc:mysql://localhost:3306/";  
-    private String dbName = "blogsharedatatest";  
+    private String dbName = "blogsharedata";  
     private String driver = "com.mysql.jdbc.Driver";  
     private String dbUserName = "blogshareuser";  
     private String dbPassword = "password";
