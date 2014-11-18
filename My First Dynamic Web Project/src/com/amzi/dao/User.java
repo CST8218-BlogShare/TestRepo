@@ -1,10 +1,11 @@
 package com.amzi.dao;
 
-//import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 public class User{
 
@@ -16,7 +17,7 @@ public class User{
 	public User() {
 		
 	}
-	
+		
 	public User(int userId, String username, String password, String dateRegistered){
 		this.userId = userId;
 		this.username = username;
@@ -24,7 +25,7 @@ public class User{
 		this.dateRegistered = dateRegistered;
 	}
 	
-	public void setUserId(int id){
+	protected void setUserId(int id){
 		this.userId=id;
 	}
 	
@@ -32,7 +33,7 @@ public class User{
 		return userId;
 	}
 	
-	public void setUserName(String s){
+	protected void setUserName(String s){
 		this.username=s;
 	}
 	
@@ -40,7 +41,7 @@ public class User{
 		return username;
 	}
 	
-	public void setPassword(String p){
+	protected void setPassword(String p){
 		this.password = p;
 	}
 	
@@ -48,7 +49,7 @@ public class User{
 		return password;
 	}
 	
-	public void setDateRegistered(String d){
+	protected void setDateRegistered(String d){
 		this.dateRegistered = d;
 	}
 	
@@ -56,51 +57,107 @@ public class User{
 		return dateRegistered;
 	}
 
-	public void buildUserFromId(int userId){
+	//Called when the user completes registration
+	public static int insertUserIntoDatabase(String username, String password){
+		 PreparedStatement pst = null;
+		 DbConnection connectionManager = null;
+		 
+	     connectionManager = DbConnection.getInstance();
+	     
+	     if(connectionManager.getConnection() == null){
+	    	 return -1;
+	     }
+		
+		 try {
+			pst = connectionManager.getConnection().prepareStatement("insert into User values(0, ?,?, curdate() );");
+			pst.setString(1,username);
+	        pst.setString(2, password);
+	        pst.executeUpdate(); 
+	        pst.close();
+		} catch (MySQLIntegrityConstraintViolationException sqlCE) {
+			sqlCE.printStackTrace();
+			return -2;
+		} catch ( SQLException sqlE){
+			sqlE.printStackTrace();
+			return -3;
+		}
+		 finally{
+			try {
+				pst.close();
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
+			}
+		}
+		 return 0;
+	}
+	
+	public static User getUserFromDatabaseByCredentials(String username, String password){
+		User u = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		DbConnection connectionManager = null;
+	    
+		connectionManager = DbConnection.getInstance();
+		
+		try {
+			pst = connectionManager.getConnection().prepareStatement("select * from user where username=? and password=?");
+			pst.setString(1, username);  
+		    pst.setString(2, password);  
+
+		    rs = pst.executeQuery(); 
+		    rs.first();
+		    
+		    u = new User(rs.getInt("userId"), rs.getString("username"), rs.getString("password"), rs.getString("DateRegistered"));
+		    
+		} catch (SQLException sqlE) {
+			sqlE.printStackTrace();
+		} finally{
+			try {
+				rs.close();
+				pst.close();
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
+			}
+			
+		}
+		return u;
+	}
+	
+	public void getUserFromDatabaseById(int userId){
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
 	     DbConnection connectionManager = null;
 	     
 	     connectionManager = DbConnection.getInstance();
-	     this.userId = userId;
 	     
 	     try {
-			pst = connectionManager.getConnection().prepareStatement("select username, dateRegistered from user where userid = "+this.userId+"");
-		    rs = pst.executeQuery();
+			pst = connectionManager.getConnection().prepareStatement("select username, dateRegistered from user where userid = ?");
+		    pst.setInt(1, userId);
+			rs = pst.executeQuery();
+			
 		    rs.first();
 		    this.username = rs.getString("username");
 		    this.dateRegistered = rs.getString("dateRegistered");
+		    this.userId = userId;
+		    
 		    rs.close();
 		    pst.close();
 	     } catch (SQLException sqlE) {
 			sqlE.printStackTrace();
 	     }finally { 
-	        //we now have to manage closing the connection a different way...at logout...
-	        if (pst != null) {  
-	        	try {  
-	        		pst.close();  
-	            } catch (SQLException e) {  
-	                e.printStackTrace();  
-	            }  
-	        }  
-	           
-	        if(rs != null) {  
-	        	try {  
-	        		rs.close();  
-	            } catch (SQLException e) {  
-	            	e.printStackTrace();  
-	            }  
+	       
+	        try {  
+	        	rs.close();
+	        	pst.close();  
+	           } catch (SQLException sqlE) {  
+	               sqlE.printStackTrace();  
 	        }  
 	     }     
 	}
 	
-	public boolean changePass(String newUsername, String newPass) {
-		boolean status = false;
-		
+	public boolean updateUserCredentialsInDatabase(String newUsername, String newPass) {
 		PreparedStatement pst = null;  
 	    DbConnection connectionManager = null;
-
-	    Exception Error = new Exception();
 	    
 	     try {  
 	       
@@ -109,22 +166,22 @@ public class User{
 	    	if (userId == -1) {
 	        	System.out.println("Login class was not initialized before calling changePass().\n");
 	        	//errorMessege = "Error with password edit attempt. Login.userId is null.";
-	        	throw Error;
+	        	return false;
 	        }
 	    	
 	    	if(newPass == ""){
 	        	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
 	        	//errorMessege = "Error with password edit attempt. Password was not entered.";
-	        	throw Error;
+	        	return false;
 	        }
 	        
 	        if(newUsername == ""){
 	        	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
 	        	//errorMessege = "Error with password edit attempt. Password was not entered.";
-	        	throw Error;
+	        	return false;
 	        }
 	        
-	         //gaining access to the shared database connection
+	        //gaining access to the shared database connection
 	        connectionManager = DbConnection.getInstance();
 	        
 	        pst = connectionManager.getConnection().prepareStatement("update user set Username=?, Password=? where userID=?"); 
@@ -137,39 +194,29 @@ public class User{
 	        if (pst.executeUpdate() == 1){
 	        	this.username = newUsername;
 	        	this.password = newPass;
-	        	status = true;
-	        } else {
-	        	status = false;        
+	        } else {   
 	        	System.out.println("Password change affected multiple rows of user table.\n");
 	        	//errorMessege = "Error with password edit attempt. User table may have errors.";
-	        	throw Error;
+	        	//need to rollBack
+	        	return false;
 	        }
 	        
 	    } catch (SQLException sqlE) {  
-	    	
-	    	connectionManager.closeConnection();
-	    	
+	    	//does this matter??
+	    	//connectionManager.closeConnection();
 	    	System.out.println("\n");
 	    	sqlE.printStackTrace();
+	    	return false;
 	    	//errorMessege = "SQL Error";
-	    	
-	    	status = false;
-	    }catch(Exception e){
-	    	 e.printStackTrace(); //may not be necessary
-	         status = false;
 	    }
-	     finally { 
-	    	//we now have to manage closing the connection a different way...at logout...
-	        if (pst != null) {  
-	            try {  
-	                pst.close();  
-	            } catch (SQLException e) {  
-	                e.printStackTrace();  
-	            }  
-	        }  
-	    }  	
-		
-		return status;
+	     finally {   
+	    	 try {  
+	    		 pst.close();  
+	         } catch (SQLException e) {  
+	        	 e.printStackTrace();  
+	         }  
+	    }  
+		return true;
 	}
 	
 	//get a list of the titles of a particular user's blogs
@@ -184,7 +231,11 @@ public class User{
         	
         	connectionManager = DbConnection.getInstance();
         	
-        	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u where b.blogid = ub.blogid and u.userid = ub.userid and u.userid =? order by b.creationDateTime desc");
+        	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u"
+        													       + " where b.blogid = ub.blogid "
+        													       + "and u.userid = ub.userid "
+        													       + "and u.userid =? "
+        													       + "order by b.creationDateTime desc");
         	pst.setString(1, Integer.toString(userId));
         	rs = pst.executeQuery();
         	
@@ -204,7 +255,7 @@ public class User{
         } catch (SQLException sqlE) {  
         	
         	sqlE.printStackTrace();
-        	connectionManager.closeConnection();
+        	//connectionManager.closeConnection();
         	userBlogs = null;
         	
         }catch(Exception e){

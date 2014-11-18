@@ -3,7 +3,6 @@ package com.amzi.servlets;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +43,7 @@ public class GetBlogServlet extends HttpServlet {
 			
 			b = new Blog();
 			
-			if (b.buildBlogFromTitle(blogTitle)){
+			if (b.getBlogFromDatabaseByTitle(blogTitle)){
 				userSession.setAttribute("currentBlog", b); 
 			}else{
 				System.out.print("Error building blog with name: " + blogTitle + ".");

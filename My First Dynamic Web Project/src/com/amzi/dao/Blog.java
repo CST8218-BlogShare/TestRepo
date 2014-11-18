@@ -54,21 +54,21 @@ public class Blog {
     	this.isPublic = isPublic;
 	}
 	
-	public boolean setEditMode(boolean mode , int toEditP) {
-		toEdit = toEditP;
-		return isEditableMode = mode;
-	}
-
 	public boolean getEditMode() {
 		return isEditableMode;
 	}
 	
-	protected void setPostCount(int count){
-		this.postCount = count;
+	public boolean setEditMode(boolean mode , int toEditP) {
+		toEdit = toEditP;
+		return isEditableMode = mode;
 	}
 	
 	public int getPostCount(){
 		return postCount;
+	}
+	
+	protected void setPostCount(int count){
+		this.postCount = count;
 	}
 	
 	public int getBlogId(){
@@ -87,10 +87,17 @@ public class Blog {
 		this.toEdit = toEdit;
 	}
 	
+	
+	/*
+	protected void setErrorMessage(String message){
+		this.errorMessage = message;
+	}
+	
+	
 	public String getErrorMessage(){
 		return errorMessage;
 	}
-	
+	*/
 	public String getBlogTitle(){
 		return blogTitle;
 	}
@@ -103,15 +110,19 @@ public class Blog {
 		return postList.get(i);
 	}
 	
-	protected void setAuthor(String author) {          
-        this.author = author;
-    }
+	protected void setPostAt(int i, Post p){
+		this.postList.add(i, p);
+	}
 	
 	public String getAuthor(){
 		return author;
 	}
 	
-	public boolean getIsPublic() {
+	protected void setAuthor(String author) {          
+        this.author = author;
+    }
+	
+	public boolean getIsPublic(){
 		return isPublic;
 	}
 	
@@ -122,8 +133,8 @@ public class Blog {
 		return 0;
 	}
 	
-	protected void setIsPublic(boolean b){
-		this.isPublic = b;
+	protected void setIsPublic(boolean isPublic){
+		this.isPublic = isPublic;
 	}
 		 
 	 protected void addPost(Post p){
@@ -136,7 +147,7 @@ public class Blog {
 		 --postCount;
 	 }
 	 
-	 public void buildBlogFromId(int id){
+	 public void getBlogFromDatabase(int id){
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
 	     DbConnection connectionManager = null;
@@ -148,7 +159,11 @@ public class Blog {
 	        
 	     try{
 	    	 //retrieve userId based on blogId value within user_blog table
-	         pst = connectionManager.getConnection().prepareStatement("select b.title as blogTitle, b.isPublic as isPublic, u.userId as userId from blog b, user_blog ub, user u where b.blogId = '"+blogId+"' AND b.blogId = ub.blogId AND u.userId = ub.userId");
+	         pst = connectionManager.getConnection().prepareStatement("select b.title as blogTitle, b.isPublic as isPublic, u.userId as userId from blog b, user_blog ub, user u"
+	        		 												+ " where b.blogId = ? AND b.blogId = ub.blogId AND u.userId = ub.userId");
+	        
+	         pst.setInt(1,this.getBlogId());
+	         
 	         rs = pst.executeQuery();
 	         rs.first();
 	         userId = rs.getInt("userid");
@@ -158,15 +173,20 @@ public class Blog {
 	         pst.close();
 	        	
 	         //retrieve username from user table based on the retrieved value of userId and assign value to blog's author data member.
-	         pst = connectionManager.getConnection().prepareStatement("select username from user where userId = '"+userId+"' ");
+	         pst = connectionManager.getConnection().prepareStatement("select username from user where userId = ?");
+	         pst.setInt(1, userId);
+	         
 	         rs = pst.executeQuery();
 	         rs.first();
 	         this.author = rs.getString("username");
+	         
 	         rs.close();
 	         pst.close();
 	        	
 	         //get the blog's posts and their bodies from the database using the blogid
-	         pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = '"+blogId+"' ");
+	         pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = ?");
+	         pst.setInt(1, this.getBlogId());
+	         
 	         rs = pst.executeQuery();
 	        	
 	         while(rs.next()){
@@ -192,31 +212,20 @@ public class Blog {
 	        rs.close();
 	        pst.close();
 	        
-	        }catch(Exception e){
-	        	 e.printStackTrace(); //may not be necessary
-	             //status = false;
-	        }
-	         finally { 
-	        	//we now have to manage closing the connection a different way...at logout...
-	            if (pst != null) {  
-	                try {  
-	                    pst.close();  
-	                } catch (SQLException e) {  
-	                    e.printStackTrace();  
-	                }  
-	            }  
-	            if (rs != null) {  
-	                try {  
-	                    rs.close();  
-	                } catch (SQLException e) {  
-	                    e.printStackTrace();  
-	                }  
-	            }  
-	        }     	
+	      }catch(SQLException sqlE){
+	    	  sqlE.printStackTrace(); //may not be necessary
+	      }finally { 
+	    	  try {  
+	    		  rs.close();
+	              pst.close();  
+	           } catch (SQLException e) {  
+	        	   e.printStackTrace();  
+	           }  
+	     }
 	 }
 	 
 	 //load the blog's id, author and posts from the database from the blogs unique title
-	 public boolean buildBlogFromTitle(String blogTitle) {          
+	 public boolean getBlogFromDatabaseByTitle(String blogTitle) {          
 	        
 	    	boolean status = true;  
 	        PreparedStatement pst = null; 
@@ -237,30 +246,39 @@ public class Blog {
 	    		retrieve userId based on blogid value within the user_blog table 
 	    		retrieve username from user table based on the retrieved value of userId
 	    	*/
-	        	this.blogTitle = blogTitle;
-	        	
 	        	
 	        	//get the blog's id and isPubic value using the value of the title
 	        	pst = connectionManager.getConnection().prepareStatement("select blogid, isPublic from blog where title = ?");
 	        	pst.setString(1, blogTitle);
-	            rs = pst.executeQuery();
+	           
+	        	rs = pst.executeQuery();
 	            rs.first();
 	            this.blogId = rs.getInt("blogid");
 	            this.isPublic = rs.getBoolean("isPublic");
+	            this.blogTitle = blogTitle;
+	            
 	            rs.close();
 	            pst.close();
 	        	
 	        	
 	        	//retrieve userId based on blogId value within user_blog table
-	        	pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u where b.blogId = '"+blogId+"' AND b.blogId = ub.blogId AND u.userId = ub.userId");
+	        	pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u "
+	        														   + " where b.blogId = ub.blogId"
+	        														   + " AND u.userId = ub.userId"
+	        														   + " AND b.blogId = ?");
+	        	pst.setInt(1, this.getBlogId());
+	        	
 	        	rs = pst.executeQuery();
 	        	rs.first();
 	        	userId = rs.getInt("userid");
+	        	
 	        	rs.close();
 	        	pst.close();
 	        	
 	        	//retrieve username from user table based on the retrieved value of userId and assign value to blog's author data member.
-	        	pst = connectionManager.getConnection().prepareStatement("select username from user where userId = '"+userId+"' ");
+	        	pst = connectionManager.getConnection().prepareStatement("select username from user where userId = ?");
+	        	pst.setInt(1, userId);
+	        	
 	        	rs = pst.executeQuery();
 	        	rs.first();
 	        	this.author = rs.getString("username");
@@ -350,54 +368,54 @@ public class Blog {
         	
         	//insert blog title and creation date into blog table -- The SQL function now(), retrieves the current dateTime value. 
         	//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
-            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, '"+b.getBlogTitle()+"', now(), '"+b.getIsPublicAsInt()+"')" );  
+            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, ?, now(), ?)");  
+            pst.setString(1,b.getBlogTitle());
+            pst.setInt(2, b.getIsPublicAsInt());
+            
             pst.executeUpdate(); 
             //closing the connection to prepare for the next prepared statement.
             pst.close();
             
             //select blogid from blog table where title matches inserted value
-            pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = '"+b.getBlogTitle()+"' ");
+            pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = ?");
+            pst.setString(1, b.getBlogTitle());
+            
             rs = pst.executeQuery();
             rs.first();
             b.setBlogId(rs.getInt("blogId"));
+            
             rs.close();
             pst.close();
              
             //insert blogid and userid into user_blog table
-            pst = connectionManager.getConnection().prepareStatement("insert into user_blog values('"+userId+"', '"+b.getBlogId()+"')");
+            pst = connectionManager.getConnection().prepareStatement("insert into user_blog values(?, ?)");
+            pst.setInt(1,userId);
+            pst.setInt(2, b.getBlogId());
             pst.executeUpdate();
             pst.close();
             
         } catch (SQLException sqlE) {  
-        	
-        	
-        	connectionManager.closeConnection();
+        	//connectionManager.closeConnection();
         	System.out.println("Blog field missing, throwing SQLException");
         	sqlE.printStackTrace();
         	//errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
-        	
         	return false;
-        }
-         finally { 
-        	//the connection the connectionManager object interacts with, is closed at logout. 
-            if (pst != null) {  
-                try {  
-                    pst.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-            if (rs != null) {  
-                try {  
-                    rs.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-        }  
+        }finally{ 
+        //the connection the connectionManager object interacts with, is closed at logout. 
+           try {  
+        	  //if the blog title enter is not unique and an error is thrown the result set in never initialized.
+        	  if(rs != null){
+        		  rs.close();
+        	  }
+               pst.close();  
+           } catch (SQLException e) {  
+        	   e.printStackTrace();  
+           }  
+        }    
         return true;  
     } 
     
+    /*Fulfills the update portion of crud functionality, since the title is the only editable portion of a blog */
     public boolean updateTitleInDatabase(int blogId, String newTitle){
     	PreparedStatement pst = null; 
     	DbConnection connectionManager = null;

@@ -142,8 +142,9 @@ public class BlogCreateServlet extends HttpServlet{
 
 		 }
 		 else{
-			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
 			 request.setAttribute("errorMessage", "Error: Your blog title is not unique.");
+			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
+			 
 			 try {
 				rd.include(request,response);
 			} catch (ServletException e) {

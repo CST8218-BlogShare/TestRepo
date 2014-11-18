@@ -33,7 +33,7 @@ public class PostDeleteServlet extends HttpServlet {
 		
 		try{
 			postPos = Integer.parseInt(request.getParameter("postPos"));
-			if(b.getPostAt(postPos).removePostFromDatabase(b, postPos) == false){
+			if(b.getPostAt(postPos).deletePostFromDatabase(b, postPos) == false){
 				//create error message about database error
 			}
 		}catch(NumberFormatException nfe){//if postPostion cannot be initialized 

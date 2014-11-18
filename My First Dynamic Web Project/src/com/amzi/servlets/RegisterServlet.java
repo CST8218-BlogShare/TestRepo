@@ -21,10 +21,7 @@ public class RegisterServlet extends HttpServlet {
 	    	String name = "";
 	    	String pass = "";
 	    	String pass2 = "";
-	    	    	
-	        //does this need to be done??
-	    	response.setContentType("text/html");    
-	          
+	    	    	      
 	        name=request.getParameter("registerUsername");    
 	        pass=request.getParameter("registerUserPass");
 	        pass2=request.getParameter("registerReenterPass");

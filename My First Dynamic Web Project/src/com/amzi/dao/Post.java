@@ -21,45 +21,6 @@ public class Post {
 		
 	}
 	
-	/*public Post(int postId, int blogId, String postTitle, String postBody, String username, boolean isPublic) {
-		
-		postTitle = postTitle.trim();
-		postBody = postBody.trim();
-		username = username.trim();
-		
-		if(postId == -1){
-			System.out.println("PostId value has not been initialized.");
-			return;
-		}
-		
-		if(blogId == -1){
-			System.out.println("BlogId value has not been initialized.");
-			return;
-		}
-		
-		if (postTitle.equals("")) {
-			System.out.println("Post has no title.");
-			return;
-		}
-			
-		if (postBody.equals("")) {
-			System.out.println("Post has no body.");
-			return;
-		}
-			
-		if (username.equals("")) {
-			System.out.println("Username contains no characters.");
-			return;
-		}
-		
-		this.postId = postId;
-		this.blogId = blogId;
-		this.postTitle = postTitle;
-		this.postBody = postBody;
-		this.author = username;
-		this.isPublic = isPublic;
-	}*/
-	
 	public Post(String postTitle, String postBody, String username, boolean isPublic) {
 		postTitle = postTitle.trim();
 		postBody = postBody.trim();
@@ -151,22 +112,24 @@ public class Post {
 	}*/
 	
 	//author is not initialized in this method, as it is not a value in the post table.
-	public void buildPostFromId(int postId){
+	public void getPostFromDatabase(int postId){
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
 	     DbConnection connectionManager = null;
 	     
-	     this.postId = postId;
+	     
 	     connectionManager = DbConnection.getInstance();
 	     
 	     try {
-			pst = connectionManager.getConnection().prepareStatement("select blogid, title, content, isPublic from post where postid = "+this.postId+" ");
+			pst = connectionManager.getConnection().prepareStatement("select blogid, title, content, isPublic from post where postid = ? ");
+			pst.setInt(1, postId);
 			rs = pst.executeQuery();
 			rs.first();
 			this.blogId = rs.getInt("blogId");
 			this.postTitle = rs.getString("title");
 			this.postBody = rs.getString("content");
 			this.isPublic = rs.getBoolean("isPublic");
+			this.postId = postId;
 		} catch (SQLException sqlE) {
 			sqlE.printStackTrace();
 		}
@@ -195,8 +158,12 @@ public class Post {
 			         * The SQL function now(), retrieves the current dateTime value.
 			         * the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.*/
 					     
-		        	pst = conn.prepareStatement("insert into post values( 0, '"+p.getBlogId()+"','"+p.getPostTitle()+"','"+p.getPostBody()+"', now(), '"+p.getIsPublicAsInt()+"' )");  
-					pst.executeUpdate();
+		        	pst = conn.prepareStatement("insert into post values( 0, ?, ?, ?, now(), ?)");  
+					pst.setInt(1, p.getBlogId());
+					pst.setString(2, p.getPostTitle());
+					pst.setString(3, p.getPostBody());
+					pst.setInt(4,p.getIsPublicAsInt());
+		        	pst.executeUpdate();
 					pst.close();
 		            
 					//selecting value of postId column generated from previous statement.
@@ -208,11 +175,12 @@ public class Post {
 					pst.close();
 					            
 					//insert postid and user id into user_post
-					pst = conn.prepareStatement("insert into user_post values('"+userId+"', '"+p.getPostId()+"') ");
+					pst = conn.prepareStatement("insert into user_post values(?, ?) ");
+					pst.setInt(1, userId);
+					pst.setInt(2, p.getPostId());
 					pst.executeUpdate();
 					pst.close();
 					        		        	
-					//b.addPost(postTitle, postBody);
 					b.addPost(p); 
 		        }else if( editMode ){
 		        	String titleBeforeEdit = "";
@@ -238,7 +206,7 @@ public class Post {
 				    	return false;
 					}
 					        
-					if(PostEdit.insertPostEditIntoDatabase(userId,p.getPostId(),titleBeforeEdit,contentBeforeEdit) == false){
+					if(PostEdit.insertPostEditInDatabase(userId,p.getPostId(),titleBeforeEdit,contentBeforeEdit) == false){
 						return false;
 					}
 					        
@@ -257,7 +225,7 @@ public class Post {
 	        
 	        } catch (SQLException sqlE) {  
 	        	
-	        	connectionManager.closeConnection();
+	        	//connectionManager.closeConnection();
 	        	//System.out.println("Post field missing, throwing SQLException");
 	        	sqlE.printStackTrace();
 	        	return false;
@@ -282,7 +250,7 @@ public class Post {
 	        return true;  
 	    }
 
-    public boolean editPostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
+    public boolean updatePostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
     	PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
@@ -348,7 +316,7 @@ public class Post {
     	return true;
     }
 	
-	public boolean removePostFromDatabase(Blog b, int postPos){
+	public boolean deletePostFromDatabase(Blog b, int postPos){
 		
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
@@ -427,7 +395,8 @@ public class Post {
 																		 " p.postId = ppep.postid AND " +
 																		 " u.userid = up.userid AND " +
 																		 " P.postid = up.postid AND " +
-																		 " p.postid = '"+postId+"'"); 
+																		 " p.postid = ? "); 
+				pst.setInt(1, postId);
 				rs = pst.executeQuery();
 				while(rs.next()){
 					//if the user has a corresponding entry for the post within postEditPrivilege

@@ -48,28 +48,36 @@ public class PostEditPrivilege {
 	        //selecting value of postEditPrivilegeId column generated from previous statement.
 	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as PrivilegeId");
 	        rs = pst.executeQuery();
+	        
 	        rs.first();
 	        pep.postEditPrivilegeId = rs.getInt("PrivilegeId");
+	        
 	        rs.close();
 	        pst.close();
 	        
 	        //creating an entry in the post_postEditPrivilege table corresponding to this new post
-	        pst = connectionManager.getConnection().prepareStatement("insert into post_postEditPrivilege values('"+postId+"','"+pep.getPostEditPrivilegeId()+"') ");
+	        pst = connectionManager.getConnection().prepareStatement("insert into post_postEditPrivilege values(?,?)");
+	        pst.setInt(1, postId);
+	        pst.setInt(2, pep.getPostEditPrivilegeId());
 	        pst.executeUpdate();
+	        
 	        pst.close();
 	        
 	       //creating an entry in the user_postEditPrivilege table corresponding to this new post
-	        pst = connectionManager.getConnection().prepareStatement("insert into user_postEditPrivilege values('"+userId+"','"+pep.getPostEditPrivilegeId()+"') ");
+	        pst = connectionManager.getConnection().prepareStatement("insert into user_postEditPrivilege values(?,?)");
+	        pst.setInt(1, userId);
+	        pst.setInt(2, pep.getPostEditPrivilegeId());
 	        pst.executeUpdate();
+	        
 	        pst.close();
 	        
 		}catch(SQLException sqlE){
-			connectionManager.closeConnection();
+			//connectionManager.closeConnection();
         	sqlE.printStackTrace();
         	status = false;
         }
          finally { 
-        	//we now have to manage closing the connection a different way...at logout...
+        	//connection obtained from DBConnection is closed at logout. 
             if (pst != null) {  
                 try {  
                     pst.close();  

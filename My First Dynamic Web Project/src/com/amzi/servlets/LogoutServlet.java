@@ -16,8 +16,9 @@ public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-		
+		//closing the database connection.
 		DbConnection.getInstance().closeConnection();
+		//setting the session to it's default state. 
 		request.getSession().invalidate();
 		
 		RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");

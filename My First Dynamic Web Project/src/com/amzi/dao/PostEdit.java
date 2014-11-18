@@ -70,7 +70,7 @@ public class PostEdit {
 		this.titleBeforeEdit = titleBeforeEdit;
 	}
 	
-	public static boolean insertPostEditIntoDatabase(int userId, int postId,String titleBeforeEdit,String contentBeforeEdit){
+	public static boolean insertPostEditInDatabase(int userId, int postId,String titleBeforeEdit,String contentBeforeEdit){
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
@@ -122,7 +122,7 @@ public class PostEdit {
 		return true;
 	}
 	
-	public static ArrayList<PostEdit> getResultsFromDatabase(int postId){
+	public static ArrayList<PostEdit> getPostEditsFromDatabaseByPostId(int postId){
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
