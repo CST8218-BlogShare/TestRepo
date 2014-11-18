@@ -69,7 +69,8 @@ public class PostCreateServlet extends HttpServlet {
 				
 				request.setAttribute("errorMessage", "alert.emptyfields");
 				
-				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
+				
 				try {
 					rd.forward(request, response);
 					return;
@@ -107,7 +108,7 @@ public class PostCreateServlet extends HttpServlet {
 				else if(userSession.getAttribute("language").equals("FR")){
 					request.setAttribute("errorMessage", "Erreur: Impossible de créer le Post. Assurez-vous d'avoir modifier tout les champs.");	
 				}
-				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
 				
 				// modify
 				try {
