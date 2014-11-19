@@ -7,16 +7,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.Blog;
 import com.amzi.dao.PostEdit;
+import com.amzi.dao.User;
 
 /**
  * Servlet implementation class GetPostEditHistoryServlet
  */
 public class GetPostEditHistoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	public static String errorMessege = null;
+	public static String errorMessegeFR = null;
+	 
     public GetPostEditHistoryServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -27,9 +31,13 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 		Blog b = null;
 		String url = "";
 		int postPos = -1;
-			
+		HttpSession userSession = null;
+		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		postPos = Integer.parseInt(request.getParameter("postPos"));
+		
+		// If a session has not been created, none will be created
+		userSession = request.getSession(false);
 	
 		/*to track postEdit history, we want to initialze a list with a post, 
 		 * but because we do not want to bog down the system, with keeping all postEdits in memory,
@@ -46,7 +54,13 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 			
 			
 			if(postEdits.size() == 0){
+				if(userSession.getAttribute("language").equals("EN"))
+					request.setAttribute("errorMessage", "Error: No modifications found");
+				else if(userSession.getAttribute("language").equals("FR")){
+					request.setAttribute("errorMessage", "Erreur: Aucune modifications trouvé");	
+				}
 				url = "BlogEdit.jsp";
+				
 			}else{
 				url = "PostEditHistory.jsp";
 			}
