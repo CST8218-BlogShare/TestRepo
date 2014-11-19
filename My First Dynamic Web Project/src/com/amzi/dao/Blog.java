@@ -126,13 +126,6 @@ public class Blog {
 		return isPublic;
 	}
 	
-	public int getIsPublicAsInt() {
-		if(isPublic == true){
-			return 1;
-		}
-		return 0;
-	}
-	
 	protected void setIsPublic(boolean isPublic){
 		this.isPublic = isPublic;
 	}
@@ -280,17 +273,28 @@ public class Blog {
 	        return blogId;
 	    }
 	
-    public static boolean insertBlogInDatabase(Blog b,int userId) {          
+    public static int insertBlogInDatabase(String blogTitle, boolean blogIsPublic, int userId, String username) {          
 	
         PreparedStatement pst = null; 
         ResultSet rs = null;
-        DbConnection connectionManager = null; 
+        DbConnection connectionManager = null;
+        int blogId = 0;
+        int blogIsPublicAsInt = 0;//default value is false
         
         try {  
         	
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
   
+        	if(connectionManager.getConnection() == null){
+	        	System.out.println("Error with Blog Insertion: Unable to establish connection with database.");
+	        	return -1;
+	        }
+	        
+        	if(blogIsPublic == true){
+    			blogIsPublicAsInt = 1;
+    		}
+        	
         	/*
         	 *  
         	 *  
@@ -304,28 +308,31 @@ public class Blog {
         	//insert blog title and creation date into blog table -- The SQL function now(), retrieves the current dateTime value. 
         	//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
             pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, ?, now(), ?)");  
-            pst.setString(1,b.getBlogTitle());
-            pst.setInt(2, b.getIsPublicAsInt());
-            
+            pst.setString(1,blogTitle);
+            pst.setInt(2, blogIsPublicAsInt);
             pst.executeUpdate(); 
+            
             //closing the connection to prepare for the next prepared statement.
             pst.close();
             
+            /*
             //select blogid from blog table where title matches inserted value
             pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = ?");
-            pst.setString(1, b.getBlogTitle());
+            pst.setString(1, b.getBlogTitle());*/
             
-            rs = pst.executeQuery();
-            rs.first();
-            b.setBlogId(rs.getInt("blogId"));
-            
+            //Retrieving the generated value for blogId from the last insert into the blog table.
+	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as blogId");
+	        rs = pst.executeQuery();
+	        rs.first();
+	        blogId = rs.getInt("blogId");
+                        
             rs.close();
             pst.close();
              
             //insert blogid and userid into user_blog table
             pst = connectionManager.getConnection().prepareStatement("insert into user_blog values(?, ?)");
             pst.setInt(1,userId);
-            pst.setInt(2, b.getBlogId());
+            pst.setInt(2, blogId);
             pst.executeUpdate();
             pst.close();
             
@@ -334,7 +341,7 @@ public class Blog {
         	System.out.println("Blog field missing, throwing SQLException");
         	sqlE.printStackTrace();
         	//errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
-        	return false;
+        	return -2;
         }finally{ 
         //the connection the connectionManager object interacts with, is closed at logout. 
            try {  
@@ -347,7 +354,7 @@ public class Blog {
         	   e.printStackTrace();  
            }  
         }    
-        return true;  
+        return blogId;
     } 
     
     /*Fulfills the update portion of crud functionality, since the title is the only editable portion of a blog */

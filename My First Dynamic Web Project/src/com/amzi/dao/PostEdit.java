@@ -90,7 +90,6 @@ public class PostEdit {
 	        pst.close();
 	        
 	        //Retrieving the generated value for PostEdit id from the last insert into the postEdit table.
-	        
 	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as postEditId");
 	        rs = pst.executeQuery();
 	        rs.first();

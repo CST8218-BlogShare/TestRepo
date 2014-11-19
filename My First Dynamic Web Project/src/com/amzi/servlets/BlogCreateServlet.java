@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
   
+
 import com.amzi.dao.Blog;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
@@ -28,15 +29,18 @@ public class BlogCreateServlet extends HttpServlet{
 		 
 		 HttpSession userSession = null;
 		 
+		 User u = null;
 		 Blog b = null;
 		 Post p = null;
 		 PostEditPrivilege pep = null;
-		 User u = null;
-		 
+		 int blogId = 0;
+		 int postId = 0;
 		 String blogTitle = "";
 		 String postTitle = "";
 		 String postBody = "";
 		 Boolean blogIsPublic = false;
+		 Boolean postIsPublic = false;
+		 Boolean isEditMode = false;
 		 
 		 //If a session has not been created, none will be created
 		 userSession = request.getSession(false);
@@ -105,9 +109,6 @@ public class BlogCreateServlet extends HttpServlet{
 			blogIsPublic = true;
 		}
 		
-		b = new Blog(blogTitle,u.getUsername(),blogIsPublic);
-		//the first post is never publicly editable. 
-		p = new Post(postTitle,postBody, u.getUsername(),false);
 		pep = new PostEditPrivilege();
 		
 		/*The function insertBlogInDatabase() is called to take the contents entered into the
@@ -116,7 +117,30 @@ public class BlogCreateServlet extends HttpServlet{
 		 This function also initializes the Blog's blogId data member with an integer value.
 		 */
 		
-		 if(Blog.insertBlogInDatabase(b, u.getUserId()) && Post.insertPostInDatabase(p,b,u.getUserId(),false) && PostEditPrivilege.insertPostEditPrivilegeInDatabase(pep,p.getPostId(), u.getUserId()) ){
+		blogId = Blog.insertBlogInDatabase(blogTitle, blogIsPublic, u.getUserId(), u.getUsername());
+		
+		if(blogId > 0){
+			b = Blog.getBlogFromDatabaseById(blogId);
+		}
+		
+		postId = Post.insertPostInDatabase(postTitle, postBody, u.getUserId(), u.getUsername(), postIsPublic, b, isEditMode);
+		
+		if(postId > 0){
+			p = Post.getPostFromDatabaseById(postId);
+		}
+		
+		/*
+		 //checking if the post is part of a blog that is publicly editable....could move
+	    if(b.getIsPublic() && b.getPostCount() != 0){
+	    	p.setIsPublic(true);
+	    }
+	    
+	    	b.addPost(p); 
+	    
+	    *
+	    */
+		
+		 if(PostEditPrivilege.insertPostEditPrivilegeInDatabase(pep,p.getPostId(), u.getUserId()) ){
 			 //getServletContext().setAttribute("errorCode", 0);
 			 
 			 

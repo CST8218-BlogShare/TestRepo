@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html;" import="java.util.ArrayList, com.amzi.dao.Post, com.amzi.dao.PostEdit"%>
+<%@ page language="java" contentType="text/html;" import="java.util.ArrayList, com.amzi.dao.Post, com.amzi.dao.PostEdit, java.util.ResourceBundle"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +7,20 @@
 <title>BlogShare - Post Edit History</title>
 </head>
 <body>
+<%
+
+	
+	if(session.getAttribute("language") == null){
+		session.setAttribute("language","EN");
+	}
+	
+	ResourceBundle lang = ResourceBundle.getBundle("PostEditHistory_EN");
+	
+	if (session.getAttribute("language").toString().equals("FR")){
+		lang = ResourceBundle.getBundle("PostEditHistory_FR");
+	} 
+%>
+
 	<% 
 		int postEditPos = (int) session.getAttribute("currentPostEditPos");
 		Post currentPost= (Post) session.getAttribute("currentPost");
@@ -14,7 +28,7 @@
 		session.setAttribute("currentPostEdit", postEdits.get(postEditPos));
 	%>
 	
-	<p class="FillScreenTextCentered" style="font-size:36px"><b>Edit History For <%=currentPost.getPostTitle() %></b></p>
+	<p class="FillScreenTextCentered" style="font-size:36px"><b><%= lang.getString("editfor") %> <%=currentPost.getPostTitle() %></b></p>
 	
 	<br>	
 	
@@ -25,8 +39,8 @@
 					<%  for(int i = 0; i < postEdits.size(); ++i){ 	%>
 						<tr postEditPos = <%=i%> >
 							<td class="postEditListElement whiteDashedBorder" onClick="postEditListClick(this)" <% if(i == postEditPos) { %> style="background:black;" <% } %>  >
-								 <div style="text-align:left; margin:2%;"><p> <b> Edit By: </b> <%= postEdits.get(i).getAuthor() %></p></div>
-								 <div style="text-align:left; margin:2%;"><p> <b> Edit Date: </b> <%= postEdits.get(i).getEditDateTime() %></p></div>
+								 <div style="text-align:left; margin:2%;"><p> <b> <%= lang.getString("editby") %> </b> <%= postEdits.get(i).getAuthor() %></p></div>
+								 <div style="text-align:left; margin:2%;"><p> <b> <%= lang.getString("editdate") %> </b> <%= postEdits.get(i).getEditDateTime() %></p></div>
 							</td>
 						</tr>						
 					<% } %>
@@ -39,7 +53,7 @@
 					<table class="FillScreen90">
 						<tr>
 							<td>
-								<p style="font-size:32px; text-decoration:underline;"><b>Content Before Edit</b></p>
+								<p style="font-size:32px; text-decoration:underline;"><b><%= lang.getString("contentbeforeedit") %></b></p>
 							</td>
 						</tr>
 						<tr>
@@ -66,7 +80,7 @@
 						
 						<tr>
 							<td>
-								<p style="font-size:32px; text-decoration:underline;"><b>Content After Edit</b></p>
+								<p style="font-size:32px; text-decoration:underline;"><b><%= lang.getString("contentafteredit") %></b></p>
 							</td>
 						</tr>
 						
@@ -112,12 +126,12 @@
 						
 						<tr>
 							<td>
-								<input class=button style="margin-bottom:1%;" type=submit value="Reverse To Edit"/>
+								<input class=button style="margin-bottom:1%;" type=submit value="<%= lang.getString("revertedit")%>"/>
 							</td>
 						</tr>						
 						<tr>
 							<td> <!-- possibly make all button have the same margin -->
-								<input class=button style="margin-bottom:1%;" type="button" value="Cancel" onClick="cancelClick(this)"/>
+								<input class=button style="margin-bottom:1%;" type="button" value="<%= lang.getString("cancel")%>" onClick="cancelClick(this)"/>
 							</td>
 						</tr>
 					</table>

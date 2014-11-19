@@ -14,7 +14,9 @@ import com.amzi.dao.PostEdit;
  */
 public class GetPostEditHistoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	public static String errorMessege = null;
+	public static String errorMessegeFR = null;
+	 
     public GetPostEditHistoryServlet() {
         super();
     }
@@ -24,10 +26,10 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 		Blog b = null;
 		String url = "";
 		int postPos = -1;
-			
+		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		postPos = Integer.parseInt(request.getParameter("postPos"));
-	
+			
 		/*to track postEdit history, we want to initialze a list with a post, 
 		 * but because we do not want to bog down the system, with keeping all postEdits in memory,
 		 * this list will only be initialized when needed and is set to null after the page is navigated away from???
@@ -43,7 +45,13 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 			
 			
 			if(postEdits.size() == 0){
+				if(request.getSession().getAttribute("language").equals("EN"))
+					request.setAttribute("errorMessage", "Error: No modifications found");
+				else if(request.getSession().getAttribute("language").equals("FR")){
+					request.setAttribute("errorMessage", "Erreur: Aucune modifications trouvé");	
+				}
 				url = "BlogEdit.jsp";
+				
 			}else{
 				url = "PostEditHistory.jsp";
 			}
