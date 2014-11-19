@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import com.amzi.dao.Blog;
 
@@ -112,11 +113,11 @@ public class Post {
 	}*/
 	
 	//author is not initialized in this method, as it is not a value in the post table.
-	public void getPostFromDatabase(int postId){
+	public static Post getPostFromDatabaseById(int postId){
+		 Post p = null;
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
 	     DbConnection connectionManager = null;
-	     
 	     
 	     connectionManager = DbConnection.getInstance();
 	     
@@ -125,14 +126,65 @@ public class Post {
 			pst.setInt(1, postId);
 			rs = pst.executeQuery();
 			rs.first();
-			this.blogId = rs.getInt("blogId");
-			this.postTitle = rs.getString("title");
-			this.postBody = rs.getString("content");
-			this.isPublic = rs.getBoolean("isPublic");
-			this.postId = postId;
+			
+			p = new Post();
+			p.blogId = rs.getInt("blogId");
+			p.postTitle = rs.getString("title");
+			p.postBody = rs.getString("content");
+			p.isPublic = rs.getBoolean("isPublic");
+			p.postId = postId;
+			
+			//author is not initialized in this method.....should be???
+			
 		} catch (SQLException sqlE) {
+			System.out.println("Error with Post Retrieval: Unable to retrieve Post contents based on PostId");
 			sqlE.printStackTrace();
+			return null;
 		}
+	     return p;
+	}
+	
+	public static ArrayList<Post> getPostListFromDatabaseById(int blogId){
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		DbConnection connectionManager = null;
+		ArrayList<Post> posts = new ArrayList<Post>();
+		
+		connectionManager = DbConnection.getInstance();
+		
+		//get the blog's posts and their bodies from the database using the blogid
+        try {
+			pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = ?");
+			
+			pst.setInt(1, blogId);
+		        
+		    rs = pst.executeQuery();
+		       	
+		    while(rs.next()){
+		    	Post p = new Post();
+		    	p.setBlogId(blogId);
+		    	p.setPostId(rs.getInt("postId"));
+		    	p.setPostTitle(rs.getString("title"));
+		    	p.setPostBody(rs.getString("content"));
+		    	p.setIsPublic(rs.getBoolean("isPublic"));
+		    	//p.setCreationDateTime(rs.getString("creationDateTime"));
+		       			
+		    	//selecting the author of the current post, by checking the contents of the user_post table to retireve, the userId associated with the post, and then selecting the username based on that userId. 
+		    	PreparedStatement authorPst = connectionManager.getConnection().prepareStatement("select username from user where userId = (select u.userId from user u, post p, user_post up where p.postId = '"+p.getPostId()+"' AND u.userId = up.userId AND p.postId = up.postId)");
+		    	ResultSet authorRs = authorPst.executeQuery();
+	    		authorRs.first();
+	    		p.setAuthor(authorRs.getString("username")); 
+	    		authorPst.close();
+	    		authorRs.close();
+		       			
+	    		posts.add(p);
+		   }
+			
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return posts;
 	}
 		
 	public static boolean insertPostInDatabase(Post p, Blog b, int userId, boolean editMode) {          

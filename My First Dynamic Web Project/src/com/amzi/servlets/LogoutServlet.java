@@ -14,7 +14,11 @@ import com.amzi.dao.DbConnection;
  */
 public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    
+	public LogoutServlet() {
+		 super();
+	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		//closing the database connection.
 		DbConnection.getInstance().closeConnection();

@@ -52,27 +52,35 @@
     <location>/Error.jsp</location>
   </error-page>
   <servlet>
-    <servlet-name>login</servlet-name>
+    <servlet-name>Login</servlet-name>
     <servlet-class>com.amzi.servlets.LoginServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>login</servlet-name>
+    <servlet-name>Login</servlet-name>
     <url-pattern>/loginServlet</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>register</servlet-name>
+    <servlet-name>Register</servlet-name>
     <servlet-class>com.amzi.servlets.RegisterServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>register</servlet-name>
+    <servlet-name>Register</servlet-name>
     <url-pattern>/registerServlet</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>postCreate</servlet-name>
+    <servlet-name>EditUserServlet</servlet-name>
+    <servlet-class>com.amzi.servlets.EditUserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditUserServlet</servlet-name>
+    <url-pattern>/editUserServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PostCreate</servlet-name>
     <servlet-class>com.amzi.servlets.PostCreateServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>postCreate</servlet-name>
+    <servlet-name>PostCreate</servlet-name>
     <url-pattern>/postCreateServlet</url-pattern>
   </servlet-mapping>
   <servlet>
@@ -108,12 +116,12 @@
     <url-pattern>/reversePostEditServlet</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>blog</servlet-name>
+    <servlet-name>BlogCreate</servlet-name>
     <servlet-class>com.amzi.servlets.BlogCreateServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>blog</servlet-name>
-    <url-pattern>/blogServlet</url-pattern>
+    <servlet-name>BlogCreate</servlet-name>
+    <url-pattern>/blogCreateServlet</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>GetBlog</servlet-name>
@@ -148,19 +156,19 @@
     <url-pattern>/searchServlet</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>switchResultType</servlet-name>
+    <servlet-name>SwitchResultType</servlet-name>
     <servlet-class>com.amzi.servlets.SwitchResultTypeServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>switchResultType</servlet-name>
+    <servlet-name>SwitchResultType</servlet-name>
     <url-pattern>/switchResultTypeServlet</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>loadSearchResult</servlet-name>
+    <servlet-name>LoadSearchResult</servlet-name>
     <servlet-class>com.amzi.servlets.LoadSearchResultServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>loadSearchResult</servlet-name>
+    <servlet-name>LoadSearchResult</servlet-name>
     <url-pattern>/loadSearchResultServlet</url-pattern>
   </servlet-mapping>
   <servlet>

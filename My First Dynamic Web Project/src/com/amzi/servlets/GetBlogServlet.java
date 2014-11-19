@@ -6,34 +6,32 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.amzi.dao.Blog;
 
 public class GetBlogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
+	public GetBlogServlet() {
+		 super();
+	}
+	
 	//load the requested blog into the session and forward to blog.jsp
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
-		HttpSession userSession = request.getSession(false);
 		Blog b = null;
+		int blogId = 0;
 		String blogTitle = null;
 		Boolean isBlogEdit = false;
-		
-		if(userSession == null){
-			System.out.println("Session state could not be retrieved, closing BlogShare");
-			//exiting in error state
-			System.exit(1);
-		}
 		
 		blogTitle = request.getParameter("blogTitle");
 		isBlogEdit =  Boolean.parseBoolean(request.getParameter("isBlogEdit"));
 		
 		if(blogTitle == null){
+			//handle error differently
 			return;
 		}
 		
-		b = (Blog) userSession.getAttribute("currentBlog");
+		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
 		/*
 		 * If the currentBlog attribute stored within the session has not been initialized or the blog to be loaded is different 
@@ -43,11 +41,27 @@ public class GetBlogServlet extends HttpServlet {
 			
 			b = new Blog();
 			
-			if (b.getBlogFromDatabaseByTitle(blogTitle)){
-				userSession.setAttribute("currentBlog", b); 
-			}else{
-				System.out.print("Error building blog with name: " + blogTitle + ".");
+			blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
+			
+			if(blogId > 0){
+				b = Blog.getBlogFromDatabaseById(blogId);
 				
+				if(b != null){
+					request.getSession().setAttribute("currentBlog", b); 
+				}
+				
+			}else{
+				
+				if(blogId == -1){
+					//db connection error
+				}
+				
+				if(blogId == -2){
+					//unable to find match
+				}
+				
+				System.out.print("Error building blog with name: " + blogTitle + ".");
+					
 				//User stays on profile page. 
 				try {
 					request.getRequestDispatcher("Profile.jsp").forward(request, response); 
@@ -55,11 +69,10 @@ public class GetBlogServlet extends HttpServlet {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
-				} 
-				
+				}	
 			}
-		}
-		
+		}	
+
 		if(isBlogEdit == false){
 			
 			try {
@@ -78,9 +91,7 @@ public class GetBlogServlet extends HttpServlet {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}  
-			
+			}  	
 		}
 	}//end of doPost
-		
 }

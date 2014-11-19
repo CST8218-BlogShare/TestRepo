@@ -39,25 +39,21 @@ public class LoadSearchResultServlet extends HttpServlet {
 		
 		switch(currentSearch.getResultType()){
 			case "Blog":
-				b = new Blog();
-				b.getBlogFromDatabase(Integer.parseInt(request.getParameter("blogId")));
+				b = Blog.getBlogFromDatabaseById(Integer.parseInt(request.getParameter("blogId")));
 				request.getSession().setAttribute("currentBlog", b);
 				url = "Blog.jsp";
 				break;
 			case "Post":
-				b = new Blog();
-				p = new Post();
 				//p.buildPostFromId does not initialize the author paramater of the post object. 
-				p.getPostFromDatabase(Integer.parseInt(request.getParameter("postId")));
-				b.getBlogFromDatabase(p.getBlogId());
+				p = Post.getPostFromDatabaseById(Integer.parseInt(request.getParameter("postId")));
+				b = Blog.getBlogFromDatabaseById(p.getBlogId());
 				request.getSession().setAttribute("currentBlog", b);
 				request.getSession().setAttribute("postToView",p.getPostTitle());
 				url = "Blog.jsp";
 		
 				break;
 			case "User":
-				u = new User();
-				u.getUserFromDatabaseById(Integer.parseInt(request.getParameter("userId")));
+				u = User.getUserFromDatabaseById(Integer.parseInt(request.getParameter("userId")));
 				request.getSession().setAttribute("currentProfile", u);
 				url = "Profile.jsp";
 		}

@@ -40,8 +40,8 @@ public class Register {
         errorCode = User.insertUserIntoDatabase(name, pass);
         
         if(errorCode == -1){
-        	System.out.println("Unable to make connection with database.");
-        	errorMessege = "Error with registration. Unable to make connection with database.";
+        	System.out.println("Unable to establish connection with database.");
+        	errorMessege = "Error with registration. Unable to establish connection with database.";
         	return null;
         }
         

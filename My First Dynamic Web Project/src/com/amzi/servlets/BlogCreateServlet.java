@@ -4,43 +4,42 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;  
 import javax.servlet.http.HttpServletRequest;  
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;  
   
-
-
-
-
 import com.amzi.dao.Blog;
-import com.amzi.dao.Login;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
 import com.amzi.dao.User;
 
-@WebServlet("/BlogCreateServlet")
 public class BlogCreateServlet extends HttpServlet{  
   
 	 private static final long serialVersionUID = 1L;
 	 public static String errorMessege = null;
 	 public static String errorMessegeFR = null;
 	 
+	 public BlogCreateServlet() {
+		 super();
+	 }
+	 
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response){
+		 
+		 HttpSession userSession = null;
 		 
 		 Blog b = null;
 		 Post p = null;
 		 PostEditPrivilege pep = null;
 		 User u = null;
+		 
 		 String blogTitle = "";
 		 String postTitle = "";
 		 String postBody = "";
 		 Boolean blogIsPublic = false;
 		 
-		 
 		 //If a session has not been created, none will be created
-		 HttpSession userSession = request.getSession(false);
+		 userSession = request.getSession(false);
 		
 		 response.setContentType("text/html");
 		
@@ -50,15 +49,15 @@ public class BlogCreateServlet extends HttpServlet{
 
 		}catch(NumberFormatException nfE){
 			nfE.printStackTrace();
-			//return;
+			System.exit(-1);
 		}catch(IllegalStateException isE){
 			isE.printStackTrace();
-			//return;
+			System.exit(-1);
 		}
 		
 		if(u == null){
 			System.out.println("Current user could not be retrieved from current session");
-			return;
+			System.exit(-1);
 		}
 		
 		blogTitle=request.getParameter("blogTitle");
@@ -133,10 +132,8 @@ public class BlogCreateServlet extends HttpServlet{
 			try {
 				rd.include(request,response);
 			} catch (ServletException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -148,10 +145,8 @@ public class BlogCreateServlet extends HttpServlet{
 			 try {
 				rd.include(request,response);
 			} catch (ServletException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		 }

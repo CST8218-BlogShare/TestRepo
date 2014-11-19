@@ -15,7 +15,10 @@ import com.amzi.dao.SearchResult;
 public class SwitchResultTypeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-   
+	public SwitchResultTypeServlet() {
+        super();
+    }
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		
 		String type = request.getParameter("resultType");

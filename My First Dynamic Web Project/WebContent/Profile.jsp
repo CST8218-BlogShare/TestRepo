@@ -256,7 +256,7 @@ contentType="text/html; charset=ISO-8859-1"
 			$("#alert").html("<%=lang.getString("alert.notpassmatch")%>").attr('class', 'alert alert-warning');
 		} else {
 			//AJAX Post method - sends a post to edituserservlet with javascript instead of the browser
-			$.post("/My_First_Dynamic_Web_Project/EditUserServlet", {
+			$.post("/My_First_Dynamic_Web_Project/editUserServlet", {
 					loginUsername: $('#loginUsername').val(),
 					newUsername: $('#newUsername').val(),
 					loginPassword: $('#loginPassword').val(),

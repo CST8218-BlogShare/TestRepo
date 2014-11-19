@@ -57,40 +57,6 @@ public class User{
 		return dateRegistered;
 	}
 
-	//Called when the user completes registration
-	public static int insertUserIntoDatabase(String username, String password){
-		 PreparedStatement pst = null;
-		 DbConnection connectionManager = null;
-		 
-	     connectionManager = DbConnection.getInstance();
-	     
-	     if(connectionManager.getConnection() == null){
-	    	 return -1;
-	     }
-		
-		 try {
-			pst = connectionManager.getConnection().prepareStatement("insert into User values(0, ?,?, curdate() );");
-			pst.setString(1,username);
-	        pst.setString(2, password);
-	        pst.executeUpdate(); 
-	        pst.close();
-		} catch (MySQLIntegrityConstraintViolationException sqlCE) {
-			sqlCE.printStackTrace();
-			return -2;
-		} catch ( SQLException sqlE){
-			sqlE.printStackTrace();
-			return -3;
-		}
-		 finally{
-			try {
-				pst.close();
-			} catch (SQLException sqlE) {
-				sqlE.printStackTrace();
-			}
-		}
-		 return 0;
-	}
-	
 	public static User getUserFromDatabaseByCredentials(String username, String password){
 		User u = null;
 		PreparedStatement pst = null;
@@ -123,7 +89,8 @@ public class User{
 		return u;
 	}
 	
-	public void getUserFromDatabaseById(int userId){
+	public static User getUserFromDatabaseById(int userId){
+		 User u = null;
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
 	     DbConnection connectionManager = null;
@@ -134,25 +101,63 @@ public class User{
 			pst = connectionManager.getConnection().prepareStatement("select username, dateRegistered from user where userid = ?");
 		    pst.setInt(1, userId);
 			rs = pst.executeQuery();
-			
-		    rs.first();
-		    this.username = rs.getString("username");
-		    this.dateRegistered = rs.getString("dateRegistered");
-		    this.userId = userId;
+			rs.first();
+		    
+		    u = new User();
+		    u.username = rs.getString("username");
+		    u.dateRegistered = rs.getString("dateRegistered");
+		    u.userId = userId;
 		    
 		    rs.close();
 		    pst.close();
+		    
 	     } catch (SQLException sqlE) {
-			sqlE.printStackTrace();
+	    	 System.out.println("Error with User Retrieval: Unable to retrieve User information based on UserId");
+	    	 sqlE.printStackTrace();
+			return null;
 	     }finally { 
-	       
-	        try {  
-	        	rs.close();
-	        	pst.close();  
-	           } catch (SQLException sqlE) {  
-	               sqlE.printStackTrace();  
-	        }  
-	     }     
+	    	 try {  
+	    		 rs.close();
+	    		 pst.close();  
+	         } catch (SQLException sqlE) {  
+	        	 sqlE.printStackTrace();  
+	         }  
+	     }   
+	     return u;
+	}
+	
+	//Called when the user completes registration
+	public static int insertUserIntoDatabase(String username, String password){
+		 PreparedStatement pst = null;
+		 DbConnection connectionManager = null;
+		 
+	     connectionManager = DbConnection.getInstance();
+	     
+	     if(connectionManager.getConnection() == null){
+	    	 return -1;
+	     }
+		
+		 try {
+			pst = connectionManager.getConnection().prepareStatement("insert into User values(0, ?,?, curdate() );");
+			pst.setString(1,username);
+	        pst.setString(2, password);
+	        pst.executeUpdate(); 
+	        pst.close();
+		} catch (MySQLIntegrityConstraintViolationException sqlCE) {
+			sqlCE.printStackTrace();
+			return -2;
+		} catch ( SQLException sqlE){
+			sqlE.printStackTrace();
+			return -3;
+		}
+		 finally{
+			try {
+				pst.close();
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
+			}
+		}
+		 return 0;
 	}
 	
 	public boolean updateUserCredentialsInDatabase(String newUsername, String newPass) {

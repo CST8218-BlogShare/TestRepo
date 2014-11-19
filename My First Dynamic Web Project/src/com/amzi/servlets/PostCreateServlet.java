@@ -17,6 +17,10 @@ import com.amzi.dao.User;
 public class PostCreateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	public PostCreateServlet() {
+		 super();
+	}
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
 		User u = null;
 		Blog b = null; 
@@ -32,92 +36,93 @@ public class PostCreateServlet extends HttpServlet {
 		
 		// If a session has not been created, none will be created
 		userSession = request.getSession(false);
-		response.setContentType("text/html");
 		
 		u = (User) userSession.getAttribute("currentUser");
 		b = (Blog) userSession.getAttribute("currentBlog");
 		
-		if( u != null && b != null){
+		if(u == null || b == null){
+			// If the current user and the current blog, cannot be retrieved from the session, the session is invalid 
+			System.exit(-1);
+		}
 		
+		try{
 			try{
-			
-				try{
-					isEditMode = Boolean.parseBoolean((userSession.getAttribute("editMode").toString()));
-				}catch(Exception e){
-					isEditMode = false;
-				}
-				
-				try{
-					toEdit = Integer.parseInt(userSession.getAttribute("toEdit").toString());
-				}catch(Exception e){
-					toEdit = -1;
-				}
-				
-				}catch(NumberFormatException nfE){
-				nfE.printStackTrace();
-				return;
-			}catch(IllegalStateException isE){
-				isE.printStackTrace();
-				return;
+				isEditMode = Boolean.parseBoolean((userSession.getAttribute("editMode").toString()));
+			}catch(Exception e){
+				isEditMode = false;
 			}
-			
-			postTitle = request.getParameter("postTitle").trim();
-			postBody = request.getParameter("postBody").trim();
-			
-			//if the title/body are empty make the response PostCreate, with corresponding error
-			if (postTitle.length() == 0 || postBody.length() == 0) {
 				
-				request.setAttribute("errorMessage", "alert.emptyfields");
-				
-				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
-				
-				try {
-					rd.forward(request, response);
-					return;
-				} catch (ServletException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				
+			try{
+				toEdit = Integer.parseInt(userSession.getAttribute("toEdit").toString());
+			}catch(Exception e){
+				toEdit = -1;
 			}
+				
+		}catch(NumberFormatException nfE){
+			nfE.printStackTrace();
+			//what error is relevant here
+			return;
+		}catch(IllegalStateException isE){
+			isE.printStackTrace();
+			//what error is relevant here
+			return;
+		}
+			
+		postTitle = request.getParameter("postTitle").trim();
+		postBody = request.getParameter("postBody").trim();
+			
+		//if the title/body are empty make the response PostCreate, with corresponding error
+		if (postTitle.length() == 0 || postBody.length() == 0) {
+				
+			request.setAttribute("errorMessage", "alert.emptyfields");
+				
+			RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
+				
+			try {
+				rd.forward(request, response);
+				return;
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 					
-			//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
-			if(request.getParameter("postEditableCheckBox") != null){
-				postIsPublic = true;
+		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
+		if(request.getParameter("postEditableCheckBox") != null){
+			postIsPublic = true;
+		}
+			
+		p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
+		pep = new PostEditPrivilege();
+			
+		if(Post.insertPostInDatabase(p, b,u.getUserId() ,isEditMode) && PostEditPrivilege.insertPostEditPrivilegeInDatabase(pep,p.getPostId(), u.getUserId())){
+				
+			RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
+				 
+			try {
+				rd.include(request, response);
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			if(userSession.getAttribute("language").equals("EN"))
+				request.setAttribute("errorMessage", "Error: Unable to create Post. Make sure all fields have been modified.");
+			else if(userSession.getAttribute("language").equals("FR")){
+				request.setAttribute("errorMessage", "Erreur: Impossible de créer le Post. Assurez-vous d'avoir modifier tout les champs.");	
 			}
 			
-			p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
-			pep = new PostEditPrivilege();
-			
-			 if(Post.insertPostInDatabase(p, b,u.getUserId() ,isEditMode) && PostEditPrivilege.insertPostEditPrivilegeInDatabase(pep,p.getPostId(), u.getUserId())){
+			RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
 				
-				 RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
-				 
-				try {
-					rd.include(request, response);
-				} catch (ServletException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} else {
-				if(userSession.getAttribute("language").equals("EN"))
-					request.setAttribute("errorMessage", "Error: Unable to create Post. Make sure all fields have been modified.");
-				else if(userSession.getAttribute("language").equals("FR")){
-					request.setAttribute("errorMessage", "Erreur: Impossible de créer le Post. Assurez-vous d'avoir modifier tout les champs.");	
-				}
-				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
-				
-				// modify
-				try {
-					rd.include(request, response);
-				} catch (ServletException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			// modify
+			try {
+				rd.include(request, response);
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}

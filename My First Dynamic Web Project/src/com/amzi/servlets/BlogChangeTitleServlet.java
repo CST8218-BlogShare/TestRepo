@@ -23,10 +23,10 @@ public class BlogChangeTitleServlet extends HttpServlet {
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
-		//if current blog cannot be retrieve, the session is no longer valid.
+		//if current blog cannot be retrieved, the session is no longer valid.
 		if(b == null){
 			System.exit(1);
-		}
+		}//??
 		
 		newBlogTitle = request.getParameter("newBlogTitle");
 		
@@ -34,7 +34,7 @@ public class BlogChangeTitleServlet extends HttpServlet {
          
 	    if(newBlogTitle.length() != 0){
 	    	if(b.updateTitleInDatabase(b.getBlogId(),newBlogTitle) == false){
-				//create error message about sql error
+				//request.setAttribute("errorMessage", alert.errorUpdatingTitle);
 			}
 	    }else{
 	    	request.setAttribute("errorMessage", "alert.emptyfields");

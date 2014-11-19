@@ -6,24 +6,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;  
 import javax.servlet.http.HttpServletRequest;  
 import javax.servlet.http.HttpServletResponse;  
-import javax.servlet.http.HttpSession;  
 import com.amzi.dao.Login; 
 import com.amzi.dao.User;
   
 public class LoginServlet extends HttpServlet{  
-  
     private static final long serialVersionUID = 1L;  
-  
+
+    public LoginServlet() {
+		 super();
+	}
+    
     public void doPost(HttpServletRequest request, HttpServletResponse response){   //need handle other exceptions.
     	User u = null;
-    	
-    	//If a session has not been created, none will be created
-    	HttpSession userSession = request.getSession(false); 
-    	
-    	if(userSession == null){
-    		/*Is this even possible????
-    		  since the page object always contains a session object and we don't explictly set it to null*/
-    	}
     	
     	response.setContentType("text/html");       
           
@@ -35,7 +29,7 @@ public class LoginServlet extends HttpServlet{
         if(u != null){   
         	getServletContext().setAttribute("errorCode", 0);
         	
-        	userSession.setAttribute("currentUser", u);
+        	request.getSession().setAttribute("currentUser", u);
         	
         	RequestDispatcher rd=request.getRequestDispatcher("Profile.jsp");    
             
@@ -48,7 +42,7 @@ public class LoginServlet extends HttpServlet{
 			}    
         }    
         else{
-        	if(userSession.getAttribute("language").toString().equals("EN")){
+        	if(request.getSession().getAttribute("language").toString().equals("EN")){
 	            getServletContext().setAttribute("errorCode", 1);
 	        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
         	}else{

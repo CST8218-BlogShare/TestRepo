@@ -57,7 +57,7 @@ if (request.getParameter("language") != null){
 		</div>
 	<%	}	%>
 		 <!--table to hold pages content -->
-		<form name="blogCreateForm" action="BlogCreateServlet" method="post">
+		<form name="blogCreateForm" action="blogCreateServlet" method="post">
 			<table class="FillScreenTextCentered">
 		
 				<!--  description for user about what to do on the page -->
