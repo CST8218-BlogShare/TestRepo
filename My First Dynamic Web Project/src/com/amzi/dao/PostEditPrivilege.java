@@ -18,26 +18,32 @@ public class PostEditPrivilege {
 		return postEditPrivilegeId;
 	}
 	
-	public static boolean insertPostEditPrivilegeInDatabase(PostEditPrivilege pep, int postId, int userId){
-		boolean status = true;
+	public static int insertPostEditPrivilegeInDatabase(int postId, int userId){
+		
 		DbConnection connectionManager = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
+		int postEditPrivilegeId = 0;
+		
+		connectionManager = DbConnection.getInstance();
+	     
+	     if(connectionManager.getConnection() == null){
+	        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+	        	return -1;
+	       }
 		
 		if(postId == -1){
 			System.out.println("The PostId value to be related to this postEditPrivilege object has not been initialized.");
-			return false;
+			return -3;
 		}
 		
 		if(userId == -1){
 			System.out.println("The UserId value to be related to this postEditPrivilege object has not been initialized.");
-			return false;
+			return -4;
 		}
 		
 		
 		try{
-			
-			connectionManager = DbConnection.getInstance();
 			
 			 //insert into postEditPrivilege
 	        pst = connectionManager.getConnection().prepareStatement("insert into postEditPrivilege values(0) ");
@@ -50,7 +56,7 @@ public class PostEditPrivilege {
 	        rs = pst.executeQuery();
 	        
 	        rs.first();
-	        pep.postEditPrivilegeId = rs.getInt("PrivilegeId");
+	        postEditPrivilegeId = rs.getInt("PrivilegeId");
 	        
 	        rs.close();
 	        pst.close();
@@ -58,7 +64,7 @@ public class PostEditPrivilege {
 	        //creating an entry in the post_postEditPrivilege table corresponding to this new post
 	        pst = connectionManager.getConnection().prepareStatement("insert into post_postEditPrivilege values(?,?)");
 	        pst.setInt(1, postId);
-	        pst.setInt(2, pep.getPostEditPrivilegeId());
+	        pst.setInt(2, postEditPrivilegeId);
 	        pst.executeUpdate();
 	        
 	        pst.close();
@@ -66,7 +72,7 @@ public class PostEditPrivilege {
 	       //creating an entry in the user_postEditPrivilege table corresponding to this new post
 	        pst = connectionManager.getConnection().prepareStatement("insert into user_postEditPrivilege values(?,?)");
 	        pst.setInt(1, userId);
-	        pst.setInt(2, pep.getPostEditPrivilegeId());
+	        pst.setInt(2, postEditPrivilegeId);
 	        pst.executeUpdate();
 	        
 	        pst.close();
@@ -74,27 +80,18 @@ public class PostEditPrivilege {
 		}catch(SQLException sqlE){
 			//connectionManager.closeConnection();
         	sqlE.printStackTrace();
-        	status = false;
-        }
-         finally { 
+        	return -2;
+        }finally { 
         	//connection obtained from DBConnection is closed at logout. 
-            if (pst != null) {  
-                try {  
-                    pst.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-            if (rs != null) {  
-                try {  
-                    rs.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-        
+           try {  
+        	   if (rs != null) {  
+        		   rs.close();
+        	   }
+        	   pst.close(); 
+           } catch (SQLException e) {  
+                e.printStackTrace();  
+           }  
 		}
-		return status;
+		return postEditPrivilegeId;
 	}
-
 }

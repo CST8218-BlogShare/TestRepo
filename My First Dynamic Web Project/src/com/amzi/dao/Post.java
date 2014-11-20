@@ -124,19 +124,66 @@ public class Post {
 			p.postTitle = rs.getString("title");
 			p.postBody = rs.getString("content");
 			p.isPublic = rs.getBoolean("isPublic");
+			p.setAuthor(Post.getPostAuthorFromDatabaseById(postId));
 			p.postId = postId;
-			
-			//author is not initialized in this method.....should be???
-			
+
 		} catch (SQLException sqlE) {
 			System.out.println("Error with Post Retrieval: Unable to retrieve Post contents based on PostId");
 			sqlE.printStackTrace();
 			return null;
+		}finally{
+			try {
+				rs.close();
+				pst.close();
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
+			}
 		}
 	     return p;
 	}
 	
-	public static ArrayList<Post> getPostListFromDatabaseById(int blogId){
+	public static String getPostAuthorFromDatabaseById(int postId){
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		DbConnection connectionManager = null;
+		String author = null;
+		
+		connectionManager = DbConnection.getInstance();
+		
+		if(connectionManager.getConnection() == null){
+        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+        	return null;
+		}
+		
+		/* 
+		 * Selecting the author of the current post, by checking the contents of the user_post table 
+		 * to retrieve the userId associated with the post, and then selecting the username based on that userId. 
+		 */
+		try{
+	    	pst = connectionManager.getConnection().prepareStatement("select username from user where userId ="
+	    													       + "(select u.userId from user u, post p, user_post up "
+	    													       + " where p.postId = ? AND u.userId = up.userId AND p.postId = up.postId)");
+	    	pst.setInt(1, postId);
+	    	rs = pst.executeQuery();
+			rs.first();
+			author = (rs.getString("username")); 
+			
+		}catch(SQLException sqlE){
+			sqlE.printStackTrace();
+			return null;
+		}finally{
+			try {
+				rs.close();
+				pst.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return author;
+	}
+	
+	public static ArrayList<Post> getPostListFromDatabaseByBlogId(int blogId){
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
@@ -160,15 +207,8 @@ public class Post {
 		    	p.setPostBody(rs.getString("content"));
 		    	p.setIsPublic(rs.getBoolean("isPublic"));
 		    	//p.setCreationDateTime(rs.getString("creationDateTime"));
-		       			
-		    	//selecting the author of the current post, by checking the contents of the user_post table to retireve, the userId associated with the post, and then selecting the username based on that userId. 
-		    	PreparedStatement authorPst = connectionManager.getConnection().prepareStatement("select username from user where userId = (select u.userId from user u, post p, user_post up where p.postId = '"+p.getPostId()+"' AND u.userId = up.userId AND p.postId = up.postId)");
-		    	ResultSet authorRs = authorPst.executeQuery();
-	    		authorRs.first();
-	    		p.setAuthor(authorRs.getString("username")); 
-	    		authorPst.close();
-	    		authorRs.close();
-		       			
+		       	p.setAuthor(getPostAuthorFromDatabaseById(p.getPostId()));
+		    	
 	    		posts.add(p);
 		   }
 			
@@ -231,16 +271,19 @@ public class Post {
 				pst.close();
 				
 		    }else if( editMode ){
-		        String titleBeforeEdit = "";
+		        
+		    	String titleBeforeEdit = "";
 		        String contentBeforeEdit = "";
 		        			
-				p.setPostId(b.getPostAt(b.getToEdit()).getPostId());
-					        
+				postId = b.getPostAt(b.getToEdit()).getPostId();
+					
+				//Post.updatePostInDatabaseById(int postId, String postTitle, String postContent, boolean postIsPublic, int userId)
+				
 				/*In order to accurately track edits, the values of postTitle, postBody, and isPublic
 				  need to captured before the update to the post within the post table is made*/
 					        
 				pst = conn.prepareStatement("select title, content from post where postid = ?");
-				pst.setInt(1, p.getPostId());
+				pst.setInt(1, postId);
 				rs = pst.executeQuery();
 				rs.first();
 					        
@@ -251,30 +294,30 @@ public class Post {
 				pst.close();
 	
 			    if(titleBeforeEdit == "" || contentBeforeEdit == ""){
-				    return false;
+				    return -3;
 				}
 					        
-				if(PostEdit.insertPostEditInDatabase(userId,p.getPostId(),titleBeforeEdit,contentBeforeEdit) == false){
-					return false;
+				if(PostEdit.insertPostEditInDatabase(userId,postId,titleBeforeEdit,contentBeforeEdit) == false){
+					return -4;
 				}
 					        
 				pst = conn.prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
-				pst.setString(1, p.getPostTitle());
-				pst.setString(2, p.getPostBody());
-				pst.setBoolean(3, p.getIsPublic());
-				pst.setInt(4, p.getPostId());
+				pst.setString(1, postTitle);
+				pst.setString(2, postBody);
+				pst.setBoolean(3, postIsPublic);
+				pst.setInt(4, postId);
 				pst.executeUpdate(); 
 			    pst.close();
 				            
-				b.getPostAt(b.getToEdit()).postTitle = p.getPostTitle();
-				b.getPostAt(b.getToEdit()).postBody = p.getPostBody();
-			    b.getPostAt(b.getToEdit()).isPublic = p.getIsPublic();
+				b.getPostAt(b.getToEdit()).postTitle = postTitle;
+				b.getPostAt(b.getToEdit()).postBody = postBody;
+			    b.getPostAt(b.getToEdit()).isPublic = postIsPublic;
 		    }
 	    } catch (SQLException sqlE) {  
 	        //connectionManager.closeConnection();
 	        //System.out.println("Post field missing, throwing SQLException");
 	        sqlE.printStackTrace();
-	        return false;
+	        return -2;
 	    }finally {
 	        	//the connection the connectionManager object interacts with, is closed at logout. 
 	            try {  
@@ -288,17 +331,90 @@ public class Post {
 	                e.printStackTrace();  
 	            }   
 	    }  
-	    return true;  
+	    return postId;
 	}
 
-    public boolean updatePostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
+	public static int updatePostInDatabaseById(int postId, String postTitle, String postContent, boolean postIsPublic, int userId){
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		DbConnection connectionManager = null;
+		String titleBeforeEdit = "";
+	    String contentBeforeEdit = "";
+	    
+	    connectionManager = DbConnection.getInstance();
+	    
+	    if(connectionManager.getConnection() == null){
+        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+        	return -1;
+       }
+	    
+	    try{
+	    	/*
+	    	 * In order to accurately track edits, the values of postTitle, postBody, and isPublic
+		  	 * need to captured before the update to the post within the post table is made
+		  	 */
+			        
+	    	pst = connectionManager.getConnection().prepareStatement("select title, content from post where postid = ?");
+	    	pst.setInt(1, postId);
+	    	rs = pst.executeQuery();
+	    	rs.first();
+			        
+	    	titleBeforeEdit = rs.getString("title");
+	    	contentBeforeEdit = rs.getString("content");
+			         
+	    	rs.close();
+	    	pst.close();
+
+	    	if(titleBeforeEdit == "" || contentBeforeEdit == ""){
+	    		return -3;
+	    	}
+			        
+	    	if(PostEdit.insertPostEditInDatabase(userId,postId,titleBeforeEdit,contentBeforeEdit) == false){
+	    		return -4;
+	    	}
+			        
+	    	pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
+	    	pst.setString(1, postTitle);
+	    	pst.setString(2, postContent);
+	    	pst.setBoolean(3, postIsPublic);
+	    	pst.setInt(4, postId);
+	    	pst.executeUpdate(); 
+	    	pst.close();
+	    
+	    } catch (SQLException sqlE) {  
+	    	//connectionManager.closeConnection();
+	    	//System.out.println("Post field missing, throwing SQLException");
+	    	sqlE.printStackTrace();
+	    	return -2;
+	    }finally {
+	    	//the connection the connectionManager object interacts with, is closed at logout. 
+	    	try {  
+	    		if(rs != null){
+	    			rs.close();
+	    		}
+	    		pst.close();  
+      	
+	    	} catch (SQLException e) {  
+	    		e.printStackTrace();  
+	    	}   
+	    } 
+	    return 0;
+	}
+	
+    public boolean reverseEditToPostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
     	PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
 		int postEditId = -1;
 		
-		connectionManager = DbConnection.getInstance();
+		
+	    connectionManager = DbConnection.getInstance();
     	
+	    if(connectionManager.getConnection() == null){
+	    	System.out.println("Error with Post Insertion: Unable to establish connection with database.");
+	    	return false;
+	    }
+	    
 		//postId, postTitle and postBody must be initialized must be initialized
 		
     	try {
@@ -309,6 +425,8 @@ public class Post {
 			pst.execute();
 			
 			pst.close();
+			
+			//PostEdit.insertPostEditInDatabase(currentUserId,postId,this.getPostTitle(),this.getPostBody()) == false
 			
 			 //Inserting the new postEdit row into the postEdit table.
 	        pst = connectionManager.getConnection().prepareStatement("insert into postEdit values (0,?,now(),?,?)");

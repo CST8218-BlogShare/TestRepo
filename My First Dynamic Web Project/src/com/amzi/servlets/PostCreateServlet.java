@@ -22,14 +22,20 @@ public class PostCreateServlet extends HttpServlet {
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession userSession = null;
+		
+		Exception error = new Exception();
+		Boolean errorState = false;
+		
 		User u = null;
 		Blog b = null; 
 		Post p = null;
-		PostEditPrivilege pep = null;
-		HttpSession userSession = null;
 		String postTitle = "";
 		String postBody = "";
+		int postId = 0;
+		int postEditPrivilegeId = 0;
 		boolean postIsPublic = false;
+		
 		int toEdit = -1;
 		boolean isEditMode  = false;
 		
@@ -67,37 +73,66 @@ public class PostCreateServlet extends HttpServlet {
 			//what error is relevant here
 			return;
 		}
-			
-		postTitle = request.getParameter("postTitle").trim();
-		postBody = request.getParameter("postBody").trim();
-			
-		//if the title/body are empty make the response PostCreate, with corresponding error
-		if (postTitle.length() == 0 || postBody.length() == 0) {
+		
+		try{
+			postTitle = request.getParameter("postTitle").trim();
+			postBody = request.getParameter("postBody").trim();
 				
-			request.setAttribute("errorMessage", "alert.emptyfields");
-				
-			RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
-				
-			try {
-				rd.forward(request, response);
-				return;
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+			//if the title/body are empty make the response PostCreate, with corresponding error
+			if (postTitle.length() == 0 || postBody.length() == 0) {
 					
-		//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
-		if(request.getParameter("postEditableCheckBox") != null){
-			postIsPublic = true;
-		}
-			
-		p = new Post(postTitle, postBody, u.getUsername(), postIsPublic);
-		pep = new PostEditPrivilege();
-			
-		if(Post.insertPostInDatabase(p, b,u.getUserId() ,isEditMode) && PostEditPrivilege.insertPostEditPrivilegeInDatabase(pep,p.getPostId(), u.getUserId())){
+				request.setAttribute("errorMessage", "alert.emptyfields");
+					
+				RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
+					
+				try {
+					rd.forward(request, response);
+					return;
+				} catch (ServletException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				
+				//throw error;
+			}
+						
+			//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
+			if(request.getParameter("postEditableCheckBox") != null){
+				postIsPublic = true;
+			}//????
+							
+			
+			//checking if the post is part of a blog that is publicly editable
+		    if(b.getIsPublic() && b.getPostCount() != 0){
+		    	postIsPublic = true;
+		    }
+			
+		    postId = Post.insertPostInDatabase(postTitle, postBody, u.getUserId(), u.getUsername(), postIsPublic, b, isEditMode);
+			
+			if(postId > 0){
+				p = Post.getPostFromDatabaseById(postId); 
+				b.addPost(p);
+			}else{
+				if(postId == -1){
+					
+				}
+				
+				throw error;
+			}
+			
+			postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId());
+			
+			if(postEditPrivilegeId < 0){
+				throw error;
+			}
+		}catch(Exception e){
+			errorState = true;
+			e.printStackTrace();
+		}
+		
+			
+		if(errorState == false){
 			RequestDispatcher rd=request.getRequestDispatcher("Blog.jsp");
 				 
 			try {
@@ -115,8 +150,7 @@ public class PostCreateServlet extends HttpServlet {
 			}
 			
 			RequestDispatcher rd = request.getRequestDispatcher("PostCreate.jsp?editEnabled=true&post="+toEdit);
-				
-			// modify
+
 			try {
 				rd.include(request, response);
 			} catch (ServletException e) {

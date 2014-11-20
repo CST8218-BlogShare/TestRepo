@@ -38,7 +38,7 @@ public class ReversePostEditServlet extends HttpServlet {
 		
 		//If the parameters passed to getPostAt are not initialized, editPostInDatabase will throw an error 
 		
-		if(currentBlog.getPostAt(currentPostPos).updatePostInDatabase(currentBlog,currentPostPos,currentPostEdit,currentUserId)){
+		if(currentBlog.getPostAt(currentPostPos).reverseEditToPostInDatabase(currentBlog,currentPostPos,currentPostEdit,currentUserId)){
 			url = "Blog.jsp";
 		}else{
 			url = "PostEditHistory.jsp";

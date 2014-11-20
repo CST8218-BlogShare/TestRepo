@@ -129,13 +129,15 @@ public class Blog {
 	protected void setIsPublic(boolean isPublic){
 		this.isPublic = isPublic;
 	}
-		 
-	 protected void addPost(Post p){
+	
+	//I don't like that these are public...at all.
+	
+	 public void addPost(Post p){
 		 postList.add(p);
 		 ++postCount;
 	 }
 	 
-	 protected void removePost(int postAt){
+	 public void removePost(int postAt){
 		 postList.remove(postAt);
 		 --postCount;
 	 }
@@ -150,14 +152,13 @@ public class Blog {
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
 	     DbConnection connectionManager = null;
-	     int userId = -1;
 	        
 	     connectionManager = DbConnection.getInstance();
 	     
 	     if(connectionManager.getConnection() == null){
 	        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
 	        	return null;
-	        }
+	     }
 	        
 	     /*
  	 		algorithm to retrieve author of blog, whether user is logged in or using searchBar as public user. 
@@ -168,19 +169,7 @@ public class Blog {
 	      */
 	        
 	     try{
-	    	 //retrieve userId based on blogId value within user_blog table
-	         pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u"
-	        		 												+ " where b.blogId = ? AND b.blogId = ub.blogId AND u.userId = ub.userId");
-
-	         pst.setInt(1,blogId);
-	         rs = pst.executeQuery();
-	         rs.first();
-	         
-	         userId = rs.getInt("userid");
-	        
-	         rs.close();
-	         pst.close();
-	         
+	    	 
 	         pst = connectionManager.getConnection().prepareStatement("select title, isPublic from blog where blogid = ?");
 	         pst.setInt(1, blogId);
 	         rs = pst.executeQuery();
@@ -189,18 +178,13 @@ public class Blog {
 	         b = new Blog();
 	         b.blogTitle = rs.getString("title");
 	         b.isPublic = rs.getBoolean("isPublic");
+	         b.author = Blog.getBlogAuthorFromDatabaseById(blogId);
 	         b.blogId = blogId;
 	         
 	         rs.close();
 	         pst.close();
-	        	
-	         //retrieve username from user table based on the retrieved value of userId and assign value to blog's author data member.
-	         pst = connectionManager.getConnection().prepareStatement("select username from user where userId = ?");
-	         pst.setInt(1, userId);
 	         
-	         rs = pst.executeQuery();
-	         rs.first();
-	         b.author = rs.getString("username");
+	         
 	         
 	     }catch(SQLException sqlE){    	 
 	    	  if(b == null){
@@ -227,8 +211,61 @@ public class Blog {
 	           }  
 	     }  	
 	        
-	     b.setPostList(Post.getPostListFromDatabaseById(blogId));
+	     b.setPostList(Post.getPostListFromDatabaseByBlogId(blogId));
 	     return b;
+	 }
+	 
+	 public static String getBlogAuthorFromDatabaseById(int blogId){
+		 PreparedStatement pst = null;
+		 ResultSet rs = null;
+		 DbConnection connectionManager = null;
+		 String author = null;
+		 
+		 //gaining access to the shared database connection.
+	     connectionManager = DbConnection.getInstance();
+	        
+	     if(connectionManager.getConnection() == null){
+	        //System.out.println("Error with BlogId Retrieval: Unable to establish connection with database.");
+	        return null;
+	     }
+	     
+	  /*
+	     //retrieve userId based on blogId value within user_blog table
+         pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u"
+        		 												+ " where b.blogId = ? AND b.blogId = ub.blogId AND u.userId = ub.userId");
+
+         pst.setInt(1,blogId);
+         rs = pst.executeQuery();
+         rs.first();
+         
+         userId = rs.getInt("userid");
+         
+         rs.close();
+         pst.close();
+         
+      */
+         try{
+	         pst = connectionManager.getConnection().prepareStatement("select username from user where userId = "
+	        		 												+ "(select u.userId from user u, blog b, user_blog ub"
+	                		 										+ " where b.blogId = ? AND b.blogId = ub.blogId AND u.userId = ub.userId)");
+	         pst.setInt(1, blogId);
+	         rs = pst.executeQuery();
+	         rs.first();
+	         
+	         author = rs.getString("username");
+         }catch(SQLException sqlE){
+        	 sqlE.printStackTrace();
+        	 return null;
+         }finally{
+        	 try {
+				rs.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+         } 
+	     return author;
 	 }
 	 
 	 //load the blog's id, author and posts from the database from the blogs unique title
