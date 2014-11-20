@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amzi.dao.Blog;
+import com.amzi.dao.Post;
+import com.amzi.dao.PostEditPrivilege;
 
 /**
  * Servlet implementation class PostDeleteServlet
@@ -22,7 +24,10 @@ public class PostDeleteServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Blog b = null;
+		Exception error = new Exception();
+		int errorCode = 0;
 		int postPos = -1;
+		int postEditPrivilegeId = 0;
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
@@ -33,12 +38,28 @@ public class PostDeleteServlet extends HttpServlet {
 		
 		try{
 			postPos = Integer.parseInt(request.getParameter("postPos"));
-			if(b.getPostAt(postPos).deletePostFromDatabase(b, postPos) == false){
-				//create error message about database error
+			
+			postEditPrivilegeId = PostEditPrivilege.getPostEditPrivilegeIdFromDatabaseByPostId(b.getPostAt(postPos).getPostId());
+			
+			if(postEditPrivilegeId <= 0){
+				throw error;
 			}
-		}catch(NumberFormatException nfe){//if postPostion cannot be initialized 
-			nfe.printStackTrace();
-			//create error message about being unable to read value correctly.
+			
+			errorCode = PostEditPrivilege.deletePostEditPrivilegeFromDatabaseById(postEditPrivilegeId);
+			
+			if(errorCode < 0){
+				throw error;
+			}
+			
+			errorCode = Post.deletePostFromDatabaseById(b.getPostAt(postPos).getPostId());
+			
+			if(errorCode < 0){
+				throw error;
+			}
+		
+			b.removePost(postPos);
+		}catch(Exception e){
+			
 		}
 		
 		RequestDispatcher rd=request.getRequestDispatcher("BlogEdit.jsp");

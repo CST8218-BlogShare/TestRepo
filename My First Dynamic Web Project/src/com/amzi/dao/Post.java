@@ -401,6 +401,37 @@ public class Post {
 	    return 0;
 	}
 	
+	public static int deletePostFromDatabaseById(int postId){
+		
+		 PreparedStatement pst = null; 
+	     DbConnection connectionManager = null;
+		
+	     connectionManager = DbConnection.getInstance();
+	     
+	     if(connectionManager.getConnection() == null){		   
+		    return -1;
+		 }
+	     	     	     
+	     try{
+	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
+	    	 pst.setInt(1, postId);
+	    	 if(pst.executeUpdate() != 1){
+	    		 return -3;
+	    	 }
+	     }catch(SQLException sqlE){	
+	    	 sqlE.printStackTrace();
+	    	 return -2;
+	     }finally {
+	    	 //the connection the connectionManager object interacts with, is closed at logout. 
+	         try {  
+	        	 pst.close();  
+	         } catch (SQLException e) {  
+	             e.printStackTrace(); 
+	         }  
+		 }
+		return 0;
+	}
+	
     public boolean reverseEditToPostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
     	PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -474,50 +505,6 @@ public class Post {
     	
     	return true;
     }
-	
-	public boolean deletePostFromDatabase(Blog b, int postPos){
-		
-		 PreparedStatement pst = null; 
-	     ResultSet rs = null;
-	     DbConnection connectionManager = null;
-	     int postId = -1; 
-		
-	     connectionManager = DbConnection.getInstance();
-	     
-	     postId = b.getPostAt(postPos).getPostId();
-	     
-	     if(postId == -1){
-	    	 return false;
-	     }
-	     
-	     try{
-	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
-	    	 pst.setInt(1, postId);
-	    	 if(pst.executeUpdate() == 1){
-	    		 b.removePost(postPos);
-	    	 }
-	     }catch(SQLException sqlE){	
-	    	 sqlE.printStackTrace();
-	    	 return false;
-	     }finally {
-	        	//the connection the connectionManager object interacts with, is closed at logout. 
-	            if (pst != null) {  
-	                try {  
-	                    pst.close();  
-	                } catch (SQLException e) {  
-	                    e.printStackTrace(); 
-	                }  
-	            }  
-	            if (rs != null) {  
-	                try {  
-	                    rs.close();  
-	                } catch (SQLException e) {  
-	                    e.printStackTrace();  
-	                }  
-	            }
-		 }
-		return true;
-	}
 	
 	public boolean determinePostEditPrivilege(User u){
 		 Boolean editEnabled = true;

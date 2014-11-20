@@ -27,7 +27,7 @@ if (session.getAttribute("language").toString().equals("FR")){
 	<jsp:include page="SearchBar.jsp"></jsp:include>
 
 	<div class="FillScreenTextCentered">
-		<p style="font-size:48px;"><a href="Blog.jsp" style="color:lightblue;"> <b> <%= b.getBlogTitle() %> </b> </a></p>
+		<p style="font-size:48px;"><a href="Blog.jsp" title="<%= lang.getString("linktoblogtitle") %>" style="color:lightblue;"> <b> <%= b.getBlogTitle() %> </b> </a></p>
 	</div>
 	
 	<div class="FillScreenTextCentered">
