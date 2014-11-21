@@ -213,8 +213,8 @@ public class Post {
 		   }
 			
         } catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
         return posts;
 	}
