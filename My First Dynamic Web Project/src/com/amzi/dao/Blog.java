@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;  
 import java.util.ArrayList;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 public class Blog { 
 	
 	private int blogId = -1;
@@ -98,6 +100,7 @@ public class Blog {
 		return errorMessage;
 	}
 	*/
+	
 	public String getBlogTitle(){
 		return blogTitle;
 	}
@@ -132,22 +135,22 @@ public class Blog {
 	
 	//I don't like that these are public...at all.
 	
-	 public void addPost(Post p){
+	public void addPost(Post p){
 		 postList.add(p);
 		 ++postCount;
-	 }
+	}
 	 
-	 public void removePost(int postAt){
+	public void removePost(int postAt){
 		 postList.remove(postAt);
 		 --postCount;
-	 }
+	}
 	 
-	 protected void setPostList(ArrayList<Post> posts){
+	protected void setPostList(ArrayList<Post> posts){
 		 this.postList = posts; 
 		 this.postCount = posts.size();
-	 }
+	}
 	 
-	 public static Blog getBlogFromDatabaseById(int blogId){
+	public static Blog getBlogFromDatabaseById(int blogId){
 		 Blog b = null;
 		 PreparedStatement pst = null; 
 	     ResultSet rs = null;
@@ -156,7 +159,7 @@ public class Blog {
 	     connectionManager = DbConnection.getInstance();
 	     
 	     if(connectionManager.getConnection() == null){
-	        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+	        	System.out.println("Error with Blog retrieval: Unable to establish connection with database.");
 	        	return null;
 	     }
 	        
@@ -187,18 +190,16 @@ public class Blog {
 	         
 	         
 	     }catch(SQLException sqlE){    	 
-	    	  if(b == null){
-	    		  System.out.println("Error with Blog Retrieval: Unable to retrieve value of UserId based on BlogId");
-	    	  }
 	    	  
+	    	 System.out.println("Error with Blog retrieval: SQL error");
+	    	 
 	    	  if(b.blogTitle == ""){
-	    		  System.out.println("Error with Blog Retrieval: Unable to retrieve Blog contents based on BlogId");
+	    		  System.out.println("Error with Blog retrieval: Unable to retrieve Blog contents based on BlogId.");
 	    	  }
 	    	  
 	    	  if(b.author == ""){
-	    		  System.out.println("Error with Blog Retrieval: Unable to retrieve author of blog based on UserId");
+	    		  System.out.println("Error with Blog retrieval: Unable to retrieve author of Blog based on BlogId.");
 	    	  }
-	    	  
 	    	  
 	    	  sqlE.printStackTrace();
 	    	  return null;
@@ -215,7 +216,7 @@ public class Blog {
 	     return b;
 	 }
 	 
-	 public static String getBlogAuthorFromDatabaseById(int blogId){
+	public static String getBlogAuthorFromDatabaseById(int blogId){
 		 PreparedStatement pst = null;
 		 ResultSet rs = null;
 		 DbConnection connectionManager = null;
@@ -225,25 +226,10 @@ public class Blog {
 	     connectionManager = DbConnection.getInstance();
 	        
 	     if(connectionManager.getConnection() == null){
-	        //System.out.println("Error with BlogId Retrieval: Unable to establish connection with database.");
+	        System.out.println("Error with Blog author retrieval: Unable to establish connection with database.");
 	        return null;
 	     }
 	     
-	  /*
-	     //retrieve userId based on blogId value within user_blog table
-         pst = connectionManager.getConnection().prepareStatement("select u.userId as userId from blog b, user_blog ub, user u"
-        		 												+ " where b.blogId = ? AND b.blogId = ub.blogId AND u.userId = ub.userId");
-
-         pst.setInt(1,blogId);
-         rs = pst.executeQuery();
-         rs.first();
-         
-         userId = rs.getInt("userid");
-         
-         rs.close();
-         pst.close();
-         
-      */
          try{
 	         pst = connectionManager.getConnection().prepareStatement("select username from user where userId = "
 	        		 												+ "(select u.userId from user u, blog b, user_blog ub"
@@ -254,6 +240,7 @@ public class Blog {
 	         
 	         author = rs.getString("username");
          }catch(SQLException sqlE){
+        	 System.out.println("Error with Blog author retrieval: Unable to find match for BlogId in database.");
         	 sqlE.printStackTrace();
         	 return null;
          }finally{
@@ -261,54 +248,53 @@ public class Blog {
 				rs.close();
 				pst.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
          } 
 	     return author;
-	 }
+	}
 	 
-	 //load the blog's id, author and posts from the database from the blogs unique title
-	 public static int getBlogIdFromDatabaseByTitle(String blogTitle) {          
+	//load the blog's id, author and posts from the database from the blogs unique title
+	public static int getBlogIdFromDatabaseByTitle(String blogTitle) {          
 	        
-	        PreparedStatement pst = null; 
-	        ResultSet rs = null;
-	        DbConnection connectionManager = null;
-	        int blogId = 0;
+		PreparedStatement pst = null; 
+	    ResultSet rs = null;
+	    DbConnection connectionManager = null;
+	    int blogId = 0;
 	        	        
-	        //gaining access to the shared database connection.
-	        connectionManager = DbConnection.getInstance();
+	    //gaining access to the shared database connection.
+	    connectionManager = DbConnection.getInstance();
 	        
-	        if(connectionManager.getConnection() == null){
-	        	System.out.println("Error with BlogId Retrieval: Unable to establish connection with database.");
-	        	return -1;
-	        }
-	        
-	        try { 
-	           	
-	        	//get the blog's id and isPubic value using the value of the title
-	        	pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = ?");
-	        	pst.setString(1, blogTitle);
-	           
-	        	rs = pst.executeQuery();
-	            rs.first();
-	            
-	            blogId = rs.getInt("blogid");
-	           
-	        } catch (SQLException sqlE) {  
-	        	blogId = -2;
-	        	sqlE.printStackTrace();
-	        	System.out.println("Error with BlogId Retrieval: Unable to find match for Blog title named: " + blogTitle + ".");
-	        } finally { 
-	        	try {  
-	        		rs.close();
-	        		pst.close();  
-	            } catch (SQLException e) {  
-	            	e.printStackTrace();  
-	            }    
-	        }
-	        return blogId;
+	    if(connectionManager.getConnection() == null){
+	    	System.out.println("Error with BlogId retrieval: Unable to establish connection with database.");
+	        return -1;
 	    }
+	        
+	    try { 
+	           	
+	        //get the blog's id and isPubic value using the value of the title
+	        pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = ?");
+	        pst.setString(1, blogTitle);
+	           
+	        rs = pst.executeQuery();
+	        rs.first();
+	            
+	        blogId = rs.getInt("blogid");
+	           
+	    } catch (SQLException sqlE) {  
+	    	System.out.println("Error with BlogId retrieval: Unable to find match for Blog title named: " + blogTitle + ".");
+	    	sqlE.printStackTrace();
+	        return -2;
+	    } finally { 
+	        try {  
+	        	rs.close();
+	        	pst.close();  
+	         } catch (SQLException e) {  
+	            e.printStackTrace();  
+	         }    
+	    }
+	    return blogId;
+	 }
 	
     public static int insertBlogInDatabase(String blogTitle, boolean blogIsPublic, int userId, String username) {          
 	
@@ -322,9 +308,9 @@ public class Blog {
         	
         	//gaining access to the shared database connection.
         	connectionManager = DbConnection.getInstance();
-  
+        	
         	if(connectionManager.getConnection() == null){
-	        	System.out.println("Error with Blog Insertion: Unable to establish connection with database.");
+	        	System.out.println("Error with insertion of Blog into database: Unable to establish connection with database.");
 	        	return -1;
 	        }
 	        
@@ -351,12 +337,7 @@ public class Blog {
             
             //closing the connection to prepare for the next prepared statement.
             pst.close();
-            
-            /*
-            //select blogid from blog table where title matches inserted value
-            pst = connectionManager.getConnection().prepareStatement("select blogid from blog where title = ?");
-            pst.setString(1, b.getBlogTitle());*/
-            
+             
             //Retrieving the generated value for blogId from the last insert into the blog table.
 	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as blogId");
 	        rs = pst.executeQuery();
@@ -372,12 +353,13 @@ public class Blog {
             pst.setInt(2, blogId);
             pst.executeUpdate();
             pst.close();
-            
+        }catch (MySQLIntegrityConstraintViolationException sqlIntConViolE){
+        	System.out.println( "Error with insertion of Blog into database: The entered value for blog title is not unique.");
+        	sqlIntConViolE.printStackTrace();
+        	return -3;
         } catch (SQLException sqlE) {  
-        	//connectionManager.closeConnection();
-        	System.out.println("Blog field missing, throwing SQLException");
+        	System.out.println("Error with insertion of Blog into database: SQL error.");
         	sqlE.printStackTrace();
-        	//errorMessage = "Error with previous login attempt. Incorrect Username and Password.";
         	return -2;
         }finally{ 
         //the connection the connectionManager object interacts with, is closed at logout. 
@@ -395,54 +377,65 @@ public class Blog {
     } 
     
     /*Fulfills the update portion of crud functionality, since the title is the only editable portion of a blog */
-    public boolean updateTitleInDatabase(int blogId, String newTitle){
+    public static int updateTitleInDatabase(Blog b, String newTitle){
     	PreparedStatement pst = null; 
     	DbConnection connectionManager = null;
           
         connectionManager = DbConnection.getInstance();
+	        
+	    if(connectionManager.getConnection() == null){
+	    	System.out.println("Error with updating Blog title: Unable to establish connection with database.");
+	        return -1;
+	    }
         
-       try {
+        try {
 			pst = connectionManager.getConnection().prepareStatement("UPDATE Blog set title = ? where blogid = ?");
 			pst.setString(1, newTitle);
-			pst.setInt(2, blogId);
+			pst.setInt(2, b.getBlogId());
 			//if one row was affected by the update, change the title of this blog to the new value..
 			if(pst.executeUpdate() == 1){
-				setBlogTitle(newTitle);
+				b.setBlogTitle(newTitle);
+			}else{
+				//rollback
 			}
-			
-			
-			
+				
        } catch (SQLException sqlE) {
+    	   System.out.println("Error with updating Blog title: SQL error.");
     	   sqlE.printStackTrace();
-    	   return false;
+    	   return -2;
        }finally{
 			//the connection the connectionManager object interacts with, is closed at logout. 
-	        if (pst != null) {  
-	            try {  
-	                pst.close();  
-	            } catch (SQLException sqlE) {  
-	                sqlE.printStackTrace();  
-	            }  
-	        } 
+	        try {  
+	        	pst.close();  
+	        } catch (SQLException sqlE) {  
+	            sqlE.printStackTrace();  
+	        }  
+	        
        }
-    	return true;
+    	return 0;
    }
 
-    public static boolean deleteBlogFromDatabase(String blogTitle){
+    public static int deleteBlogFromDatabaseById(int blogId){
     	PreparedStatement pst = null;
     	DbConnection connectionManager = null;
     	
     	connectionManager = DbConnection.getInstance();
     	
+    	if(connectionManager.getConnection() == null){
+	    	System.out.println("Error with deleting Blog: Unable to establish connection with database.");
+	        return -1;
+	    }
+    	
     	try {
 			
-			pst = connectionManager.getConnection().prepareStatement("delete from blog where title = ?");
-			pst.setString(1, blogTitle);
+			pst = connectionManager.getConnection().prepareStatement("delete from blog where blogId = ?");
+			pst.setInt(1, blogId);
 			pst.executeUpdate();
 	    	
 		} catch (SQLException sqlE) {
+			System.out.println("Error with deleting Blog: SQL error.");
 			sqlE.printStackTrace();
-			return false;
+			return -2;
 		}finally{
 			try {
 				pst.close();
@@ -451,8 +444,88 @@ public class Blog {
 			}
 		}
 		
-		return true;
+		return 0;
     }
+    
+    public static int addBlogToBlogDeleted(int blogId){
+		PreparedStatement ps = null; 
+	    DbConnection connectionManager = null;
+	    
+	    if(blogId <= 0){
+	    	System.out.println("Error with adding Blog to BlogDeleted table: Provided value for blogId is invalid.");
+	    	return -3;
+	    }
+	    
+	    connectionManager = DbConnection.getInstance();
+	    
+	    if(connectionManager.getConnection() == null){
+        	System.out.println("Error with adding Blog to BlogDeleted table: Unable to establish connection with database.");
+        	return -1;
+       }
+	    
+	   try{
+		   ps = connectionManager.getConnection().prepareStatement("insert into blogdeleted(blogDeletedId, blogId) values(0,?)");
+		   ps.setInt(1,blogId);
+		   ps.execute();
+	   }catch(SQLException slqE){
+		   System.out.println("Error with adding Blog to BlogDeleted table: SQL Error");
+		   return -2;
+	   }finally{
+		   try {
+			   ps.close();
+		   } catch (SQLException sqlE) {
+			   sqlE.printStackTrace();
+		   }
+	   }
+	    
+	    return 0;
+	}
+    
+    public static int checkForDeletion(int blogId){
+		PreparedStatement ps = null; 
+	    ResultSet rs = null;
+	    DbConnection connectionManager = null;
+		
+	    if(blogId <= 0){
+	    	System.out.println("Error with Blog deletion check: Provided value for blogId is invalid.");
+	    	return -3;
+	    }
+	    
+	    connectionManager = DbConnection.getInstance();
+	    
+	    if(connectionManager.getConnection() == null){
+        	System.out.println("Error with blog deletion check: Unable to establish connection with database.");
+        	return -1;
+       }
+	    
+	   try{
+	   
+		   ps = connectionManager.getConnection().prepareStatement("select blogId from blogDeleted where blogId = ?");
+		   ps.setInt(1, blogId);
+		   
+		   rs = ps.executeQuery();
+		   
+		   rs.last();
+		   
+		  //if the result set contains any rows, this blog has been deleted and has been added to the postDeleted table.
+		   if(rs.getRow() > 0){
+			   return 1;
+		   }
+	    
+	   }catch(SQLException sqlE){
+		   System.out.println("Error with Blog deletion check: SQL Error");
+		   return -2;
+	   }finally{
+		   try {
+			   rs.close();
+			   ps.close();
+		   } catch (SQLException e) {
+			   e.printStackTrace();
+		   }
+	   }	
+	    
+		return 0;
+	}
 
 }
 

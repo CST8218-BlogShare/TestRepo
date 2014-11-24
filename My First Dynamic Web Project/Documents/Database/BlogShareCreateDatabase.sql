@@ -88,6 +88,16 @@ ALTER TABLE User_Blog
 -- displaying the attributes of the User_Blog table.
 desc User_Blog;
 
+CREATE TABLE BlogDeleted
+	(
+	BlogDeletedId    INT  NOT NULL,
+	BlogId           INT  NOT NULL 
+    )
+;
+	
+ALTER TABLE BlogDeleted	
+	ADD CONSTRAINT BlogDeleted_PK PRIMARY KEY ( BlogDeletedId );
+
 -- creating post table
 CREATE TABLE Post 
     ( 
@@ -143,6 +153,18 @@ ALTER TABLE User_Post
 -- displaying the attributes of the User_Post table.
 desc User_Post;
 
+CREATE TABLE PostDeleted
+	(
+	PostDeletedId    INT  NOT NULL,
+	PostID           INT  NOT NULL 
+    )
+;
+	
+ALTER TABLE PostDeleted	
+	ADD CONSTRAINT PostDeleted_PK PRIMARY KEY ( PostDeletedId );
+
+desc PostDeleted;
+	
 -- creating PostEdit table
 CREATE TABLE PostEdit 
     ( 

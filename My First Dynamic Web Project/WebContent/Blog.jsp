@@ -115,44 +115,15 @@
 	 	
 			for(int i = 0 ; i < b.getPostCount(); ++i){
 			
-				Post p = b.getPostAt(i);
-				Boolean editEnabled = p.determinePostEditPrivilege(u);
+				Boolean editEnabled;
+				Post p = b.getPostAt(i); 
 				
-				
-				/*
-				//If the post is not public and the current user is not the author of the post.
-				if( !p.getIsPublic() && !p.getAuthor().equals(u.getUsername())){
-					
-					//An attempt is made to match current userId with a userId that is associated to the privilegeId of this post. 
-					PreparedStatement pst = null;
-					ResultSet rs = null;
-					DbConnection connectionManager = DbConnection.getInstance(); 					
-					editEnabled = false;
-					
-					try{
-						pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
-																				 " where u.userid = upep.userid AND " +
-																				 " upep.postEditPrivilegeId = pep.postEditPrivilegeId AND " +
-																			     " pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND " +
-																				 " p.postId = ppep.postid AND " +
-																				 " u.userid = up.userid AND " +
-																				 " P.postid = up.postid AND " +
-																				 " p.postid = '"+p.getPostId()+"'"); 
-						
-						while(rs.next()){
-							//if the user does not have a corresponding entry for the post within postEditPrivilege
-							if(u.getUserId() == rs.getInt("userId")){
-								editEnabled = true;
-								break;
-							}
-						}
-					}catch(SQLException sqlE){
-						System.out.println("An exception was thrown while attempting to associate the current user with the edit privileges granted granted for this post.");
-						sqlE.printStackTrace();
-					}
-				}
-				*/
-				
+				//if the post is not public and there is no user logged in, the post will never be editable.
+				 if(u == null){
+				 	editEnabled = false;
+				 }else{											//int postId, String author, boolean isPublic, int userId, String username
+					editEnabled = Post.determinePostEditPrivilegeById(p.getPostId(), p.getAuthor(), p.getIsPublic() , u.getUserId(), u.getUsername());
+				 }
 		 %>
 			 
 			 <tr>

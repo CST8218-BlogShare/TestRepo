@@ -16,27 +16,19 @@ public class EditUserServlet extends HttpServlet {
 		 super();
 	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-
-    	User userToEdit = (User) request.getSession().getAttribute("currentUser");
-    	
-    	if(userToEdit == null){
-    		//if the attribute currentUser cannot be retrieved the session has become invalid
-    		System.exit(-1);
-    	}
-          
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {          
         String name=request.getParameter("loginUsername");    
         String pass=request.getParameter("loginPassword");
         String newPass=request.getParameter("newPass");
         String newUsername = request.getParameter("newUsername");
 
+        int userId = ((User) (request.getSession().getAttribute("currentUser"))).getUserId();
         
         if(Login.validate(name, pass) != null){   
-        	if(userToEdit.updateUserCredentialsInDatabase(newUsername, newPass)){ 
+        	if(User.updateUserCredentialsInDatabase(newUsername, newPass, userId)){ 
         		try {
 					response.getWriter().print("SUCCESS");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}   
             }    
@@ -44,7 +36,6 @@ public class EditUserServlet extends HttpServlet {
                 try {
 					response.getWriter().print("SQL_ERROR");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}    
             }       
@@ -53,7 +44,6 @@ public class EditUserServlet extends HttpServlet {
             try {
 				response.getWriter().print("WRONG_PASS");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}    
         }    

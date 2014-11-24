@@ -61,6 +61,7 @@ public class BlogCreateServlet extends HttpServlet{
 			System.exit(-1);
 		}
 		
+		//if current user cannot be retrieved, the session is no longer valid.
 		if(u == null){
 			System.out.println("Current user could not be retrieved from current session");
 			System.exit(-1);
@@ -105,31 +106,70 @@ public class BlogCreateServlet extends HttpServlet{
 			
 			blogId = Blog.insertBlogInDatabase(blogTitle, blogIsPublic, u.getUserId(), u.getUsername());
 			
-			if(blogId > 0){
-				b = Blog.getBlogFromDatabaseById(blogId);
-			}else{
+			if(blogId < 0){
+				if(blogId == -1){
+					request.setAttribute("errorMessage", "Error creating blog, error connecting to database.");
+				}
 				
-				/*if(blogId == -1){
+				if(blogId == -2){
+					request.setAttribute("errorMessage", "Error creating blog, error with SQL interaction with database.");
+				}
 				
-				}*/
-				
+				if(blogId == -3){
+					request.setAttribute("errorMessage", "Error creating blog, a blog with the same title already exists within BlogShare.");
+				}
 				throw error;
 			}
 			
+			b = Blog.getBlogFromDatabaseById(blogId);
 			
+			if(b == null){
+				request.setAttribute("errorMessage", "Error creating blog for display on webpage, unable to retrieve blog from database.");
+				throw error;
+			}
 			
 			postId = Post.insertPostInDatabase(postTitle, postBody, u.getUserId(), u.getUsername(), postIsPublic, b, isEditMode);
 			
-			if(postId > 0){
-				p = Post.getPostFromDatabaseById(postId);
-			    b.addPost(p); 
-			}else{
+			if(postId < 0){
+				
+				if(postId == -1){
+					request.setAttribute("errorMessage", "Error creating first post of blog, error connecting to database");
+				}
+				
+				if(postId == -2){
+					request.setAttribute("errorMessage", "Error creating first post of blog, error with SQL interaction with database.");
+				}
+				
 				throw error;
 			}
+			
+			p = Post.getPostFromDatabaseById(postId);
+			
+			if(p == null){
+				request.setAttribute("errorMessage", "Error adding first post to blog, unable to retrieve post from database.");
+				throw error;
+			}
+			
+			b.addPost(p); 
 			
 			postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId());
 			
 			if(postEditPrivilegeId < 0){
+				
+				if(postEditPrivilegeId == -1){
+					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, error connecting to database");
+				}
+				
+				if(postEditPrivilegeId == -2){
+					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, error with SQL interaction with database.");
+				}
+				if(postEditPrivilegeId == -3){
+					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, invalid postId value.");
+				}
+				if(postEditPrivilegeId == -4){
+					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, invalid userId value.");
+				}
+				
 				throw error;
 			}		 
 				 
@@ -158,7 +198,6 @@ public class BlogCreateServlet extends HttpServlet{
 			}
 
 		}else{
-			 request.setAttribute("errorMessage", "Error: Your blog title is not unique.");
 			 RequestDispatcher rd=request.getRequestDispatcher("BlogCreate.jsp");
 			 
 			 try {

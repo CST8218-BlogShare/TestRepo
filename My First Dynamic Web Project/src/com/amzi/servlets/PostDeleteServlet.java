@@ -42,18 +42,67 @@ public class PostDeleteServlet extends HttpServlet {
 			postEditPrivilegeId = PostEditPrivilege.getPostEditPrivilegeIdFromDatabaseByPostId(b.getPostAt(postPos).getPostId());
 			
 			if(postEditPrivilegeId <= 0){
+				if(postEditPrivilegeId == -1){
+					request.setAttribute("errorMessage", "Error deleting post from database, error connecting to database");
+				}
+				
+				if(postEditPrivilegeId == -2){
+					request.setAttribute("errorMessage", "Error deleting post from database, error with SQL interaction with database.");
+				}
+				if(postEditPrivilegeId == -3){
+					request.setAttribute("errorMessage", "Error deleting post from database, invalid postId value.");
+				}
+				if(postEditPrivilegeId == -4){
+					request.setAttribute("errorMessage", "Error deleting post from database, invalid userId value.");
+				}
+				
 				throw error;
 			}
 			
 			errorCode = PostEditPrivilege.deletePostEditPrivilegeFromDatabaseById(postEditPrivilegeId);
 			
 			if(errorCode < 0){
+				
+				if(errorCode == -1){
+					request.setAttribute("errorMessage", "Error deleting postEditPrivilege, error connecting to database.");
+				}
+				
+				if(errorCode == -2){
+					request.setAttribute("errorMessage", "Error deleting postEditPrivilege, SQL error while interacting with database.");
+				}
+				
 				throw error;
 			}
 			
 			errorCode = Post.deletePostFromDatabaseById(b.getPostAt(postPos).getPostId());
 			
 			if(errorCode < 0){
+				
+				if(errorCode == -1){
+					request.setAttribute("errorMessage", "Error deleting post, error connecting to database.");
+				}
+				
+				if(errorCode == -2){
+					request.setAttribute("errorMessage", "Error deleting post, SQL error while interacting with database.");
+				}
+				throw error;
+			}
+			
+			errorCode = Post.addPostToPostDeleted(b.getPostAt(postPos).getPostId());
+			
+			if(errorCode < 0){
+				if(errorCode == -1){
+					request.setAttribute("errorMessage", "Error adding postid to postDeleted, error connecting to database.");
+				}
+				
+				if(errorCode == -2){
+					request.setAttribute("errorMessage", "Error adding postid to postDeleted, SQL error while interacting with database.");
+				}
+				
+				if(errorCode == -3){
+					request.setAttribute("errorMessage", "Error adding postid to postDelete, value of postId is invalid.");
+				}
+				
 				throw error;
 			}
 		

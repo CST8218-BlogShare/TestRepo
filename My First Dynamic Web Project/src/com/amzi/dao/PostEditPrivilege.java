@@ -27,7 +27,7 @@ public class PostEditPrivilege {
 		connectionManager = DbConnection.getInstance();
 	     
 	    if(connectionManager.getConnection() == null){
-	    	//System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+	    	System.out.println("Error with retrieval of PostEditPrivilege by Id: Unable to establish connection with database.");
 	        return -1;
 	    }
 	    
@@ -48,7 +48,16 @@ public class PostEditPrivilege {
 	    	
 	    }catch(SQLException sqlE){
 	    	sqlE.printStackTrace();
+	    	System.out.println("Error with retrieval of PostEditPrivilege by Id: SQL error.");
 	    	return -2;
+	    }finally{
+	    	//connection obtained from DBConnection is closed at logout. 
+	    	try {
+				rs.close();
+				pst.close();
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
+			}
 	    }
 		return postEditPrivilegeId;
 	}
@@ -63,17 +72,17 @@ public class PostEditPrivilege {
 		connectionManager = DbConnection.getInstance();
 	     
 	     if(connectionManager.getConnection() == null){
-	        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
-	        	return -1;
+	        System.out.println("Error with insertion of postEditPrivilege into database: Unable to establish connection with database.");
+	        return -1;
 	     }
 		
-		if(postId == -1){
-			System.out.println("The PostId value to be related to this postEditPrivilege object has not been initialized.");
+		if(postId <= 0){
+			System.out.println("Error with insertion of postEditPrivilege into database: The value of postId is invalid");
 			return -3;
 		}
 		
-		if(userId == -1){
-			System.out.println("The UserId value to be related to this postEditPrivilege object has not been initialized.");
+		if(userId <= 0){
+			System.out.println("Error with insertion of postEditPrivilege into database: The value of userId is invalid");
 			return -4;
 		}
 		
@@ -81,7 +90,7 @@ public class PostEditPrivilege {
 		try{
 			
 			 //insert into postEditPrivilege
-	        pst = connectionManager.getConnection().prepareStatement("insert into postEditPrivilege values(0) ");
+	        pst = connectionManager.getConnection().prepareStatement("insert into postEditPrivilege values(0)");
 	        pst.executeUpdate();
 	        pst.close();
 	        
@@ -113,8 +122,8 @@ public class PostEditPrivilege {
 	        pst.close();
 	        
 		}catch(SQLException sqlE){
-			//connectionManager.closeConnection();
         	sqlE.printStackTrace();
+        	System.out.println("Error with insertion of postEditPrivilege into database: SQL error");
         	return -2;
         }finally { 
         	//connection obtained from DBConnection is closed at logout. 
@@ -138,7 +147,7 @@ public class PostEditPrivilege {
 		connectionManager = DbConnection.getInstance();
 	     
 	    if(connectionManager.getConnection() == null){
-	    	//System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+	    	System.out.println("Error with deletion of PostEditPrivilege by id: Unable to establish connection with database.");
 	        return -1;
 	    }
 		
@@ -146,10 +155,10 @@ public class PostEditPrivilege {
 			pst = connectionManager.getConnection().prepareStatement("delete from postEditPrivilege where postEditPrivilegeId = ?");
 	    	pst.setInt(1, postEditPrivilegeId);
 	    	pst.execute();
-	    	
 	    	pst.close();
 	    }catch(SQLException sqlE){
 	    	sqlE.printStackTrace();
+	    	System.out.println("Error with deletion of PostEditPrivilege by id: SQL Error");
 	    	return -2;
 	    }finally{
 	    	try {

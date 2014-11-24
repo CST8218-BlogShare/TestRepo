@@ -160,19 +160,14 @@ public class User{
 		 return 0;
 	}
 	
-	public boolean updateUserCredentialsInDatabase(String newUsername, String newPass) {
+	public static boolean updateUserCredentialsInDatabase(String newUsername, String newPass, int userId) {
 		PreparedStatement pst = null;  
 	    DbConnection connectionManager = null;
 	    
 	     try {  
 	       
 	    	newPass = newPass.trim();
-	        
-	    	if (userId == -1) {
-	        	System.out.println("Login class was not initialized before calling changePass().\n");
-	        	//errorMessege = "Error with password edit attempt. Login.userId is null.";
-	        	return false;
-	        }
+	        newUsername = newUsername.trim();
 	    	
 	    	if(newPass == ""){
 	        	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
@@ -189,6 +184,10 @@ public class User{
 	        //gaining access to the shared database connection
 	        connectionManager = DbConnection.getInstance();
 	        
+	        if(connectionManager.getConnection() == null){
+	        	System.out.println("");
+	        }
+	        
 	        pst = connectionManager.getConnection().prepareStatement("update user set Username=?, Password=? where userID=?"); 
 	        
 	        pst.setString(1, newUsername);  
@@ -196,23 +195,16 @@ public class User{
 	        pst.setString(3, Integer.toString(userId));  
 
 	        //returns the row count or 0 if nothing was updated 
-	        if (pst.executeUpdate() == 1){
-	        	this.username = newUsername;
-	        	this.password = newPass;
-	        } else {   
+	        if (pst.executeUpdate() > 1){
 	        	System.out.println("Password change affected multiple rows of user table.\n");
-	        	//errorMessege = "Error with password edit attempt. User table may have errors.";
 	        	//need to rollBack
 	        	return false;
 	        }
 	        
 	    } catch (SQLException sqlE) {  
-	    	//does this matter??
-	    	//connectionManager.closeConnection();
 	    	System.out.println("\n");
 	    	sqlE.printStackTrace();
 	    	return false;
-	    	//errorMessege = "SQL Error";
 	    }
 	     finally {   
 	    	 try {  

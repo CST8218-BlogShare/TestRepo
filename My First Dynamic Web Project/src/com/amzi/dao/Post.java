@@ -113,6 +113,11 @@ public class Post {
 	     
 	     connectionManager = DbConnection.getInstance();
 	     
+	     if(connectionManager.getConnection() == null){
+	        	System.out.println("Error with post retrieval: Unable to establish connection with database.");
+	        	return null;
+		 }
+	     
 	     try {
 			pst = connectionManager.getConnection().prepareStatement("select blogid, title, content, isPublic from post where postid = ? ");
 			pst.setInt(1, postId);
@@ -128,7 +133,7 @@ public class Post {
 			p.postId = postId;
 
 		} catch (SQLException sqlE) {
-			System.out.println("Error with Post Retrieval: Unable to retrieve Post contents based on PostId");
+			System.out.println("Error with post retrieval: Unable to retrieve post contents based on postId.");
 			sqlE.printStackTrace();
 			return null;
 		}finally{
@@ -151,7 +156,7 @@ public class Post {
 		connectionManager = DbConnection.getInstance();
 		
 		if(connectionManager.getConnection() == null){
-        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+        	System.out.println("Error with post author retrieval: Unable to establish connection with database.");
         	return null;
 		}
 		
@@ -169,6 +174,7 @@ public class Post {
 			author = (rs.getString("username")); 
 			
 		}catch(SQLException sqlE){
+			System.out.println("Error with post author retrieval: SQL error.");
 			sqlE.printStackTrace();
 			return null;
 		}finally{
@@ -191,6 +197,11 @@ public class Post {
 		
 		connectionManager = DbConnection.getInstance();
 		
+		if(connectionManager.getConnection() == null){
+        	System.out.println("Error with post list retrieval: Unable to establish connection with database.");
+        	return null;
+		}
+		
 		//get the blog's posts and their bodies from the database using the blogid
         try {
 			pst = connectionManager.getConnection().prepareStatement("select postId, title, content, isPublic from post where blogid = ?");
@@ -201,30 +212,40 @@ public class Post {
 		       	
 		    while(rs.next()){
 		    	Post p = new Post();
-		    	p.setBlogId(blogId);
-		    	p.setPostId(rs.getInt("postId"));
-		    	p.setPostTitle(rs.getString("title"));
-		    	p.setPostBody(rs.getString("content"));
-		    	p.setIsPublic(rs.getBoolean("isPublic"));
-		    	//p.setCreationDateTime(rs.getString("creationDateTime"));
-		       	p.setAuthor(getPostAuthorFromDatabaseById(p.getPostId()));
+		    	
+		    	p.postId =  rs.getInt("postId");
+		    	p.postTitle = rs.getString("title");
+		    	p.postBody = rs.getString("content");
+		    	p.isPublic = rs.getBoolean("isPublic");
+		       	p.author =  getPostAuthorFromDatabaseById(p.getPostId());
+		       	p.blogId = blogId;
 		    	
 	    		posts.add(p);
 		   }
 			
-        } catch (SQLException e) {
-			e.printStackTrace();
+        } catch (SQLException sqlE) {
+        	System.out.println("Error with post list retrieval: SQL error.");
+			
+        	if(posts.get(posts.size() - 1).postTitle == ""){
+        		System.out.println("Error with post list retrieval: Unable to retrieve post contents based on blogId.");
+	    	}
+	    	  
+	    	if(posts.get(posts.size() - 1).author == ""){
+	    		System.out.println("Error with post list retrieval: Unable to retrieve author of post based on postId.");
+	    	}
+        	
+        	sqlE.printStackTrace();
 			return null;
 		}
         return posts;
 	}
-	
-	
+		
 	public static int insertPostInDatabase(String postTitle, String postBody, int userId, String username, boolean postIsPublic, Blog b, boolean editMode) {          
 		PreparedStatement pst = null; 
 	    ResultSet rs = null;
 	    DbConnection connectionManager = null;
 	    Connection conn = null;
+	    int errorCode = 0;
 	    int postId = 0;
 	    int postIsPublicAsInt = 0; // default value is false
 	    
@@ -232,7 +253,7 @@ public class Post {
 	    conn = connectionManager.getConnection();
 	    
 	    if(conn == null){
-	    	System.out.println("Error with Post Insertion: Unable to establish connection with database.");
+	    	System.out.println("Error with post insertion of into database : Unable to establish connection with database.");
 	        return -1;
 	    }
 	    
@@ -240,97 +261,82 @@ public class Post {
 			postIsPublicAsInt = 1;
 		}
 	        	        
-	    try{
 	    	if(!editMode){
 	    		/* Insert post title, blogid content, creation date into post table 
 			     * The SQL function now(), retrieves the current dateTime value.
 			     * the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
 			    */
-					     
-		        pst = conn.prepareStatement("insert into post values( 0, ?, ?, ?, now(), ?)");  
-				pst.setInt(1, b.getBlogId());
-				pst.setString(2, postTitle);
-				pst.setString(3, postBody);
-				pst.setInt(4,postIsPublicAsInt);
-		        pst.executeUpdate();
-				pst.close();
-		            
-				//selecting value of postId column generated from previous statement.
-				pst = conn.prepareStatement("select last_insert_id() as PostId");
-				rs = pst.executeQuery();
-				rs.first();
-				postId = rs.getInt("PostId");
-				rs.close();
-				pst.close();
-					            
-				//insert postid and user id into user_post
-				pst = conn.prepareStatement("insert into user_post values(?, ?) ");
-				pst.setInt(1, userId);
-				pst.setInt(2, postId);
-				pst.executeUpdate();
-				pst.close();
+					
+	    		try{
+			        pst = conn.prepareStatement("insert into post values( 0, ?, ?, ?, now(), ?)");  
+					pst.setInt(1, b.getBlogId());
+					pst.setString(2, postTitle);
+					pst.setString(3, postBody);
+					pst.setInt(4,postIsPublicAsInt);
+			        pst.executeUpdate();
+					pst.close();
+			            
+					//selecting value of postId column generated from previous statement.
+					pst = conn.prepareStatement("select last_insert_id() as PostId");
+					rs = pst.executeQuery();
+					rs.first();
+					postId = rs.getInt("PostId");
+					rs.close();
+					pst.close();
+						            
+					//insert postid and user id into user_post
+					pst = conn.prepareStatement("insert into user_post values(?, ?) ");
+					pst.setInt(1, userId);
+					pst.setInt(2, postId);
+					pst.executeUpdate();
+					pst.close();
+				
+	    		} catch (SQLException sqlE) {  
+	    			System.out.println("Error with post insertion of into database : SQL error.");
+	    			sqlE.printStackTrace();
+	    			return -2;
+	    		}finally {
+	    			//the connection the connectionManager object interacts with, is closed at logout. 
+		            try {  
+		            	
+		            	if(rs != null){
+		            		rs.close();
+		            	}
+		            	pst.close();  
+		            	
+		            } catch (SQLException e) {  
+		                e.printStackTrace();  
+		            }   
+	    		}  
 				
 		    }else if( editMode ){
-		        
-		    	String titleBeforeEdit = "";
-		        String contentBeforeEdit = "";
-		        			
+		            			
 				postId = b.getPostAt(b.getToEdit()).getPostId();
 					
-				//Post.updatePostInDatabaseById(int postId, String postTitle, String postContent, boolean postIsPublic, int userId)
+				errorCode = Post.updatePostInDatabaseById(postId, postTitle, postBody, postIsPublic, userId);
 				
-				/*In order to accurately track edits, the values of postTitle, postBody, and isPublic
-				  need to captured before the update to the post within the post table is made*/
-					        
-				pst = conn.prepareStatement("select title, content from post where postid = ?");
-				pst.setInt(1, postId);
-				rs = pst.executeQuery();
-				rs.first();
-					        
-				titleBeforeEdit = rs.getString("title");
-				contentBeforeEdit = rs.getString("content");
-					         
-				rs.close();
-				pst.close();
-	
-			    if(titleBeforeEdit == "" || contentBeforeEdit == ""){
-				    return -3;
+				if(errorCode < 0){
+					if(errorCode == -1){
+						//error descriptions are unneeded as they are output from updatePostInDatabaseById();
+						//System.out.println("Error with updating current post: Unable to establish connection with database.");
+						return -1;
+					}
+					
+					if(errorCode == -2){
+						//System.out.println("Error with updating current post: SQL error.");
+						return -2;
+					}
+					
+					if(errorCode == -3){
+						//System.out.println("Error with updating current post: Error creating postEdit to track update to post.");
+						return -3;
+					}
 				}
-					        
-				if(PostEdit.insertPostEditInDatabase(userId,postId,titleBeforeEdit,contentBeforeEdit) == false){
-					return -4;
-				}
-					        
-				pst = conn.prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
-				pst.setString(1, postTitle);
-				pst.setString(2, postBody);
-				pst.setBoolean(3, postIsPublic);
-				pst.setInt(4, postId);
-				pst.executeUpdate(); 
-			    pst.close();
-				            
+				
 				b.getPostAt(b.getToEdit()).postTitle = postTitle;
 				b.getPostAt(b.getToEdit()).postBody = postBody;
 			    b.getPostAt(b.getToEdit()).isPublic = postIsPublic;
 		    }
-	    } catch (SQLException sqlE) {  
-	        //connectionManager.closeConnection();
-	        //System.out.println("Post field missing, throwing SQLException");
-	        sqlE.printStackTrace();
-	        return -2;
-	    }finally {
-	        	//the connection the connectionManager object interacts with, is closed at logout. 
-	            try {  
-	            	
-	            	if(rs != null){
-	            		rs.close();
-	            	}
-	            	pst.close();  
-	            	
-	            } catch (SQLException e) {  
-	                e.printStackTrace();  
-	            }   
-	    }  
 	    return postId;
 	}
 
@@ -340,11 +346,12 @@ public class Post {
 		DbConnection connectionManager = null;
 		String titleBeforeEdit = "";
 	    String contentBeforeEdit = "";
+	    int errorCode = 0;
 	    
 	    connectionManager = DbConnection.getInstance();
 	    
 	    if(connectionManager.getConnection() == null){
-        	System.out.println("Error with Blog Retrieval: Unable to establish connection with database.");
+        	System.out.println("Error with post update: Unable to establish connection with database.");
         	return -1;
        }
 	    
@@ -364,15 +371,14 @@ public class Post {
 			         
 	    	rs.close();
 	    	pst.close();
-
-	    	if(titleBeforeEdit == "" || contentBeforeEdit == ""){
+        
+	    	errorCode = PostEdit.insertPostEditInDatabase(userId,postId,titleBeforeEdit,contentBeforeEdit);
+	    	
+	    	if(errorCode < 0){
+	    		System.out.println("Error with post update: Unable to create post edit entry to track the update to post.");
 	    		return -3;
 	    	}
-			        
-	    	if(PostEdit.insertPostEditInDatabase(userId,postId,titleBeforeEdit,contentBeforeEdit) == false){
-	    		return -4;
-	    	}
-			        
+	    	    
 	    	pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
 	    	pst.setString(1, postTitle);
 	    	pst.setString(2, postContent);
@@ -381,9 +387,8 @@ public class Post {
 	    	pst.executeUpdate(); 
 	    	pst.close();
 	    
-	    } catch (SQLException sqlE) {  
-	    	//connectionManager.closeConnection();
-	    	//System.out.println("Post field missing, throwing SQLException");
+	    } catch (SQLException sqlE){
+	    	System.out.println("Error with post update: SQL error.");
 	    	sqlE.printStackTrace();
 	    	return -2;
 	    }finally {
@@ -409,16 +414,21 @@ public class Post {
 	     connectionManager = DbConnection.getInstance();
 	     
 	     if(connectionManager.getConnection() == null){		   
-		    return -1;
+	    	 System.out.println("Error with post deletion: Unable to establish connection with database.");
+	    	 return -1;
 		 }
 	     	     	     
 	     try{
 	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
 	    	 pst.setInt(1, postId);
+	    	 
 	    	 if(pst.executeUpdate() != 1){
-	    		 return -3;
+	    		//rollback
+	    		//return -3;
 	    	 }
+	    	 
 	     }catch(SQLException sqlE){	
+	    	 System.out.println("Error with post deletion: SQL error.");
 	    	 sqlE.printStackTrace();
 	    	 return -2;
 	     }finally {
@@ -432,7 +442,144 @@ public class Post {
 		return 0;
 	}
 	
-    public boolean reverseEditToPostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
+	public static int addPostToPostDeleted(int postId){
+		PreparedStatement ps = null; 
+	    DbConnection connectionManager = null;
+	    
+	    if(postId <= 0){
+	    	System.out.println("Error with adding post to PostDeleted table: Provided value for postId is invalid.");
+	    	return -3;
+	    }
+	    
+	    connectionManager = DbConnection.getInstance();
+	    
+	    if(connectionManager.getConnection() == null){
+        	System.out.println("Error with adding post to PostDeleted table: Unable to establish connection with database.");
+        	return -1;
+       }
+	    
+	   try{
+		   ps = connectionManager.getConnection().prepareStatement("insert into postdeleted(postDeletedId, postId) values(0,?)");
+		   ps.setInt(1,postId);
+		   ps.execute();
+	   }catch(SQLException slqE){
+		   System.out.println("Error with adding post to PostDeleted table: SQL error");
+		   return -2;
+	   }finally{
+		   try {
+			   ps.close();
+		   } catch (SQLException sqlE) {
+			   sqlE.printStackTrace();
+		   }
+	   }
+	    
+	    return 0;
+	}
+		
+	public static int checkForDeletion(int postId){
+		PreparedStatement ps = null; 
+	    ResultSet rs = null;
+	    DbConnection connectionManager = null;
+		
+	    if(postId <= 0){
+	    	System.out.println("Error with post deletion check: Provided value for postId is invalid.");
+	    	return -3;
+	    }
+	    
+	    connectionManager = DbConnection.getInstance();
+	    
+	    if(connectionManager.getConnection() == null){
+        	System.out.println("Error with post deletion check: Unable to establish connection with database.");
+        	return -1;
+       }
+	    
+	   try{
+		   ps = connectionManager.getConnection().prepareStatement("select postId from postDeleted where postId = ?");
+		   ps.setInt(1, postId);
+		   
+		   rs = ps.executeQuery();
+		   
+		   rs.last();
+		   
+		   //if the result set contains any rows, this post has been deleted and has been added to the postDeleted table.
+		   if(rs.getRow() > 0){
+			   return 1;
+		   }
+		   
+	   }catch(SQLException sqlE){
+		   System.out.println("Error with post deletion check: SQL error");
+		   return -2;
+	   }finally{
+		   try {
+			   rs.close();
+			   ps.close();
+		   } catch (SQLException e) {
+			   e.printStackTrace();
+		   }
+	   }	    
+		return 0;
+	}
+	
+	public static boolean determinePostEditPrivilegeById(int postId, String author, boolean isPublic, int userId, String username){
+		 Boolean editEnabled = true;
+		 PreparedStatement pst = null;
+		 ResultSet rs = null;
+		
+		 //if the post is public, it will always be editable.
+		 if(isPublic == true){
+		 	return editEnabled;
+		 }
+		 	
+		/* 
+		   If the current user is not the author of the post and the post is not publicly editable
+		   An attempt is made to match current userId with a userId that is associated to the privilegeId of this post.
+		 */
+		if(!author.equals(username)){
+			
+					
+			DbConnection connectionManager = DbConnection.getInstance(); 
+	    	
+		    if(connectionManager.getConnection() == null){
+		    	System.out.println("Error with determining PostEditPrivilege: Unable to establish connection with database.");
+		    	return false;
+		    }
+			
+			editEnabled = false;
+				
+			try{
+				pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
+																		 " where u.userid = upep.userid AND " +
+																		 " upep.postEditPrivilegeId = pep.postEditPrivilegeId AND " +
+																	     " pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND " +
+																		 " p.postId = ppep.postid AND " +
+																		 " u.userid = up.userid AND " +
+																		 " P.postid = up.postid AND " +
+																		 " p.postid = ? "); 
+				pst.setInt(1, postId);
+				rs = pst.executeQuery();
+				while(rs.next()){
+					//if the user has a corresponding entry for the post within postEditPrivilege
+					if(userId == rs.getInt("userId")){
+						editEnabled = true;
+						break;
+					}
+				}
+			}catch(SQLException sqlE){
+				System.out.println("Error with determining PostEditPrivilege: SQL error.");
+				sqlE.printStackTrace();
+			}finally{
+				try {
+					rs.close();
+					pst.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return editEnabled;
+	 }  
+	
+	public int reverseEditToPostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
     	PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
@@ -442,8 +589,8 @@ public class Post {
 	    connectionManager = DbConnection.getInstance();
     	
 	    if(connectionManager.getConnection() == null){
-	    	System.out.println("Error with Post Insertion: Unable to establish connection with database.");
-	    	return false;
+	    	System.out.println("Error with PostEdit Reversal: Unable to establish connection with database.");
+	    	return -1;
 	    }
 	    
 		//postId, postTitle and postBody must be initialized must be initialized
@@ -491,8 +638,9 @@ public class Post {
 	        b.getPostAt(postPosInBlog).setPostBody(currentPostEdit.getContentBeforeEdit());
 	        				
 		} catch (SQLException sqlE) {
+			System.out.println("Error with PostEdit Reversal: SQL error");
 			sqlE.printStackTrace();
-			return false;
+			return -2;
 		}finally{
 			try {
 				pst.close();
@@ -503,61 +651,8 @@ public class Post {
 			
 		}
     	
-    	return true;
+    	return 0;
     }
-	
-	public boolean determinePostEditPrivilege(User u){
-		 Boolean editEnabled = true;
-		 PreparedStatement pst = null;
-		 ResultSet rs = null;
-		
-		 //if the post is not public and there is no user logged in, the post will never be editable.
-		 if(u == null){
-		 	editEnabled = false;
-		 	return editEnabled;
-		 }
-		 
-		 //if the post is public, it will always be editable.
-		 if(isPublic == true){
-		 	return editEnabled;
-		 }
-		 	
-
-		/* 
-		   If the current user is not the author of the post and the post is not publicly editable
-		   An attempt is made to match current userId with a userId that is associated to the privilegeId of this post.
-		 */
-		if(!author.equals(u.getUsername())){
-			
-					
-			DbConnection connectionManager = DbConnection.getInstance(); 					
-			editEnabled = false;
-				
-			try{
-				pst = connectionManager.getConnection().prepareStatement("select u.userid as userId from user u, post p, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
-																		 " where u.userid = upep.userid AND " +
-																		 " upep.postEditPrivilegeId = pep.postEditPrivilegeId AND " +
-																	     " pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND " +
-																		 " p.postId = ppep.postid AND " +
-																		 " u.userid = up.userid AND " +
-																		 " P.postid = up.postid AND " +
-																		 " p.postid = ? "); 
-				pst.setInt(1, postId);
-				rs = pst.executeQuery();
-				while(rs.next()){
-					//if the user has a corresponding entry for the post within postEditPrivilege
-					if(u.getUserId() == rs.getInt("userId")){
-						editEnabled = true;
-						break;
-					}
-				}
-			}catch(SQLException sqlE){
-				System.out.println("An exception was thrown while attempting to associate the current user with the edit privileges granted granted for this post.");
-				sqlE.printStackTrace();
-			}
-		}
-		return editEnabled;
-	 }  
 	
 }
 

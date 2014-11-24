@@ -106,7 +106,7 @@
 						<td rowspan="2" style="width:25%; font-size:24px;"> <input type=text name="navBarSearchTerm" maxlength=100 <% /* If a search has been made, keep the search term available */ if(searchResult != null) { %> value=<%=searchResult.getSearchTerm() %> <% } %>/></td>
 						<td style="width:10%"> <input type=checkbox id="navBarBlogsCheck" name="navBarBlogsCheck" checked="checked" OnClick="BlogClicked(this)"/><% out.println(lang.getString("blogs")); %>  </td>
 						<td style="width:10%"> <input type=checkbox id="navBarTitleCheck" name="navBarTitleCheck" checked="checked"/><% out.println(lang.getString("titles")); %></td>
-						<td style="width:10%"> <input type=checkbox id="navBarEditableCheck" name="navBarEditableCheck" /><% out.println(lang.getString("editable")); %> </td>
+						<td style="width:10%"> <input type=checkbox id="navBarEditableCheck" name="navBarEditableCheck"  <% if(session.getAttribute("currentUser") == null) { %> disabled="disabled" <% } %> /><% out.println(lang.getString("editable")); %> </td>
 						<td rowspan="2" style="width:25%">  <input type=submit name=navBarSearch value="<%=lang.getString("search") %>"/></td>
 					</tr>
 					<tr style="height:50%;">

@@ -18,9 +18,6 @@ import com.amzi.dao.SearchResult;
 public class LoadSearchResultServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public LoadSearchResultServlet() {
         super();
     }
@@ -34,7 +31,7 @@ public class LoadSearchResultServlet extends HttpServlet {
 				
 		currentSearch =  (SearchResult) request.getSession().getAttribute("currentSearchResult");
 		if(currentSearch == null){
-			//error
+			System.exit(-1);
 		}
 		
 		switch(currentSearch.getResultType()){

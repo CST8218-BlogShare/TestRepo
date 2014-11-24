@@ -18,6 +18,9 @@ public class GetBlogServlet extends HttpServlet {
 	
 	//load the requested blog into the session and forward to blog.jsp
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
+		Exception error = new Exception();
+		String url = "Blog.jsp";
+		
 		Blog b = null;
 		int blogId = 0;
 		String blogTitle = null;
@@ -27,8 +30,7 @@ public class GetBlogServlet extends HttpServlet {
 		isBlogEdit =  Boolean.parseBoolean(request.getParameter("isBlogEdit"));
 		
 		if(blogTitle == null){
-			//handle error differently
-			return;
+			System.exit(-1);
 		}
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
@@ -41,57 +43,47 @@ public class GetBlogServlet extends HttpServlet {
 			
 			b = new Blog();
 			
-			blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
-			
-			if(blogId > 0){
-				b = Blog.getBlogFromDatabaseById(blogId);
+			try{
+				blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
 				
-				if(b != null){
-					request.getSession().setAttribute("currentBlog", b); 
-				}
-				
-			}else{
-				
-				if(blogId == -1){
-					//db connection error
-				}
-				
-				if(blogId == -2){
-					//unable to find match
-				}
-				
-				System.out.print("Error building blog with name: " + blogTitle + ".");
+				if(blogId < 0){
 					
-				//User stays on profile page. 
-				try {
-					request.getRequestDispatcher("Profile.jsp").forward(request, response); 
-				} catch (ServletException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}	
-			}
+					if(blogId == -1){
+						request.setAttribute("errorMessage", "Error building blog from link in profile, error connecting to database.");
+					}
+					
+					if(blogId == -2){
+						request.setAttribute("errorMessage", "Error building blog from link in profile, SQL error while interacting with database");
+					}
+					
+					throw error;	
+				}
+				
+				b = Blog.getBlogFromDatabaseById(blogId);
+					
+				if(b == null){
+					request.setAttribute("errorMessage", "Error creating blog for display on webpage, unable to retrieve blog from database.");
+					throw error;
+				}
+				
+				request.getSession().setAttribute("currentBlog", b); 
+				
+				//If the edit button has been clicked on the profile page instead of the title of the blog. 
+				if(isBlogEdit == true){
+					url = "BlogEdit.jsp";
+				}
+				
+			}catch(Exception e){
+				url = "Profile.jsp";
+			}	
 		}	
-
-		if(isBlogEdit == false){
 			
-			try {
-				request.getRequestDispatcher("Blog.jsp").forward(request, response); 
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}else{
-			
-			try {
-				request.getRequestDispatcher("BlogEdit.jsp").forward(request, response); 
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}  	
-		}
+		try {
+			request.getRequestDispatcher(url).forward(request, response); 
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}//end of doPost
 }

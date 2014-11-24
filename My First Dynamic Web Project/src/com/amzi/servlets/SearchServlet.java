@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amzi.dao.DbConnection;
-import com.amzi.dao.User;
 import com.amzi.dao.SearchResult;
+import com.amzi.dao.User;
 
 /**
  * Servlet implementation class SearchServlet
@@ -28,9 +28,7 @@ public class SearchServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		
-		User u = null;
 		SearchResult searchResult = null;
-	
 		DbConnection connectionManager = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -81,40 +79,61 @@ public class SearchServlet extends HttpServlet {
 				try {
 					
 					if(searchEditable == true){
-						u = (User) request.getSession().getAttribute("currentUser");
+						String username = null;
 						
-						//if the user is not logged in
-						if(u == null){
-							//only search for blogs that are publicly editable. 
-							ps =  connectionManager.getConnection().prepareStatement("select blogID from blog where title like '%"+searchTerm+"%' AND isPublic = 1");
-						//if the user is logged in
-						}else{
-							//since privileges may not be given to edit a blog, only select from the set of blogs where the currentUser is the author of the blog.
-							//further checks are unneeded as editing privileges may not be granted for a a blog. 
-							ps =  connectionManager.getConnection().prepareStatement("select b.blogID from blog b, user u, user_blog ub " +
-																					 " where b.title like '%"+searchTerm+"%' " +
-																					 " AND b.blogId = ub.blogId" +
-																					 " AND u.userId = ub.userId" +
-																					 " AND u.username = '"+u.getUsername()+"' ");
+						ps = connectionManager.getConnection().prepareStatement("select blogId from blog where isPublic = 1");
+						
+						rs = ps.executeQuery();
+						
+						searchResultsBlog = SearchResult.parseSearchResults(searchResultsBlog,"blogId",rs);
+						
+						if(searchResultsBlog == null){
+							//error
 						}
+						
+						rs.close();
+						ps.close();
+						
+						username = ((User) request.getSession().getAttribute("currentUser")).getUsername();
+						
+						if(username == null){
+							//error
+						}
+						
+						//since privileges may not be given to edit a blog, only select from the set of blogs where the currentUser is the author of the blog.
+						//further checks are unneeded as editing privileges may not be granted for a a blog. 
+						ps =  connectionManager.getConnection().prepareStatement("select b.blogID from blog b, user u, user_blog ub " +
+																					" where b.title like '%"+searchTerm+"%' " +
+																					" AND b.blogId = ub.blogId" +
+																					" AND u.userId = ub.userId" +
+																					" AND u.username = ? ");
+						ps.setString(1,username);
+						
+						rs = ps.executeQuery();
+						
+						searchResultsBlog = SearchResult.parseSearchResults(searchResultsBlog,"blogId",rs);
+						
+						if(searchResultsBlog == null){
+							//error
+						}
+						
+						rs.close();
+						ps.close();
+						
 					}else{
 						ps =  connectionManager.getConnection().prepareStatement("select blogID from blog where title like '%"+searchTerm+"%'");
+					
+						rs = ps.executeQuery();
+						
+						searchResultsBlog = SearchResult.parseSearchResults(searchResultsBlog,"blogId",rs);
+						
+						if(searchResultsBlog == null){
+							//error;
+						}
+						
+						ps.close();
+						rs.close();
 					}
-					
-					rs = ps.executeQuery();
-					
-					//determining if the list that will holds the corresponding searchResults, needs to initialized by checking if the resultSet contains any rows of data.
-					rs.last();
-					if(rs.getRow() > 0 ){
-						searchResultsBlog = new ArrayList<Integer>();
-					}
-					rs.beforeFirst();
-					
-					while(rs.next()){
-						searchResultsBlog.add(rs.getInt("blogID"));
-					}
-					
-					
 				} catch (SQLException sqlE) {
 					// TODO Auto-generated catch block
 					sqlE.printStackTrace();
@@ -160,44 +179,70 @@ public class SearchServlet extends HttpServlet {
 				
 				try{
 					
-					//determining the query to use when searching for thr searchTerm.
-					
+					//determining the query to use when searching for the searchTerm.
 					if(searchEditable == true){
-						 u = (User) request.getSession().getAttribute("currentUser");
+						int userId = -1;
 						
-						//the query being used will depend on if the user is a public or registered user. 
-						if(u == null){
-							String queryString = "select postId from post where isPublic = 1 AND " + searchTermTitleBody; 
-							ps = connectionManager.getConnection().prepareStatement(queryString);
-						}else{
-							//find the posts where the user has been granted editing privileges and the title and or body of the post matches the search term.  
-							ps = connectionManager.getConnection().prepareStatement("select p.postId from post p, user u, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
-																					" where u.userid = upep.userid AND" +
-																					" upep.postEditPrivilegeId = pep.postEditPrivilegeId AND" + 
-																					" pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND" +
-																					" p.postid = ppep.postid AND" +
-																					" u.userid = up.userid AND" +
-																					" p.postid = up.postid AND" +
-																					" "+searchTermTitleBody+" AND" + 
-																					" u.userId = "+u.getUserId()+" ");
-						}	
+						ps = connectionManager.getConnection().prepareStatement("select postId from post where isPublic = 1");
+						
+						rs = ps.executeQuery();
+						
+						searchResultsPost = SearchResult.parseSearchResults(searchResultsPost,"postId",rs);
+						
+						if(searchResultsPost == null){
+							//error
+						}
+						
+						ps.close();
+						rs.close();
+						
+						userId = ((User) request.getSession().getAttribute("currentUser")).getUserId();
+						
+						if(userId == -1){
+							//error
+						}
+						
+						//find the posts where the user has been granted editing privileges and the title and or body of the post matches the search term.  
+						ps = connectionManager.getConnection().prepareStatement("select p.postId from post p, user u, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
+																				" where u.userid = upep.userid AND" +
+																				" upep.postEditPrivilegeId = pep.postEditPrivilegeId AND" + 
+																				" pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND" +
+																				" p.postid = ppep.postid AND" +
+																				" u.userid = up.userid AND" +
+																				" p.postid = up.postid AND" +
+																				" u.userId = ? AND" + 
+																				" ("+searchTermTitleBody+") AND"
+																			  + " p.postId NOT IN" + 
+																				" (select postId from post where isPublic = 1)");
+						ps.setInt(1,userId);
+						System.out.println(ps.toString());
+						
+						rs = ps.executeQuery();
+						
+						searchResultsPost = SearchResult.parseSearchResults(searchResultsPost,"postId",rs);
+						
+						if(searchResultsPost == null){
+							//error
+						}
+						
+						ps.close();
+						rs.close();
+						
 					}else{
 						//the editable option has not been enabled. 
 						String queryString = "select postId from post where " + searchTermTitleBody; 
 						ps = connectionManager.getConnection().prepareStatement(queryString);
-					}
-					
-					rs = ps.executeQuery();
-					
-					//determining if the list that will holds the corresponding searchResults, needs to initialized by checking if the resultSet contains any rows of data.
-					rs.last();
-					if(rs.getRow() > 0 ){
-						searchResultsPost = new ArrayList<Integer>();
-					}
-					rs.beforeFirst();
-					
-					while(rs.next()){
-						searchResultsPost.add(rs.getInt("postId"));
+						
+						rs = ps.executeQuery();
+						
+						searchResultsPost = SearchResult.parseSearchResults(searchResultsPost,"postId",rs);
+						
+						if(searchResultsPost == null){
+							//error
+						}
+						
+						ps.close();
+						rs.close();
 					}
 					
 				}catch(SQLException sqlE){
@@ -227,16 +272,14 @@ public class SearchServlet extends HttpServlet {
 					ps = connectionManager.getConnection().prepareStatement("select userId from user where username like '%"+searchTerm+"%'"); 
 					rs = ps.executeQuery();
 					
-					//determining if the list that will holds the corresponding searchResults, needs to initialized by checking if the resultSet contains any rows of data.
-					rs.last();
-					if(rs.getRow() > 0 ){
-						searchResultsUser = new ArrayList<Integer>();
-					}
-					rs.beforeFirst();
+					searchResultsUser = SearchResult.parseSearchResults(searchResultsUser,"userId",rs);
 					
-					while(rs.next()){
-						searchResultsUser.add(rs.getInt("userId"));
+					if(searchResultsUser == null){
+						//error
 					}
+					
+					ps.close();
+					rs.close();
 					
 				}catch(SQLException sqlE){
 					sqlE.printStackTrace();

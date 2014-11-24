@@ -43,15 +43,21 @@ public class BlogDeleteServlet extends HttpServlet {
 			
 			blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
 			
-			if(blogId <= 0){
-				request.setAttribute("errorMessage", "Error: Unable to retrieve blogId using blogTitle.");
+			if(blogId < 0){
+				if(blogId == -1){
+					request.setAttribute("errorMessage", "Error retrieving blogId by Blog title, error connection to database.");
+				}
+				
+				if(blogId == -2){
+					request.setAttribute("errorMessage", "Error retrieving blogId using Blog title, SQL error while interacting with database.");
+				}
 				throw error;
 			}
 			
 			postsInBlog = Post.getPostListFromDatabaseByBlogId(blogId);
 			
 			if(postsInBlog == null){
-				request.setAttribute("errorMessage", "Error: Unable to retrieve post list using blogId.");
+				request.setAttribute("errorMessage", "Error retrieving posts for this blog, unable to retrieve post list using blogId.");
 				throw error;
 			}
 			
@@ -59,25 +65,72 @@ public class BlogDeleteServlet extends HttpServlet {
 				
 				postEditPrivilegeId = PostEditPrivilege.getPostEditPrivilegeIdFromDatabaseByPostId(post.getPostId());
 				
-				if(postEditPrivilegeId <= 0){
+				if(postEditPrivilegeId < 0){
+					
+					if(postEditPrivilegeId == -1){
+						request.setAttribute("errorMessage", "Error retrieving post edit privilege id for a post contained within the current blog, unable to retrieve post edit privilege id using postId.");
+					}
+					
+					if(postEditPrivilegeId == -2){
+						request.setAttribute("errorMessage", "Error retrieving post edit privilege id for a post contained within the current blog, SQL error while interacting with database.");
+					}
+					
 					throw error;
 				}
 				
 				errorCode = PostEditPrivilege.deletePostEditPrivilegeFromDatabaseById(postEditPrivilegeId);
 				
 				if(errorCode < 0){
+					
+					if(errorCode == -1){
+						request.setAttribute("errorMessage", "Error deleting post edit privilege id for a post contained within the current blog, unable to retrieve post edit privilege id using postId.");
+					}
+					
+					if(errorCode == -2){
+						request.setAttribute("errorMessage", "Error deleting post edit privilege id for a post contained within the current blog, SQL error while interacting with database.");
+					}
+					
 					throw error;
 				}
 				
 			}
 			
 			//if the method is unsuccessful the value false will be returned.
-			if(Blog.deleteBlogFromDatabase(blogTitle) == false){
-				request.setAttribute("errorMessage", "Error: Unable to delete blog from database.");
+			errorCode = Blog.deleteBlogFromDatabaseById(blogId);
+			
+			if(errorCode < 0){
+				
+				if(errorCode == -1){
+					request.setAttribute("errorMessage", "Error deleting post, error connecting to database.");
+				}
+				
+				if(errorCode == -2){
+					request.setAttribute("errorMessage", "Error deleting post, SQL error while interacting with database.");
+				}
+				
 				throw error;
 			}
+			
+			errorCode = Blog.addBlogToBlogDeleted(blogId);
+			
+			if(errorCode < 0){
+				
+				if(errorCode == -1){
+					request.setAttribute("errorMessage", "Error deleting post, error connecting to database.");
+				}
+				
+				if(errorCode == -2){
+					request.setAttribute("errorMessage", "Error deleting post, SQL error while interacting with database.");
+				}
+				
+				if(errorCode == -3){
+					request.setAttribute("errorMessage", "Error deleting post, the value of BlogId is invalid.");
+				}
+				throw error;
+			}
+			
 		}catch(Exception e){
-			System.out.println("Error deleting post");
+			System.out.println("Error deleting post, for more details see stack trace.");
 		}
 				
 		try {

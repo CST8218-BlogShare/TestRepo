@@ -70,13 +70,18 @@ public class PostEdit {
 		this.titleBeforeEdit = titleBeforeEdit;
 	}
 	
-	public static boolean insertPostEditInDatabase(int userId, int postId,String titleBeforeEdit,String contentBeforeEdit){
+	public static int insertPostEditInDatabase(int userId, int postId,String titleBeforeEdit,String contentBeforeEdit){
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
 		int postEditId = -1;
 		
 		connectionManager = DbConnection.getInstance();
+		
+		if(connectionManager.getConnection() == null){
+			System.out.println("Error with insertion of post edit into database: Unable to establish connection with database.");
+			return -1;
+		}
 		
 		try{
 		
@@ -92,6 +97,7 @@ public class PostEdit {
 	        //Retrieving the generated value for PostEdit id from the last insert into the postEdit table.
 	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as postEditId");
 	        rs = pst.executeQuery();
+	        
 	        rs.first();
 	        postEditId = rs.getInt("postEditId");
 	        
@@ -103,22 +109,24 @@ public class PostEdit {
 	        pst = connectionManager.getConnection().prepareStatement("insert into user_postedit values(?,?)");
 	        pst.setInt(1,userId);
 	        pst.setInt(2, postEditId);
-	        
 	        pst.execute();
 	        pst.close();
+	        
 		}catch(SQLException sqlE){
+			System.out.println("Error with insertion of post edit into database: SQL error.");
 			sqlE.printStackTrace();
-			return false;
+			return -2;
 		}finally{
 			try {
+				if(rs != null){
+					rs.close();
+				}
 				pst.close();
-				rs.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
 			}
 		}
-		return true;
+		return 0;
 	}
 	
 	public static ArrayList<PostEdit> getPostEditsFromDatabaseByPostId(int postId){
@@ -128,6 +136,11 @@ public class PostEdit {
 		ArrayList<PostEdit> postEdits = new ArrayList<PostEdit>();
 		
 		connectionManager = DbConnection.getInstance();
+		
+		if(connectionManager.getConnection() == null){
+        	System.out.println("Error with post edit retrieval using post id: Unable to establish connection with database.");
+        	return null;
+        }
 		
 		/* selecting all postEdits based on PostId*/
 		
@@ -174,8 +187,10 @@ public class PostEdit {
 				
 				postEdits.add(pe);
 			}
-		} catch (SQLException sqlE) {
+		} catch (SQLException sqlE){
+			System.out.println("Error with post edit retrieval using post id: SQL Error");
 			sqlE.printStackTrace();
+			return null;
 		}finally{
 			try {
 				pst.close();

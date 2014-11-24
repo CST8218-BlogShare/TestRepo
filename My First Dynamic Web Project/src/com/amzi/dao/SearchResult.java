@@ -1,13 +1,16 @@
 package com.amzi.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SearchResult {
 
-	private ArrayList<Integer> searchResultsBlog = null;
-	private ArrayList<Integer> searchResultsPost = null;
-	private ArrayList<Integer> searchResultsUser = null;
-	private ArrayList<Integer> resultsToDisplay = null;
+	private ArrayList<Integer> searchResultsBlog = null;//blogId
+	private ArrayList<Integer> searchResultsPost = null;//postId
+	private ArrayList<Integer> searchResultsUser = null;//userId
+	private ArrayList<Integer> resultsToDisplay = null;//results currently shown on screen.
+	
 	private String resultType = "";
 	private String searchTerm = ""; /* will allow the error message within SearchResult.jsp, 
 									   to show the message "Unable to find any content relating to search term " ", 
@@ -90,5 +93,29 @@ public class SearchResult {
 		return searchResultsUser;
 	}
 	
-
+	public static ArrayList<Integer> parseSearchResults(ArrayList<Integer> listToReturn, String idType, ResultSet resultsToParse){
+		
+		try{
+			if(listToReturn == null){
+				resultsToParse.last();
+				if(resultsToParse.getRow() > 0 ){
+					listToReturn = new ArrayList<Integer>();
+				}
+			}
+			
+			resultsToParse.beforeFirst();
+			
+			while(resultsToParse.next()){
+				listToReturn.add(resultsToParse.getInt(idType));
+			}
+		}catch(SQLException sqlE){
+			sqlE.printStackTrace();
+			return null;
+		}
+		
+		
+		return listToReturn;
+	}
+	
+	
 }

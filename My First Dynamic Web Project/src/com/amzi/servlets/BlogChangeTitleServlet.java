@@ -19,23 +19,34 @@ public class BlogChangeTitleServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 		Blog b = null;
+		int errorCode = 0;
 		String newBlogTitle = "";
+		
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
 		//if current blog cannot be retrieved, the session is no longer valid.
 		if(b == null){
 			System.exit(1);
-		}//??
+		}
 		
 		newBlogTitle = request.getParameter("newBlogTitle");
-		
 		newBlogTitle = newBlogTitle.trim();
          
 	    if(newBlogTitle.length() != 0){
-	    	if(b.updateTitleInDatabase(b.getBlogId(),newBlogTitle) == false){
-				//request.setAttribute("errorMessage", alert.errorUpdatingTitle);
-			}
+	    	errorCode = Blog.updateTitleInDatabase(b,newBlogTitle);
+			
+	    	if(errorCode < 0){
+	    		if(errorCode == -1){
+	    			
+	    			request.setAttribute("errorMessage", "Error updating blog title, error connecting to database.");
+	    		}
+	    		
+	    		if(errorCode == -2){
+	    			request.setAttribute("errorMessage", "Error updating blog title, SQL error while interacting with database.");
+	    		}
+	    	}
+	    	
 	    }else{
 	    	request.setAttribute("errorMessage", "alert.emptyfields");
 	    }

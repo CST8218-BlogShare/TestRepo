@@ -30,6 +30,7 @@ public class ReversePostEditServlet extends HttpServlet {
 		String url = "";
 		int currentPostPos = -1;
 		int currentUserId = -1;
+		int errorCode = 0;
 		
 		currentBlog = (Blog) request.getSession().getAttribute("currentBlog");
 		currentPostPos = (int) request.getSession().getAttribute("currentPostPos");
@@ -38,11 +39,23 @@ public class ReversePostEditServlet extends HttpServlet {
 		
 		//If the parameters passed to getPostAt are not initialized, editPostInDatabase will throw an error 
 		
-		if(currentBlog.getPostAt(currentPostPos).reverseEditToPostInDatabase(currentBlog,currentPostPos,currentPostEdit,currentUserId)){
-			url = "Blog.jsp";
-		}else{
-			url = "PostEditHistory.jsp";
-		}
+		errorCode = currentBlog.getPostAt(currentPostPos).reverseEditToPostInDatabase(currentBlog,currentPostPos,currentPostEdit,currentUserId);
+		
+		 if(errorCode == 0){
+			 url = "Blog.jsp"; 
+		 }else{
+			 
+			if(errorCode == -1){
+				request.setAttribute("errorMessage", "Error reversing edit to post, error connecting to database.");
+			}
+				
+			if(errorCode == -2){
+				request.setAttribute("errorMessage", "Error reversing edit to post, SQL error while interacting with database.");
+			}
+			 
+		 }
+		 
+		url = "PostEditHistory.jsp";
 		
 		try {
 			request.getRequestDispatcher(url).forward(request, response);

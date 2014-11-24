@@ -30,7 +30,7 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		postPos = Integer.parseInt(request.getParameter("postPos"));
 			
-		/*to track postEdit history, we want to initialze a list with a post, 
+		/*to track postEdit history, we want to initialize a list with a post, 
 		 * but because we do not want to bog down the system, with keeping all postEdits in memory,
 		 * this list will only be initialized when needed and is set to null after the page is navigated away from???
 		 */
@@ -38,21 +38,23 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 		if(postPos != -1 && b != null){
 			
 			ArrayList<PostEdit> postEdits = PostEdit.getPostEditsFromDatabaseByPostId(b.getPostAt(postPos).getPostId());
-			request.getSession().setAttribute("currentPostEditList", postEdits);
-			request.getSession().setAttribute("currentPostPos", postPos);
-			request.getSession().setAttribute("currentPost", b.getPostAt(postPos));
-			request.getSession().setAttribute("currentPostEditPos", 0);
-			
 			
 			if(postEdits.size() == 0){
+				
 				if(request.getSession().getAttribute("language").equals("EN"))
-					request.setAttribute("errorMessage", "Error: No modifications found");
+					request.setAttribute("errorMessage", "Error: This post does not contain any edits");
 				else if(request.getSession().getAttribute("language").equals("FR")){
 					request.setAttribute("errorMessage", "Erreur: Aucune modifications trouvé");	
 				}
 				url = "BlogEdit.jsp";
 				
 			}else{
+				
+				request.getSession().setAttribute("currentPostEditList", postEdits);
+				request.getSession().setAttribute("currentPostPos", postPos);
+				request.getSession().setAttribute("currentPost", b.getPostAt(postPos));
+				request.getSession().setAttribute("currentPostEditPos", 0);
+				
 				url = "PostEditHistory.jsp";
 			}
 			

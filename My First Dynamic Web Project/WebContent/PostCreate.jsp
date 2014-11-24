@@ -16,8 +16,6 @@
 	boolean isEditMode;
 	int toEdit = -1;
 	
-	
-	
 	if(session.getAttribute("language") == null){
 		session.setAttribute("language","EN");
 	}
@@ -164,7 +162,7 @@
 								If the user is logged in, the user is the author of the post and this is not the first post. 
 								Show the option to make the post publicly editable. 
 							*/
-							if(u != null && b.getPostAt(toEdit).getAuthor() == u.getUsername() && toEdit != firstPostIndex){
+							if(u != null && b.getPostAt(toEdit).getAuthor().equals(u.getUsername()) && toEdit != firstPostIndex){
 					%>
 								<tr>
 									<td class="FillScreenTextCentered">
