@@ -658,7 +658,10 @@ public class Post {
 		//postId, postTitle and postBody must be initialized must be initialized
 		
     	try {
-			pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ? WHERE postID  = ?");
+			
+    		connectionManager.getConnection().setAutoCommit(false);
+    		
+    		pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ? WHERE postID  = ?");
 			pst.setString(1, currentPostEdit.getTitleBeforeEdit());
 			pst.setString(2, currentPostEdit.getContentBeforeEdit());
 			pst.setInt(3, this.getPostId());
@@ -666,22 +669,11 @@ public class Post {
 			
 			pst.close();
 			
-			errorCode = PostEdit.insertPostEditInDatabase(currentUserId,postId,this.getPostTitle(),this.getPostBody());
-			
-			if(errorCode == -1){
-				System.out.println("Error inserting post edit into database: Unable to establish connection with database.");
-				return -1;
-			}
-			
-			if(errorCode == -2){
-				System.out.println("Error inserting post edit into database: SQL error.");
-				return -2;
-			}
+			errorCode = PostEdit.insertPostEditInDatabase(currentUserId,postId,this.getPostTitle(),this.getPostBody());	
 	        				
 		} catch (SQLException sqlE) {
-			System.out.println("Error with post edit reversal: SQL error");
 			sqlE.printStackTrace();
-			return -2;
+			errorCode = 2;
 		}finally{
 			try {
 				if(rs != null){
@@ -690,11 +682,29 @@ public class Post {
 				pst.close();
 			} catch (SQLException sqlE) {
 				sqlE.printStackTrace();
-			}
-			
+			}			
 		}
-    	return 0;
-    }
-	
+    	
+    	try {
+    		if(errorCode < 0){
+    			connectionManager.getConnection().rollback();
+        		connectionManager.getConnection().setAutoCommit(true);
+    			
+        		if(errorCode == -1){
+        			System.out.println("Error inserting post edit into database: Unable to establish connection with database.");
+        		}
+        		
+        		if(errorCode == -2){
+        			System.out.println("Error inserting post edit into database: SQL error.");
+        		}
+    		}else{
+    			connectionManager.getConnection().commit();
+    			connectionManager.getConnection().setAutoCommit(true);
+    		}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	return errorCode;
+	}
 }
 

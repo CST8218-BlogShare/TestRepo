@@ -1,6 +1,7 @@
 package com.amzi.servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amzi.dao.Blog;
+import com.amzi.dao.DbConnection;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
 
@@ -31,12 +33,16 @@ public class PostDeleteServlet extends HttpServlet {
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
+		
 		//if current blog cannot be retrieved, the session is no longer valid.
 		if(b == null){
 			System.exit(1);
 		}
 		
 		try{
+			
+			DbConnection.getInstance().getConnection().setAutoCommit(false);
+			
 			postPos = Integer.parseInt(request.getParameter("postPos"));
 			
 			postEditPrivilegeId = PostEditPrivilege.getPostEditPrivilegeIdFromDatabaseByPostId(b.getPostAt(postPos).getPostId());
@@ -96,10 +102,36 @@ public class PostDeleteServlet extends HttpServlet {
 				if(errorCode == -3){
 					request.setAttribute("errorMessage", "Error adding postid to postDelete, value of postId is invalid.");
 				}
-				
 				throw error;
 			}
+			
+			//Now that it is proved that the insertion of blog, post and postEditPrivilege were successful, the changes are applied to the database. 
+			DbConnection.getInstance().getConnection().commit();
+			
+			/*
+			 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+			 * This statement is placed here to avoid another try-catch block within the method. 
+			 */
+			
+			DbConnection.getInstance().getConnection().setAutoCommit(true);
+			
+			
 		}catch(Exception e){
+			try {
+				DbConnection.getInstance().getConnection().rollback();
+				
+				/*
+				 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+				 * This statement is placed here to avoid another try-catch block within the method. 
+				 */
+				
+				DbConnection.getInstance().getConnection().setAutoCommit(true);
+			} catch (SQLException sqlE) {
+				// TODO Auto-generated catch block
+				sqlE.printStackTrace();
+			}
+			
+			e.printStackTrace();
 			
 		}
 		

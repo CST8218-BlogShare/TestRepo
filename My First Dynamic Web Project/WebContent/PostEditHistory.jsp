@@ -142,7 +142,7 @@
 						</tr>						
 						<tr>
 							<td> <!-- possibly make all button have the same margin -->
-								<input class=button style="margin-bottom:1%;" type="button" value="<%= lang.getString("cancel")%>" onClick="cancelClick(this)"/>
+								<input class=button style="margin-bottom:1%;" type="button" value="<%= lang.getString("exit")%>" onClick="cancelClick(this)"/>
 							</td>
 						</tr>
 					</table>

@@ -1,6 +1,7 @@
 package com.amzi.servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amzi.dao.Blog;
+import com.amzi.dao.DbConnection;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
 
@@ -36,6 +38,9 @@ public class BlogDeleteServlet extends HttpServlet {
 		blogTitle = blogTitle.trim();
 		
 		try{
+			
+			DbConnection.getInstance().getConnection().setAutoCommit(false);
+			
 			if(blogTitle.equals("")){
 				request.setAttribute("errorMessage", "Error: Blog title is empty.");
 				throw error;
@@ -129,8 +134,20 @@ public class BlogDeleteServlet extends HttpServlet {
 				throw error;
 			}
 			
+			DbConnection.getInstance().getConnection().commit();
+			DbConnection.getInstance().getConnection().setAutoCommit(true);
+			
 		}catch(Exception e){
 			System.out.println("Error deleting post, for more details see stack trace.");
+			
+			try {
+				DbConnection.getInstance().getConnection().rollback();
+				DbConnection.getInstance().getConnection().setAutoCommit(true);
+			} catch (SQLException sqlE) {
+				// TODO Auto-generated catch block
+				sqlE.printStackTrace();
+			}
+			e.printStackTrace();
 		}
 				
 		try {
