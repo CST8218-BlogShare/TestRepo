@@ -237,6 +237,7 @@ public class BlogCreateServlet extends HttpServlet{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			 
 		}
 	 }
 } 

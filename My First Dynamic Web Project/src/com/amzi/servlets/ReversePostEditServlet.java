@@ -40,11 +40,11 @@ public class ReversePostEditServlet extends HttpServlet {
 		
 		if(errorCode < 0){
 			if(errorCode == -1){
-				request.setAttribute("errorMessage", "Error reversing edit to post, error connecting to database.");
+				request.setAttribute("errorMessage", "reversepostediterror1.");
 			}
 				
 			if(errorCode == -2){
-				request.setAttribute("errorMessage", "Error reversing edit to post, SQL error.");
+				request.setAttribute("errorMessage", "reversepostediterror2");
 			}
 			url = "PostEditHistory.jsp";
 		}else{

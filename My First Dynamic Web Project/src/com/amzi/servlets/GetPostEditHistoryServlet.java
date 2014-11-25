@@ -40,9 +40,9 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 			if(postEdits.size() == 0){
 				
 				if(request.getSession().getAttribute("language").equals("EN"))
-					request.setAttribute("errorMessage", "Error: This post does not contain any edits");
+					request.setAttribute("errorMessage", "error1");
 				else if(request.getSession().getAttribute("language").equals("FR")){
-					request.setAttribute("errorMessage", "Erreur: Aucune modifications trouvé");	
+					request.setAttribute("errorMessage", "error1");	
 				}
 				url = "BlogEdit.jsp";
 				

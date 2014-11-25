@@ -32,7 +32,7 @@ public class ProfileReloadAfterEditServlet extends HttpServlet {
 		u = User.getUserFromDatabaseById(userId);
 		
 		if(u == null){
-			request.setAttribute("errorMessage", "Error reloading user contents after profile edit, unable to retrieve user from database by id.");
+			request.setAttribute("errorMessage","profilereloaderror1");
 		}else{
 			request.getSession().setAttribute("currentUser", u);
 		}

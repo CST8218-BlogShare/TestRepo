@@ -47,10 +47,8 @@ public class SwitchResultTypeServlet extends HttpServlet {
 		try {
 			rd.include(request,response);
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -39,11 +39,11 @@ public class BlogChangeTitleServlet extends HttpServlet {
 	    	if(errorCode < 0){
 	    		if(errorCode == -1){
 	    			
-	    			request.setAttribute("errorMessage", "Error updating blog title, error connecting to database.");
+	    			request.setAttribute("errorMessage", "alert.error1");
 	    		}
 	    		
 	    		if(errorCode == -2){
-	    			request.setAttribute("errorMessage", "Error updating blog title, SQL error while interacting with database.");
+	    			request.setAttribute("errorMessage", "alert.error2");
 	    		}
 	    	}
 	    	

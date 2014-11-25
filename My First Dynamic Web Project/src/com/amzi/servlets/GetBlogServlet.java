@@ -44,16 +44,16 @@ public class GetBlogServlet extends HttpServlet {
 			 */
 			if(b == null || b.getBlogTitle().equals(blogTitle) == false){
 				
-				blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
+				blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle + "fsd");
 					
 				if(blogId < 0){
 						
 					if(blogId == -1){
-						request.setAttribute("errorMessage", "Error building blog from link in profile, error connecting to database.");
+						request.setAttribute("errorMessage", "getblogerror1");
 					}
 						
 					if(blogId == -2){
-						request.setAttribute("errorMessage", "Error building blog from link in profile, SQL error while interacting with database");
+						request.setAttribute("errorMessage", "getblogerror2");
 					}
 						
 					throw error;	
