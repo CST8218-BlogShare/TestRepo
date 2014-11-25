@@ -78,11 +78,16 @@ public class PostEdit {
 		
 		connectionManager = DbConnection.getInstance();
 		
-		if(connectionManager.getConnection() == null){
-			System.out.println("Error with insertion of post edit into database: Unable to establish connection with database.");
-			return -1;
-		}
-		
+		try {
+     		if(connectionManager.getConnection().isValid(0) == false){
+     			System.out.println("Error with insertion of post edit into database: Unable to establish connection with database.");
+     			connectionManager.closeConnection();
+     			return -1;
+     		}
+	    } catch (SQLException sqlConE) {
+     		sqlConE.printStackTrace();
+	    }
+			
 		try{
 		
 			//Inserting the new postEdit row into the postEdit table.
@@ -138,10 +143,15 @@ public class PostEdit {
 		
 		connectionManager = DbConnection.getInstance();
 		
-		if(connectionManager.getConnection() == null){
-        	System.out.println("Error with post edit retrieval using post id: Unable to establish connection with database.");
-        	return null;
-        }
+		try {
+     		if(connectionManager.getConnection().isValid(0) == false){
+     			System.out.println("Error with post edit retrieval using post id: Unable to establish connection with database.");
+     			connectionManager.closeConnection();
+     			return null;
+     		}
+		} catch (SQLException sqlConE) {
+     		sqlConE.printStackTrace();
+		}
 		
 		/* selecting all postEdits based on PostId*/
 		

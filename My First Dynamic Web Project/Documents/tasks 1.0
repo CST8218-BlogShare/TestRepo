@@ -1,0 +1,7 @@
+tasks
+
+add all error messages to resource bundle....will always throw error if not included.
+convert SearchResult to a pattern of other servlets and beans.
+ensure translations are complete - ensure currentPage is updated on every page.
+convert blog.jsp to build the blog on every load - done! - confirm I have minimized my use of Blog object.
+handle rollback where necessary

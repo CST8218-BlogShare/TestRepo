@@ -113,10 +113,15 @@ public class Post {
 	     
 	     connectionManager = DbConnection.getInstance();
 	     
-	     if(connectionManager.getConnection() == null){
-	        	System.out.println("Error with post retrieval: Unable to establish connection with database.");
-	        	return null;
-		 }
+	     try {
+	    	 if(connectionManager.getConnection().isValid(0) == false){
+	    		 System.out.println("Error with post retrieval by postId: Unable to establish connection with database.");
+				 connectionManager.closeConnection();
+				 return null;
+	    	 }
+	     } catch (SQLException sqlConE) {
+			sqlConE.printStackTrace();
+	     }
 	     
 	     try {
 			pst = connectionManager.getConnection().prepareStatement("select blogid, title, content, isPublic from post where postid = ? ");
@@ -133,7 +138,23 @@ public class Post {
 			p.postId = postId;
 
 		} catch (SQLException sqlE) {
-			System.out.println("Error with post retrieval: Unable to retrieve post contents based on postId.");
+			System.out.println("Error with post retrieval by postId: Unable to retrieve post contents based on postId.");
+			
+			/*
+        	 * Since the function getPostAuthorFromDatabaseById() is called within the try-catch block,
+        	 * these error messages detect at what point the error was thrown.
+        	 */
+        	
+        	//if the query within getPostListFromDatabasaByBlogId() failed to produce a result.
+        	if(p.blogId == -1){
+        		System.out.println("Error with post retrieval by postId: Unable to retrieve post contents based on postId.");
+	    	}
+	    	
+        	//if the query within getPostAuthorFromDatabaseById() failed to produce a result.
+	    	if(p.author == ""){
+	    		System.out.println("Error with post retrieval by postId: Unable to retrieve author of post based on postId.");
+	    	}
+			
 			sqlE.printStackTrace();
 			return null;
 		}finally{
@@ -155,10 +176,15 @@ public class Post {
 		
 		connectionManager = DbConnection.getInstance();
 		
-		if(connectionManager.getConnection() == null){
-        	System.out.println("Error with post author retrieval: Unable to establish connection with database.");
-        	return null;
-		}
+		 try {
+	    	 if(connectionManager.getConnection().isValid(0) == false){
+	    		 System.out.println("Error with post author retrieval by postId: Unable to establish connection with database.");
+				 connectionManager.closeConnection();
+				 return null;
+	    	 }
+	     } catch (SQLException sqlConE) {
+			sqlConE.printStackTrace();
+	     }
 		
 		/* 
 		 * Selecting the author of the current post, by checking the contents of the user_post table 
@@ -174,7 +200,7 @@ public class Post {
 			author = (rs.getString("username")); 
 			
 		}catch(SQLException sqlE){
-			System.out.println("Error with post author retrieval: SQL error.");
+			System.out.println("Error with post author retrieval by postId: SQL error.");
 			sqlE.printStackTrace();
 			return null;
 		}finally{
@@ -197,10 +223,15 @@ public class Post {
 		
 		connectionManager = DbConnection.getInstance();
 		
-		if(connectionManager.getConnection() == null){
-        	System.out.println("Error with post list retrieval: Unable to establish connection with database.");
-        	return null;
-		}
+		try {
+	    	if(connectionManager.getConnection().isValid(0) == false){
+	    		System.out.println("Error with post list retrieval by blogId: Unable to establish connection with database.");
+				connectionManager.closeConnection();
+				return null;
+	    	}
+	    } catch (SQLException sqlConE) {
+	    	sqlConE.printStackTrace();
+	    }
 		
 		//get the blog's posts and their bodies from the database using the blogid
         try {
@@ -224,14 +255,21 @@ public class Post {
 		   }
 			
         } catch (SQLException sqlE) {
-        	System.out.println("Error with post list retrieval: SQL error.");
+        	System.out.println("Error with post list retrieval by blogId: SQL error.");
 			
-        	if(posts.get(posts.size() - 1).postTitle == ""){
-        		System.out.println("Error with post list retrieval: Unable to retrieve post contents based on blogId.");
+        	/*
+        	 * Since the function getPostAuthorFromDatabaseById() is called within the try-catch block,
+        	 * these error messages detect at what point the error was thrown.
+        	 */
+        	
+        	//if the query within getPostListFromDatabasaByBlogId() failed to produce a result.
+        	if(posts.get(posts.size() - 1).postId == -1){
+        		System.out.println("Error with post list retrieval by blogId: Unable to retrieve post contents based on blogId.");
 	    	}
-	    	  
+	    	
+        	//if the query within getPostAuthorFromDatabaseById() failed to produce a result.
 	    	if(posts.get(posts.size() - 1).author == ""){
-	    		System.out.println("Error with post list retrieval: Unable to retrieve author of post based on postId.");
+	    		System.out.println("Error with post list retrieval by blogId: Unable to retrieve author of post based on postId.");
 	    	}
         	
         	sqlE.printStackTrace();
@@ -252,11 +290,16 @@ public class Post {
 	    connectionManager = DbConnection.getInstance();
 	    conn = connectionManager.getConnection();
 	    
-	    if(conn == null){
-	    	System.out.println("Error with post insertion of into database : Unable to establish connection with database.");
-	        return -1;
+	    try {
+	    	if(connectionManager.getConnection().isValid(0) == false){
+	    		System.out.println("Error with post insertion into database : Unable to establish connection with database.");
+				connectionManager.closeConnection();
+				return -1;
+	    	}
+	    } catch (SQLException sqlConE) {
+	    	sqlConE.printStackTrace();
 	    }
-	    
+	     
 	    if(postIsPublic == true){
 			postIsPublicAsInt = 1;
 		}
@@ -293,7 +336,7 @@ public class Post {
 					pst.close();
 				
 	    		} catch (SQLException sqlE) {  
-	    			System.out.println("Error with post insertion of into database : SQL error.");
+	    			System.out.println("Error with post insertion into database : SQL error.");
 	    			sqlE.printStackTrace();
 	    			return -2;
 	    		}finally {
@@ -319,17 +362,14 @@ public class Post {
 				if(errorCode < 0){
 					if(errorCode == -1){
 						//error descriptions are unneeded as they are output from updatePostInDatabaseById();
-						//System.out.println("Error with updating current post: Unable to establish connection with database.");
 						return -1;
 					}
 					
 					if(errorCode == -2){
-						//System.out.println("Error with updating current post: SQL error.");
 						return -2;
 					}
 					
 					if(errorCode == -3){
-						//System.out.println("Error with updating current post: Error creating postEdit to track update to post.");
 						return -3;
 					}
 				}
@@ -347,11 +387,16 @@ public class Post {
 	    
 	    connectionManager = DbConnection.getInstance();
 	    
-	    if(connectionManager.getConnection() == null){
-        	System.out.println("Error with post update: Unable to establish connection with database.");
-        	return -1;
-       }
-	    
+	    try {
+	    	if(connectionManager.getConnection().isValid(0) == false){
+	    		System.out.println("Error with post update: Unable to establish connection with database.");
+				connectionManager.closeConnection();
+				return -1;
+	    	}
+	    } catch (SQLException sqlConE) {
+	    	sqlConE.printStackTrace();
+	    }
+	     
 	    try{
 	    	/*
 	    	 * In order to accurately track edits, the values of postTitle, postBody, and isPublic
@@ -408,11 +453,16 @@ public class Post {
 		
 	     connectionManager = DbConnection.getInstance();
 	     
-	     if(connectionManager.getConnection() == null){		   
-	    	 System.out.println("Error with post deletion: Unable to establish connection with database.");
-	    	 return -1;
+	     try {
+	    	 if(connectionManager.getConnection().isValid(0) == false){
+	    		 System.out.println("Error with post deletion by postId: Unable to establish connection with database.");
+	    		 connectionManager.closeConnection();
+	    		 return -1;
+		     }
+		 } catch (SQLException sqlConE) {
+		    	sqlConE.printStackTrace();
 		 }
-	     	     	     
+	      	     	     
 	     try{
 	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
 	    	 pst.setInt(1, postId);
@@ -423,7 +473,7 @@ public class Post {
 	    	 }
 	    	 
 	     }catch(SQLException sqlE){	
-	    	 System.out.println("Error with post deletion: SQL error.");
+	    	 System.out.println("Error with post deletion by postId: SQL error.");
 	    	 sqlE.printStackTrace();
 	    	 return -2;
 	     }finally {
@@ -442,32 +492,36 @@ public class Post {
 	    DbConnection connectionManager = null;
 	    
 	    if(postId <= 0){
-	    	System.out.println("Error with adding post to PostDeleted table: Provided value for postId is invalid.");
+	    	System.out.println("Error adding post to PostDeleted table: Provided value for postId is invalid.");
 	    	return -3;
 	    }
 	    
 	    connectionManager = DbConnection.getInstance();
 	    
-	    if(connectionManager.getConnection() == null){
-        	System.out.println("Error with adding post to PostDeleted table: Unable to establish connection with database.");
-        	return -1;
-       }
-	    
-	   try{
-		   ps = connectionManager.getConnection().prepareStatement("insert into postdeleted(postDeletedId, postId) values(0,?)");
-		   ps.setInt(1,postId);
-		   ps.execute();
-	   }catch(SQLException slqE){
-		   System.out.println("Error with adding post to PostDeleted table: SQL error");
-		   return -2;
-	   }finally{
-		   try {
-			   ps.close();
-		   } catch (SQLException sqlE) {
-			   sqlE.printStackTrace();
-		   }
-	   }
-	    
+	    try {
+	    	if(connectionManager.getConnection().isValid(0) == false){
+	    		System.out.println("Error adding post to PostDeleted table: Unable to establish connection with database.");
+	    		connectionManager.closeConnection();
+	    		return -1;
+		    }
+		} catch (SQLException sqlConE) {
+			sqlConE.printStackTrace();
+		}
+	     
+	    try{
+	    	ps = connectionManager.getConnection().prepareStatement("insert into postdeleted(postDeletedId, postId) values(0,?)");
+		    ps.setInt(1,postId);
+		    ps.execute();
+	    }catch(SQLException slqE){
+		    System.out.println("Error adding post to PostDeleted table: SQL error");
+		    return -2;
+	    }finally{
+		    try {
+		    	ps.close();
+		    } catch (SQLException sqlE) {
+		    	sqlE.printStackTrace();
+		    }
+	    }
 	    return 0;
 	}
 		
@@ -483,17 +537,21 @@ public class Post {
 	    
 	    connectionManager = DbConnection.getInstance();
 	    
-	    if(connectionManager.getConnection() == null){
-        	System.out.println("Error with post deletion check: Unable to establish connection with database.");
-        	return -1;
-       }
+	    try {
+	    	if(connectionManager.getConnection().isValid(0) == false){
+	    		System.out.println("Error with post deletion check: Unable to establish connection with database.");
+	    		connectionManager.closeConnection();
+	    		return -1;
+		    }
+		} catch (SQLException sqlConE) {
+			sqlConE.printStackTrace();
+		}
 	    
-	   try{
+	    try{
 		   ps = connectionManager.getConnection().prepareStatement("select postId from postDeleted where postId = ?");
 		   ps.setInt(1, postId);
 		   
 		   rs = ps.executeQuery();
-		   
 		   rs.last();
 		   
 		   //if the result set contains any rows, this post has been deleted and has been added to the postDeleted table.
@@ -534,10 +592,15 @@ public class Post {
 					
 			DbConnection connectionManager = DbConnection.getInstance(); 
 	    	
-		    if(connectionManager.getConnection() == null){
-		    	System.out.println("Error with determining PostEditPrivilege: Unable to establish connection with database.");
-		    	return false;
-		    }
+			try {
+		    	if(connectionManager.getConnection().isValid(0) == false){
+		    		System.out.println("Error with determining PostEditPrivilege by postId: Unable to establish connection with database.");
+		    		connectionManager.closeConnection();
+		    		return false;
+			    }
+			} catch (SQLException sqlConE) {
+				sqlConE.printStackTrace();
+			}
 			
 			editEnabled = false;
 				
@@ -560,7 +623,7 @@ public class Post {
 					}
 				}
 			}catch(SQLException sqlE){
-				System.out.println("Error with determining PostEditPrivilege: SQL error.");
+				System.out.println("Error with determining PostEditPrivilege by postId: SQL error.");
 				sqlE.printStackTrace();
 			}finally{
 				try {
@@ -582,11 +645,16 @@ public class Post {
 		
 	    connectionManager = DbConnection.getInstance();
     	
-	    if(connectionManager.getConnection() == null){
-	    	System.out.println("Error with Post ddit reversal: Unable to establish connection with database.");
-	    	return -1;
-	    }
-	    
+	    try {
+	    	if(connectionManager.getConnection().isValid(0) == false){
+	    		System.out.println("Error with post edit reversal: Unable to establish connection with database.");
+	    		connectionManager.closeConnection();
+	    		return -1;
+		    }
+		} catch (SQLException sqlConE) {
+			sqlConE.printStackTrace();
+		}
+	     
 		//postId, postTitle and postBody must be initialized must be initialized
 		
     	try {
@@ -611,7 +679,7 @@ public class Post {
 			}
 	        				
 		} catch (SQLException sqlE) {
-			System.out.println("Error with PostEdit Reversal: SQL error");
+			System.out.println("Error with post edit reversal: SQL error");
 			sqlE.printStackTrace();
 			return -2;
 		}finally{
