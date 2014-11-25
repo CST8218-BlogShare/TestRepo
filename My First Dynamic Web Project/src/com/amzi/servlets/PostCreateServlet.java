@@ -1,6 +1,7 @@
 package com.amzi.servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.amzi.dao.Blog;
+import com.amzi.dao.DbConnection;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
 import com.amzi.dao.User;
@@ -99,6 +101,13 @@ public class PostCreateServlet extends HttpServlet {
 		    	}
 		    }
 		    
+		    /* 
+			 * Setting up a database transaction where the post and postEditPrivilege entries both need to be inserted into the database.
+			 * If the two items cannot be inserted into the database, any completed insertions are reversed to this point.
+			 */
+			
+			DbConnection.getInstance().getConnection().setAutoCommit(false);
+		    
 		    /* If the post is currently being edited (isEditMode == false), 
 		     * The post is not added to a blog and updatePostInDatabaseById() is called within insertPostInDatabase().
 		     */
@@ -124,7 +133,7 @@ public class PostCreateServlet extends HttpServlet {
 					throw error;
 				}
 					
-				postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId());
+				postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(postId, u.getUserId());
 					
 				if(postEditPrivilegeId < 0){
 					if(postEditPrivilegeId == -1){
@@ -145,8 +154,34 @@ public class PostCreateServlet extends HttpServlet {
 					throw error;
 				}
 			}
+		    
+		    //Now that it is proved that the insertion of blog, post and postEditPrivilege were successful, the changes are applied to the database. 
+			DbConnection.getInstance().getConnection().commit();
+			
+			/*
+			 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+			 * This statement is placed here to avoid another try-catch block within the method. 
+			 */
+			
+			DbConnection.getInstance().getConnection().setAutoCommit(true);
+		    
 		}catch(Exception e){
 			errorState = true;
+			try {
+				if(DbConnection.getInstance().getConnection().getAutoCommit() == false){
+					DbConnection.getInstance().getConnection().rollback();
+				
+					/*
+				 	* Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+				 	* This statement is placed here to avoid another try-catch block within the method. 
+				 	*/
+				
+					DbConnection.getInstance().getConnection().setAutoCommit(true);
+				}
+			} catch (SQLException sqlE) {
+				sqlE.printStackTrace();
+			}
+			e.printStackTrace();
 		}
 		
 			

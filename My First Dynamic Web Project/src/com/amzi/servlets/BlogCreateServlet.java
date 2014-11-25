@@ -1,6 +1,7 @@
 package com.amzi.servlets;  
   
 import java.io.IOException;  
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;  
 import javax.servlet.ServletException;  
@@ -10,7 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  
   
 
+
+
 import com.amzi.dao.Blog;
+import com.amzi.dao.DbConnection;
 import com.amzi.dao.Post;
 import com.amzi.dao.PostEditPrivilege;
 import com.amzi.dao.User;
@@ -97,13 +101,19 @@ public class BlogCreateServlet extends HttpServlet{
 			if(request.getParameter("blogEditableCheckBox") != null){
 				blogIsPublic = true;
 			}
-					
+			
+			/* 
+			 * Setting up a database transaction where the blog, post and postEditPrivilege entries all need to be inserted into the database.
+			 * If all three items cannot be inserted into the database, any completed insertions are reversed to this point.
+			 */
+			
+			DbConnection.getInstance().getConnection().setAutoCommit(false);
+			
 			/*The function insertBlogInDatabase() is called to take the contents entered into the
 			 form within blogCreate held within Blog Object b, and insert this info into the database
 			 
 			 This function also initializes the Blog's blogId data member with an integer value.
 			 */
-			
 			blogId = Blog.insertBlogInDatabase(blogTitle, blogIsPublic, u.getUserId(), u.getUsername());
 			
 			if(blogId < 0){
@@ -150,7 +160,7 @@ public class BlogCreateServlet extends HttpServlet{
 				throw error;
 			}
 						
-			postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId());
+			postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(postId, u.getUserId());
 			
 			if(postEditPrivilegeId < 0){
 				
@@ -170,7 +180,17 @@ public class BlogCreateServlet extends HttpServlet{
 				
 				throw error;
 			}		 
-				 
+		
+			//Now that it is proved that the insertion of blog, post and postEditPrivilege were successful, the changes are applied to the database. 
+			DbConnection.getInstance().getConnection().commit();
+			
+			/*
+			 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+			 * This statement is placed here to avoid another try-catch block within the method. 
+			 */
+			
+			DbConnection.getInstance().getConnection().setAutoCommit(true);
+			
 			/*
 			 * Adding the newly created blog object to the ServletContext object, 
 			 * allowing it and it's data members to be retrieved within Blog.jsp
@@ -180,6 +200,19 @@ public class BlogCreateServlet extends HttpServlet{
 			//Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.
 		}catch(Exception e){
 			errorState = true;
+			try {
+				DbConnection.getInstance().getConnection().rollback();
+				
+				/*
+				 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+				 * This statement is placed here to avoid another try-catch block within the method. 
+				 */
+				
+				DbConnection.getInstance().getConnection().setAutoCommit(true);
+			} catch (SQLException sqlE) {
+				// TODO Auto-generated catch block
+				sqlE.printStackTrace();
+			}
 			e.printStackTrace();
 		}
 		
