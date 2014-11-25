@@ -48,26 +48,30 @@ public class DbConnection {
 	
 	public Connection getConnection(){
 		if(conn == null){
-			System.out.println("Connection object has not been initialized.\n");
+			System.out.println("Error obtaining database connection object - Connection object has not been initialized.\n");
 			return null;
 		}
 		
 		return this.conn;
 	}
 	
-	public void closeConnection(){
+	public int closeConnection(){
 		
 		try{
     		conn.close();
     		
-    		/*connectionHelper is set to null, since the connection is closed 
-    		 * and the only way to create a new connection is to create a 
+    		/*connectionHelper is set to null.
+    		 * This is done, since when the connection is closed 
+    		 * the only way to create a new connection is to create a 
     		 * new instance of DbConnection and instantiate it into connectionHelper*/
     		connectionHelper = null;
     		
     	}catch(SQLException sqlCloseE){
+    		System.out.println("Error closing database connection - connection object has not been initialized.\n");
     		sqlCloseE.printStackTrace();
+    		return -1;
     	}
+		return 0;
 	}
 	
 	

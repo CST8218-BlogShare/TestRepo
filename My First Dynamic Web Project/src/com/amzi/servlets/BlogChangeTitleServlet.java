@@ -18,15 +18,15 @@ public class BlogChangeTitleServlet extends HttpServlet {
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-		Blog b = null;
 		int errorCode = 0;
+		int blogId = -1;
 		String newBlogTitle = "";
 		
 		
-		b = (Blog) request.getSession().getAttribute("currentBlog");
+		blogId = ((Blog) request.getSession().getAttribute("currentBlog")).getBlogId();
 		
 		//if current blog cannot be retrieved, the session is no longer valid.
-		if(b == null){
+		if(blogId == -1){
 			System.exit(1);
 		}
 		
@@ -34,7 +34,7 @@ public class BlogChangeTitleServlet extends HttpServlet {
 		newBlogTitle = newBlogTitle.trim();
          
 	    if(newBlogTitle.length() != 0){
-	    	errorCode = Blog.updateTitleInDatabase(b,newBlogTitle);
+	    	errorCode = Blog.updateTitleInDatabase(newBlogTitle, blogId);
 			
 	    	if(errorCode < 0){
 	    		if(errorCode == -1){

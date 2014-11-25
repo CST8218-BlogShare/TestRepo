@@ -35,48 +35,47 @@ public class GetBlogServlet extends HttpServlet {
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
-		/*
-		 * If the currentBlog attribute stored within the session has not been initialized or the blog to be loaded is different 
-		 * from the currently stored blog, then a new blog is created and replaces the previous blog that was stored in the session.
-		 */
-		if(b == null || b.getBlogTitle().contentEquals(blogTitle) == false){
-			
-			b = new Blog();
-			
-			try{
-				blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
+		
+		try{
+		
+			/*
+			 * If the currentBlog attribute stored within the session has not been initialized or the blog to be loaded is different 
+			 * from the currently stored blog, then a new blog is created and replaces the previous blog that was stored in the session.
+			 */
+			if(b == null || b.getBlogTitle().equals(blogTitle) == false){
 				
-				if(blogId < 0){
+				blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
 					
+				if(blogId < 0){
+						
 					if(blogId == -1){
 						request.setAttribute("errorMessage", "Error building blog from link in profile, error connecting to database.");
 					}
-					
+						
 					if(blogId == -2){
 						request.setAttribute("errorMessage", "Error building blog from link in profile, SQL error while interacting with database");
 					}
-					
+						
 					throw error;	
 				}
 				
-				b = Blog.getBlogFromDatabaseById(blogId);
+				/* 
+				 * Since Blog.getBlogFromDatabaseById() is called on every load of Blog.jsp, a Blog object
+				 * is initialized with only the blogId of the Blog corresponding to the retrieved title. 
+				 */
+				
+				b = new Blog(blogId);
 					
-				if(b == null){
-					request.setAttribute("errorMessage", "Error creating blog for display on webpage, unable to retrieve blog from database.");
-					throw error;
-				}
-				
 				request.getSession().setAttribute("currentBlog", b); 
-				
-				//If the edit button has been clicked on the profile page instead of the title of the blog. 
-				if(isBlogEdit == true){
-					url = "BlogEdit.jsp";
-				}
-				
-			}catch(Exception e){
-				url = "Profile.jsp";
 			}	
-		}	
+			
+			if(isBlogEdit){
+				url = "BlogEdit.jsp";
+			}
+		
+		}catch(Exception e){
+			url = "Profile.jsp";
+		}
 			
 		try {
 			request.getRequestDispatcher(url).forward(request, response); 

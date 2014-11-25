@@ -20,8 +20,10 @@ public class LogoutServlet extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+		
 		//closing the database connection.
 		DbConnection.getInstance().closeConnection();
+		
 		//setting the session to it's default state. 
 		request.getSession().invalidate();
 		

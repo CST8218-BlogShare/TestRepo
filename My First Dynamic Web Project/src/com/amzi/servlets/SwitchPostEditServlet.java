@@ -18,6 +18,11 @@ public class SwitchPostEditServlet extends HttpServlet {
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
+		
+		if(request.getSession(false) == null){
+			System.exit(-1);
+		}
+		
 		if(request.getParameter("postEditPos") != null){
 			request.getSession().setAttribute("currentPostEditPos", Integer.parseInt(request.getParameter("postEditPos")));
 		}

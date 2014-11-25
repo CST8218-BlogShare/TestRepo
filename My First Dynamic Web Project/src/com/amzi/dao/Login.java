@@ -26,13 +26,6 @@ public class Login {
             return null;
         }
             
-            
-        /*if(connectionManager.getConnection() == null){
-        	errorMessege = "Error communicating with database. Login cannnot be completed.";
-            errorMessegeFR = "Problem de connection avec la base de données. Veuiller essayer à nouveau.";
-
-        }*/
-            
         u = User.getUserFromDatabaseByCredentials(name, pass);
             
         if(u == null){

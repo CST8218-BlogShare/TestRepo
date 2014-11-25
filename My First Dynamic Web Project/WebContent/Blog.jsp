@@ -24,7 +24,7 @@
 			session.setAttribute("language","EN");
 		}
 	}		
-	%>
+%>
 	
 <html>
 <!--  The page used to display all Blogs created within BLOGSHARE
@@ -44,13 +44,18 @@
 		/* 
 			Retrieving the user and blog objects accociated with the 
 			currently logged in user and the blog to be displayed.
-			
-			Need to make null checks for these sessionState variables and throw appropriate exception.
 		*/
-		Blog b = (Blog) session.getAttribute("currentBlog");
+		
+		Blog b = Blog.getBlogFromDatabaseById(((Blog) session.getAttribute("currentBlog")).getBlogId());
 		User u = (User) session.getAttribute("currentUser");
-		String postTitle = (String) session.getAttribute("postToView");
-					
+		String postTitle = (String) session.getAttribute("postToView");		
+		
+		//if the blog cannot be retrieved, this page cannot be displayed. So the program is closed...could also logout
+		if(b == null){
+			System.exit(-1);
+		}else{
+			session.setAttribute("currentBlog",b);
+		}
 %>
 
 <!--  If the user is navigating from the searchResults page causing the sessionVariable postToView to be set.
@@ -118,10 +123,10 @@
 				Boolean editEnabled;
 				Post p = b.getPostAt(i); 
 				
-				//if the post is not public and there is no user logged in, the post will never be editable.
+				//if there is no user logged in, the post will never be editable.
 				 if(u == null){
 				 	editEnabled = false;
-				 }else{											//int postId, String author, boolean isPublic, int userId, String username
+				 }else{
 					editEnabled = Post.determinePostEditPrivilegeById(p.getPostId(), p.getAuthor(), p.getIsPublic() , u.getUserId(), u.getUsername());
 				 }
 		 %>

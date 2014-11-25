@@ -48,7 +48,7 @@ contentType="text/html; charset=ISO-8859-1"
 			usersProfile = false; //Set to false to prevent display of the additional functionality related to the logged in user. 
 		}else if(u != null){ //If there is a currently logged in user. 
 			//If the logged in user is not the same as the user profile that is associated with the current search result.
-			if(!u.getUsername().contentEquals(((User) session.getAttribute("currentProfile")).getUsername())){
+			if(!u.getUsername().equals(((User) session.getAttribute("currentProfile")).getUsername())){
 				u = (User) session.getAttribute("currentProfile");
 				usersProfile = false; 
 			}
@@ -172,7 +172,9 @@ contentType="text/html; charset=ISO-8859-1"
 		<input type="hidden" id="blogToDeleteName" name="blogTitle" value="">
 	</form>
 	
-	<form id="reloadProfileForm" action="LoadProfileServlet" method="post"></form>
+	<form id="reloadProfileForm" action="profileReloadAfterEditServlet" method="post">
+		<input type="hidden" id="ProfileReloadUserId" name="userId" value="<%=u.getUserId()%>">
+	</form>
 	
 	<!-- profileedit is shown in this modal window -->
 	<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog"
@@ -269,10 +271,17 @@ contentType="text/html; charset=ISO-8859-1"
 					if (response == "SUCCESS"){
 						$("#alert").html("<%=lang.getString("alert.success")%>").attr('class', 'alert alert-success');
 						$('#reloadProfileForm').submit();
-					} else if (response == "WRONG_PASS")
+					}else if (response == "BLANK_NAME"){
+						$("#alert").html("<%=lang.getString("alert.blankname")%>").attr('class', 'alert alert-danger');
+					}else if (response == "BLANK_PASS"){
+						$("#alert").html("<%=lang.getString("alert.blankpass")%>").attr('class', 'alert alert-danger');
+					}else if (response == "WRONG_PASS"){
 						$("#alert").html("<%=lang.getString("alert.wrongpass")%>").attr('class', 'alert alert-danger');
-					else if (response == "SQL_ERROR")
+					}else if (response == "CONNECT_ERROR"){
+						$("#alert").html("<%=lang.getString("alert.connecterror")%>").attr('class', 'alert alert-danger');
+					}else if (response == "SQL_ERROR"){
 						$("#alert").html("<%=lang.getString("alert.sqlerror")%>").attr('class', 'alert alert-danger');
+					}
 			});	
 		}
 	});

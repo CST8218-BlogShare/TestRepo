@@ -43,17 +43,11 @@ public class PostDeleteServlet extends HttpServlet {
 			
 			if(postEditPrivilegeId <= 0){
 				if(postEditPrivilegeId == -1){
-					request.setAttribute("errorMessage", "Error deleting post from database, error connecting to database");
+					request.setAttribute("errorMessage", "Error retrieving post edit privilege by id, error connecting to database");
 				}
 				
 				if(postEditPrivilegeId == -2){
-					request.setAttribute("errorMessage", "Error deleting post from database, error with SQL interaction with database.");
-				}
-				if(postEditPrivilegeId == -3){
-					request.setAttribute("errorMessage", "Error deleting post from database, invalid postId value.");
-				}
-				if(postEditPrivilegeId == -4){
-					request.setAttribute("errorMessage", "Error deleting post from database, invalid userId value.");
+					request.setAttribute("errorMessage", "Error retrieving post edit privilege by id, SQL error.");
 				}
 				
 				throw error;
@@ -68,7 +62,7 @@ public class PostDeleteServlet extends HttpServlet {
 				}
 				
 				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error deleting postEditPrivilege, SQL error while interacting with database.");
+					request.setAttribute("errorMessage", "Error deleting postEditPrivilege, SQL error.");
 				}
 				
 				throw error;
@@ -83,7 +77,7 @@ public class PostDeleteServlet extends HttpServlet {
 				}
 				
 				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error deleting post, SQL error while interacting with database.");
+					request.setAttribute("errorMessage", "Error deleting post, SQL error.");
 				}
 				throw error;
 			}
@@ -96,7 +90,7 @@ public class PostDeleteServlet extends HttpServlet {
 				}
 				
 				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error adding postid to postDeleted, SQL error while interacting with database.");
+					request.setAttribute("errorMessage", "Error adding postid to postDeleted, SQL error.");
 				}
 				
 				if(errorCode == -3){
@@ -105,8 +99,6 @@ public class PostDeleteServlet extends HttpServlet {
 				
 				throw error;
 			}
-		
-			b.removePost(postPos);
 		}catch(Exception e){
 			
 		}

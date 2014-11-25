@@ -86,7 +86,8 @@ public class PostEdit {
 		try{
 		
 			//Inserting the new postEdit row into the postEdit table.
-	        pst = connectionManager.getConnection().prepareStatement("insert into postEdit values (0,?,now(),?,?)");
+	        pst = connectionManager.getConnection().prepareStatement("insert into postEdit (postEditId, postId, editDateTime, titleBeforeEdit, contentBeforeEdit)"
+	        												       + " values (0,?,now(),?,?)");
 	        pst.setInt(1, postId);
 	        pst.setString(2, titleBeforeEdit);
 	        pst.setString(3, contentBeforeEdit);
@@ -106,7 +107,7 @@ public class PostEdit {
 	        
 	        //Inserting a new row into the User_PostEdit table. 
 	        
-	        pst = connectionManager.getConnection().prepareStatement("insert into user_postedit values(?,?)");
+	        pst = connectionManager.getConnection().prepareStatement("insert into user_postedit (userId, postEditId) values(?,?)");
 	        pst.setInt(1,userId);
 	        pst.setInt(2, postEditId);
 	        pst.execute();

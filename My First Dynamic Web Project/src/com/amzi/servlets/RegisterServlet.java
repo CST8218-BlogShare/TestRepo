@@ -28,9 +28,7 @@ public class RegisterServlet extends HttpServlet {
 	         
 	    u = Register.validate(name, pass, pass2);
 	        
-	    if(u != null){  
-	    	getServletContext().setAttribute("errorCode", 0);
-	        		        	
+	    if(u != null){    		        	
 	        request.getSession().setAttribute("currentUser", u);
 	        	
 	        //username variable is added for use in the header section of the page's where the header is shown.
@@ -46,8 +44,7 @@ public class RegisterServlet extends HttpServlet {
 				e.printStackTrace();
 			}    
 	    }else{
-	        getServletContext().setAttribute("errorCode", 1);
-	        getServletContext().setAttribute("errorMessage", Register.errorMessege);
+	        request.setAttribute("errorMessage", Register.errorMessege);
 	        	
 	        RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
 	            

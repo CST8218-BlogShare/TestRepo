@@ -2,9 +2,6 @@ package com.amzi.servlets;
 
 import java.io.IOException;
 
-
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,24 +36,21 @@ public class ReversePostEditServlet extends HttpServlet {
 		
 		//If the parameters passed to getPostAt are not initialized, editPostInDatabase will throw an error 
 		
-		errorCode = currentBlog.getPostAt(currentPostPos).reverseEditToPostInDatabase(currentBlog,currentPostPos,currentPostEdit,currentUserId);
+		errorCode = currentBlog.getPostAt(currentPostPos).reverseEditToPostInDatabase(currentPostPos,currentPostEdit,currentUserId);
 		
-		 if(errorCode == 0){
-			 url = "Blog.jsp"; 
-		 }else{
-			 
+		if(errorCode < 0){
 			if(errorCode == -1){
 				request.setAttribute("errorMessage", "Error reversing edit to post, error connecting to database.");
 			}
 				
 			if(errorCode == -2){
-				request.setAttribute("errorMessage", "Error reversing edit to post, SQL error while interacting with database.");
+				request.setAttribute("errorMessage", "Error reversing edit to post, SQL error.");
 			}
-			 
-		 }
+			url = "PostEditHistory.jsp";
+		}else{
+			 url = "Blog.jsp"; 
+		}
 		 
-		url = "PostEditHistory.jsp";
-		
 		try {
 			request.getRequestDispatcher(url).forward(request, response);
 		} catch (ServletException se) {

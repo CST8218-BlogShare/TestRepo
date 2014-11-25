@@ -112,7 +112,7 @@ public class BlogCreateServlet extends HttpServlet{
 				}
 				
 				if(blogId == -2){
-					request.setAttribute("errorMessage", "Error creating blog, error with SQL interaction with database.");
+					request.setAttribute("errorMessage", "Error creating blog, SQL error.");
 				}
 				
 				if(blogId == -3){
@@ -137,7 +137,7 @@ public class BlogCreateServlet extends HttpServlet{
 				}
 				
 				if(postId == -2){
-					request.setAttribute("errorMessage", "Error creating first post of blog, error with SQL interaction with database.");
+					request.setAttribute("errorMessage", "Error creating first post of blog, SQL error.");
 				}
 				
 				throw error;
@@ -149,9 +149,7 @@ public class BlogCreateServlet extends HttpServlet{
 				request.setAttribute("errorMessage", "Error adding first post to blog, unable to retrieve post from database.");
 				throw error;
 			}
-			
-			b.addPost(p); 
-			
+						
 			postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId());
 			
 			if(postEditPrivilegeId < 0){
@@ -161,7 +159,7 @@ public class BlogCreateServlet extends HttpServlet{
 				}
 				
 				if(postEditPrivilegeId == -2){
-					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, error with SQL interaction with database.");
+					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, SQL error.");
 				}
 				if(postEditPrivilegeId == -3){
 					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, invalid postId value.");
@@ -176,8 +174,7 @@ public class BlogCreateServlet extends HttpServlet{
 			/*
 			 * Adding the newly created blog object to the ServletContext object, 
 			 * allowing it and it's data members to be retrieved within Blog.jsp
-			 */
-				 
+			 */	 
 			userSession.setAttribute("currentBlog", b);
 				 	
 			//Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.

@@ -47,26 +47,15 @@ public class PostCreateServlet extends HttpServlet {
 		}
 		
 		try{
-			try{
-				isEditMode = Boolean.parseBoolean(request.getSession().getAttribute("editMode").toString());
-			}catch(Exception e){
-				isEditMode = false;
-			}
+			isEditMode = Boolean.parseBoolean(request.getSession().getAttribute("editMode").toString());
+		}catch(Exception e){
+			isEditMode = false;
+		}
 				
-			try{
-				toEdit = Integer.parseInt(request.getSession().getAttribute("toEdit").toString());
-			}catch(Exception e){
-				toEdit = -1;
-			}
-				
-		}catch(NumberFormatException nfE){
-			nfE.printStackTrace();
-			//what error is relevant here
-			return;
-		}catch(IllegalStateException isE){
-			isE.printStackTrace();
-			//what error is relevant here
-			return;
+		try{
+			toEdit = Integer.parseInt(request.getSession().getAttribute("toEdit").toString());
+		}catch(Exception e){
+			toEdit = -1;
 		}
 		
 		try{
@@ -80,25 +69,18 @@ public class PostCreateServlet extends HttpServlet {
 				throw error;
 				
 			}
-						
-			//if the checkbox has not been activated, the parameter will not be initialized and the value null will be returned.
-			if(request.getParameter("postEditableCheckBox") != null){
-				postIsPublic = true;
-			}
-							
 			
 			//checking if the post is part of a blog that is publicly editable
-		    if(b.getIsPublic() && b.getPostCount() != 0){
+			////if the checkbox has not been activated, the parameter postEditableCheckBox will not be initialized and the value null will be returned.
+		    if(b.getIsPublic() && b.getPostCount() != 0 || request.getParameter("postEditableCheckBox") != null ){ 
 		    	postIsPublic = true;
 		    }
-			
-		   
+						   
 		     /* 
-			  * Checking to see if the blog this post is a member or, or will be a member of has been deleted. 
+			  * Checking to see if the Blog this post is a member of or will be a member of, has been deleted. 
 			  * When isEditMode equals true, 
-			  * The check for blogDeletion prevents any attempt to add a post to a non-existent blog.
+			  *		The check for blogDeletion prevents any attempt to modify a post within a non-existent blog.
 			  */ 
-			 
 		    if(Blog.checkForDeletion(b.getBlogId()) == 1){
 		    	request.setAttribute("errorMessage","alert.blogdeleted");
 		    	throw error;
@@ -117,46 +99,51 @@ public class PostCreateServlet extends HttpServlet {
 		    	}
 		    }
 		    
+		    /* If the post is currently being edited (isEditMode == false), 
+		     * The post is not added to a blog and updatePostInDatabaseById() is called within insertPostInDatabase().
+		     */
 		    postId = Post.insertPostInDatabase(postTitle, postBody, u.getUserId(), u.getUsername(), postIsPublic, b, isEditMode);
 			
-			
-		    if(postId > 0){
-				/* if the post is currently being edited, the post does not need to be added 
-		    	   and insertPostEditPrivilegeInDatabase() is called by updatePostInDatabaseById() 
-		    	   within insertPostInDatabase()
-		    	*/
-		    	if(!isEditMode){
-					p = Post.getPostFromDatabaseById(postId); 
-					b.addPost(p);
-					
-					postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId());
-					
-					if(postEditPrivilegeId < 0){
-						if(postEditPrivilegeId == -1){
-							request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, error connecting to database");
-						}
-						
-						if(postEditPrivilegeId == -2){
-							request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, error with SQL interaction with database.");
-						}
-						if(postEditPrivilegeId == -3){
-							request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, invalid postId value.");
-						}
-						if(postEditPrivilegeId == -4){
-							request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, invalid userId value.");
-						}
-						throw error;
-					}
-				}
-			}else{
-				if(postId == -1){
+		    if(postId < 0){
+		    	if(postId == -1){
 					request.setAttribute("errorMessage", "Error creating post while retreiving postId, error connecting to database");
 				}
 				
 				if(postId == -2){
-					request.setAttribute("errorMessage", "Error creating post while retrieving postId, error with SQL interaction with database.");
+					request.setAttribute("errorMessage", "Error creating post while retrieving postId, SQL error.");
 				}
 				throw error;
+		    }
+			
+			//If the post is not being updated and should be added to the current blog.
+		    if(!isEditMode){
+				p = Post.getPostFromDatabaseById(postId);
+				
+				if(p == null){
+					request.setAttribute("errorMessage", "Error creating post while adding post to current Blog, unable to retrieve post from database by id.");
+					throw error;
+				}
+					
+				postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(p.getPostId(), u.getUserId());
+					
+				if(postEditPrivilegeId < 0){
+					if(postEditPrivilegeId == -1){
+						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, error connecting to database");
+					}
+						
+					if(postEditPrivilegeId == -2){
+						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, SQL error..");
+					}
+					
+					if(postEditPrivilegeId == -3){
+						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, invalid postId value.");
+					}
+					
+					if(postEditPrivilegeId == -4){
+						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, invalid userId value.");
+					}
+					throw error;
+				}
 			}
 		}catch(Exception e){
 			errorState = true;

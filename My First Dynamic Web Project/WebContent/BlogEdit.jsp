@@ -9,17 +9,24 @@
 
 <%
 
- Blog b = (Blog) session.getAttribute("currentBlog");
+	Blog b = Blog.getBlogFromDatabaseById(((Blog) session.getAttribute("currentBlog")).getBlogId());
 
-if(session.getAttribute("language") == null){
-	session.setAttribute("language","EN");
-}
+	//if the blog cannot be retrieved, this page cannot be displayed. So the program is closed...could also logout
+	if(b == null){
+		System.exit(-1);
+	}else{
+		session.setAttribute("currentBlog",b);
+	}
 
-ResourceBundle lang = ResourceBundle.getBundle("BlogEdit_EN");
+	if(session.getAttribute("language") == null){
+		session.setAttribute("language","EN");
+	}
 
-if (session.getAttribute("language").toString().equals("FR")){
-	lang = ResourceBundle.getBundle("BlogEdit_FR");
-} 
+	ResourceBundle lang = ResourceBundle.getBundle("BlogEdit_EN");
+
+	if (session.getAttribute("language").toString().equals("FR")){
+		lang = ResourceBundle.getBundle("BlogEdit_FR");
+	} 
 
 %>
 <body>
@@ -39,7 +46,8 @@ if (session.getAttribute("language").toString().equals("FR")){
 		<div class="container">
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<%= lang.getString(request.getAttribute("errorMessage").toString()) %>
+				 <% //lang.getString(request.getAttribute("errorMessage").toString()) %>
+				 <%= request.getAttribute("errorMessage").toString() %>
 			</div>
 		</div>
 	<%	}	%>

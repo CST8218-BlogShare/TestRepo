@@ -14,8 +14,6 @@ import com.amzi.dao.PostEdit;
  */
 public class GetPostEditHistoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static String errorMessege = null;
-	public static String errorMessegeFR = null;
 	 
     public GetPostEditHistoryServlet() {
         super();

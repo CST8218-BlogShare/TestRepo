@@ -56,14 +56,13 @@ if (request.getParameter("language") != null){
 	<!--Output area for error messages related to registration and login -->
 	
 	<%  
-		//Clearing the previous error
-		if( (int)getServletContext().getAttribute("errorCode") == 0)
-		{
-			getServletContext().setAttribute("errorMessage", "");
-		} else { %>
+		if( request.getAttribute("errorMessage") != null)
+		{ %>
+		<div class="container">
 			<div class="alert alert-danger alert-dismissible" role="alert">
-			<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			<%= getServletContext().getAttribute("errorMessage") %>
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<%= request.getAttribute("errorMessage") %>
+			</div>
 		</div>
 	<%	}	%>
 

@@ -48,7 +48,7 @@ public class PostEditPrivilege {
 	    	
 	    }catch(SQLException sqlE){
 	    	sqlE.printStackTrace();
-	    	System.out.println("Error with retrieval of PostEditPrivilege by Id: SQL error.");
+	    	System.out.println("Error with retrieval of PostEditPrivilege by id: SQL error.");
 	    	return -2;
 	    }finally{
 	    	//connection obtained from DBConnection is closed at logout. 
@@ -90,7 +90,7 @@ public class PostEditPrivilege {
 		try{
 			
 			 //insert into postEditPrivilege
-	        pst = connectionManager.getConnection().prepareStatement("insert into postEditPrivilege values(0)");
+	        pst = connectionManager.getConnection().prepareStatement("insert into postEditPrivilege (PostEditPrivilegeId) values(0)");
 	        pst.executeUpdate();
 	        pst.close();
 	        
@@ -106,7 +106,7 @@ public class PostEditPrivilege {
 	        pst.close();
 	        
 	        //creating an entry in the post_postEditPrivilege table corresponding to this new post
-	        pst = connectionManager.getConnection().prepareStatement("insert into post_postEditPrivilege values(?,?)");
+	        pst = connectionManager.getConnection().prepareStatement("insert into post_postEditPrivilege (postId, postEditPrivilegeId) values(?,?)");
 	        pst.setInt(1, postId);
 	        pst.setInt(2, postEditPrivilegeId);
 	        pst.executeUpdate();
@@ -114,7 +114,7 @@ public class PostEditPrivilege {
 	        pst.close();
 	        
 	       //creating an entry in the user_postEditPrivilege table corresponding to this new post
-	        pst = connectionManager.getConnection().prepareStatement("insert into user_postEditPrivilege values(?,?)");
+	        pst = connectionManager.getConnection().prepareStatement("insert into user_postEditPrivilege (userId, postEditPrivilegeId) values(?,?)");
 	        pst.setInt(1, userId);
 	        pst.setInt(2, postEditPrivilegeId);
 	        pst.executeUpdate();

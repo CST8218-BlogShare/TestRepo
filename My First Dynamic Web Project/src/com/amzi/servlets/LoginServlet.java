@@ -16,18 +16,15 @@ public class LoginServlet extends HttpServlet{
 		 super();
 	}
     
-    public void doPost(HttpServletRequest request, HttpServletResponse response){   //need handle other exceptions.
+    public void doPost(HttpServletRequest request, HttpServletResponse response){ 
     	User u = null;
-    	
-    	response.setContentType("text/html");       
-          
+    	       
         String name=request.getParameter("loginUsername");    
         String pass=request.getParameter("loginUserpass");   
             
         u = Login.validate(name, pass);
         
         if(u != null){   
-        	getServletContext().setAttribute("errorCode", 0);
         	
         	request.getSession().setAttribute("currentUser", u);
         	
@@ -43,11 +40,9 @@ public class LoginServlet extends HttpServlet{
         }    
         else{
         	if(request.getSession().getAttribute("language").toString().equals("EN")){
-	            getServletContext().setAttribute("errorCode", 1);
-	        	getServletContext().setAttribute("errorMessage", Login.errorMessege);
+	        	request.setAttribute("errorMessage", Login.errorMessege);
         	}else{
-        		 getServletContext().setAttribute("errorCode", 1);
- 	        	getServletContext().setAttribute("errorMessage", Login.errorMessegeFR);
+ 	        	request.setAttribute("errorMessage", Login.errorMessegeFR);
         	}
 
             RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    

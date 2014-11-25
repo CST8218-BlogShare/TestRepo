@@ -65,6 +65,11 @@ public class User{
 	    
 		connectionManager = DbConnection.getInstance();
 		
+		if(connectionManager.getConnection() == null){
+			System.out.println("Error with User retrieval by credentials: Unable to establish connection with database.");
+	        return null;
+	    }
+		
 		try {
 			pst = connectionManager.getConnection().prepareStatement("select * from user where username=? and password=?");
 			pst.setString(1, username);  
@@ -75,8 +80,10 @@ public class User{
 		    
 		    u = new User(rs.getInt("userId"), rs.getString("username"), rs.getString("password"), rs.getString("DateRegistered"));
 		    
-		} catch (SQLException sqlE) {
+		} catch (SQLException sqlE){
+			System.out.println("Error with User retrieval by credentials: Unable to find matching user for given credentials.");
 			sqlE.printStackTrace();
+			return null;
 		} finally{
 			try {
 				rs.close();
@@ -97,6 +104,11 @@ public class User{
 	     
 	     connectionManager = DbConnection.getInstance();
 	     
+	     if(connectionManager.getConnection() == null){
+	    	 System.out.println("Error with User retrieval: Unable to establish connection with database.");
+		     return null;
+		 }
+	     
 	     try {
 			pst = connectionManager.getConnection().prepareStatement("select username, dateRegistered from user where userid = ?");
 		    pst.setInt(1, userId);
@@ -114,7 +126,7 @@ public class User{
 	     } catch (SQLException sqlE) {
 	    	 System.out.println("Error with User Retrieval: Unable to retrieve User information based on UserId");
 	    	 sqlE.printStackTrace();
-			return null;
+			 return null;
 	     }finally { 
 	    	 try {  
 	    		 rs.close();
@@ -134,19 +146,22 @@ public class User{
 	     connectionManager = DbConnection.getInstance();
 	     
 	     if(connectionManager.getConnection() == null){
+	    	 System.out.println("Error with insertion of user into database: Unable to establish connection with database.");
 	    	 return -1;
 	     }
 		
 		 try {
-			pst = connectionManager.getConnection().prepareStatement("insert into User values(0, ?,?, curdate() );");
+			pst = connectionManager.getConnection().prepareStatement("insert into User (userId, username, password, dateRegistered)  values(0, ?,?, curdate())");
 			pst.setString(1,username);
 	        pst.setString(2, password);
 	        pst.executeUpdate(); 
 	        pst.close();
 		} catch (MySQLIntegrityConstraintViolationException sqlCE) {
+			System.out.println("Error with insertion of user into database: User with same name already exists.");
 			sqlCE.printStackTrace();
 			return -2;
 		} catch ( SQLException sqlE){
+			System.out.println("Error with insertion of user into database: SQL error.");
 			sqlE.printStackTrace();
 			return -3;
 		}
@@ -160,7 +175,7 @@ public class User{
 		 return 0;
 	}
 	
-	public static boolean updateUserCredentialsInDatabase(String newUsername, String newPass, int userId) {
+	public static int updateUserCredentialsInDatabase(String newUsername, String newPass, int userId) {
 		PreparedStatement pst = null;  
 	    DbConnection connectionManager = null;
 	    
@@ -169,23 +184,12 @@ public class User{
 	    	newPass = newPass.trim();
 	        newUsername = newUsername.trim();
 	    	
-	    	if(newPass == ""){
-	        	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
-	        	//errorMessege = "Error with password edit attempt. Password was not entered.";
-	        	return false;
-	        }
-	        
-	        if(newUsername == ""){
-	        	System.out.println("Password was not entered, throwing java.lang.Exception.\n");
-	        	//errorMessege = "Error with password edit attempt. Password was not entered.";
-	        	return false;
-	        }
-	        
 	        //gaining access to the shared database connection
 	        connectionManager = DbConnection.getInstance();
 	        
 	        if(connectionManager.getConnection() == null){
-	        	System.out.println("");
+	        	System.out.println("Error with update of user credentials within database: Unable to establish connection with database.");
+	        	return -1;
 	        }
 	        
 	        pst = connectionManager.getConnection().prepareStatement("update user set Username=?, Password=? where userID=?"); 
@@ -196,15 +200,14 @@ public class User{
 
 	        //returns the row count or 0 if nothing was updated 
 	        if (pst.executeUpdate() > 1){
-	        	System.out.println("Password change affected multiple rows of user table.\n");
+	        	//System.out.println("Password change affected multiple rows of user table.\n");
 	        	//need to rollBack
-	        	return false;
 	        }
 	        
 	    } catch (SQLException sqlE) {  
-	    	System.out.println("\n");
+	    	System.out.println("Error with update of user credentials within database: SQL error.");
 	    	sqlE.printStackTrace();
-	    	return false;
+	    	return -2;
 	    }
 	     finally {   
 	    	 try {  
@@ -213,7 +216,7 @@ public class User{
 	        	 e.printStackTrace();  
 	         }  
 	    }  
-		return true;
+		return 0;
 	}
 	
 	//get a list of the titles of a particular user's blogs
@@ -227,6 +230,11 @@ public class User{
         try {  
         	
         	connectionManager = DbConnection.getInstance();
+        	
+        	if(connectionManager.getConnection() == null){
+	        	System.out.println("Error with retrieval of list of blogs by user id: Unable to establish connection with database.");
+	        	return null;
+	        }
         	
         	pst = connectionManager.getConnection().prepareStatement("select b.title, b.blogid from blog b, user_blog ub, user u"
         													       + " where b.blogid = ub.blogid "
@@ -249,36 +257,18 @@ public class User{
         	rs.close();
         	pst.close();
         	
-        } catch (SQLException sqlE) {  
-        	
+        } catch (SQLException sqlE){
+        	System.out.println("Error with retrieval of list of blogs by user id: SQL error.");
         	sqlE.printStackTrace();
-        	//connectionManager.closeConnection();
-        	userBlogs = null;
-        	
-        }catch(Exception e){
-        	
-        	 e.printStackTrace();
-        	 userBlogs = null;
-             
-        }
-         finally { 
-
-            if (pst != null) {  
-                try {  
-                    pst.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
-            if (rs != null) {  
-                try {  
-                    rs.close();  
-                } catch (SQLException e) {  
-                    e.printStackTrace();  
-                }  
-            }  
+        	return null;	
+        }finally { 
+        	try {  
+        		rs.close();
+                pst.close();  
+              } catch (SQLException e) {  
+                e.printStackTrace();  
+              }  
         }  
-        
         return userBlogs;  
         
     }

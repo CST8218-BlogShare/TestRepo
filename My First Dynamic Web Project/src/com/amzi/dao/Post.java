@@ -268,7 +268,8 @@ public class Post {
 			    */
 					
 	    		try{
-			        pst = conn.prepareStatement("insert into post values( 0, ?, ?, ?, now(), ?)");  
+			        pst = conn.prepareStatement("insert into post (postid, blogid, title, content, creationDateTime, isPublic)"
+			        						  + " values( 0, ?, ?, ?, now(), ?)");  
 					pst.setInt(1, b.getBlogId());
 					pst.setString(2, postTitle);
 					pst.setString(3, postBody);
@@ -285,7 +286,7 @@ public class Post {
 					pst.close();
 						            
 					//insert postid and user id into user_post
-					pst = conn.prepareStatement("insert into user_post values(?, ?) ");
+					pst = conn.prepareStatement("insert into user_post (userid,postid) values(?,?) ");
 					pst.setInt(1, userId);
 					pst.setInt(2, postId);
 					pst.executeUpdate();
@@ -332,10 +333,6 @@ public class Post {
 						return -3;
 					}
 				}
-				
-				b.getPostAt(b.getToEdit()).postTitle = postTitle;
-				b.getPostAt(b.getToEdit()).postBody = postBody;
-			    b.getPostAt(b.getToEdit()).isPublic = postIsPublic;
 		    }
 	    return postId;
 	}
@@ -394,9 +391,7 @@ public class Post {
 	    }finally {
 	    	//the connection the connectionManager object interacts with, is closed at logout. 
 	    	try {  
-	    		if(rs != null){
-	    			rs.close();
-	    		}
+	    		rs.close();
 	    		pst.close();  
       	
 	    	} catch (SQLException e) {  
@@ -579,17 +574,16 @@ public class Post {
 		return editEnabled;
 	 }  
 	
-	public int reverseEditToPostInDatabase(Blog b, int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
+	public int reverseEditToPostInDatabase(int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
     	PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
-		int postEditId = -1;
-		
+		int errorCode = 0;
 		
 	    connectionManager = DbConnection.getInstance();
     	
 	    if(connectionManager.getConnection() == null){
-	    	System.out.println("Error with PostEdit Reversal: Unable to establish connection with database.");
+	    	System.out.println("Error with Post ddit reversal: Unable to establish connection with database.");
 	    	return -1;
 	    }
 	    
@@ -604,38 +598,17 @@ public class Post {
 			
 			pst.close();
 			
-			//PostEdit.insertPostEditInDatabase(currentUserId,postId,this.getPostTitle(),this.getPostBody()) == false
+			errorCode = PostEdit.insertPostEditInDatabase(currentUserId,postId,this.getPostTitle(),this.getPostBody());
 			
-			 //Inserting the new postEdit row into the postEdit table.
-	        pst = connectionManager.getConnection().prepareStatement("insert into postEdit values (0,?,now(),?,?)");
-	        pst.setInt(1, this.getPostId());
-	        pst.setString(2, this.getPostTitle());
-	        pst.setString(3, this.getPostBody());
-	        pst.execute();
-	        
-	        pst.close();
-	        
-	        //Retrieving the generated value for PostEdit id from the last insert into the postEdit table.
-	        
-	        pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as postEditId");
-	        rs = pst.executeQuery();
-	        rs.first();
-	        postEditId = rs.getInt("postEditId");
-	        
-	        rs.close();
-	        pst.close();
-	        
-	        //Inserting a new row into the User_PostEdit table. 
-	        
-	        pst = connectionManager.getConnection().prepareStatement("insert into user_postedit values(?,?)");
-	        pst.setInt(1,currentUserId);
-	        pst.setInt(2, postEditId);
-	        pst.execute();
-	        
-	        pst.close();
-	        
-	        b.getPostAt(postPosInBlog).setPostTitle(currentPostEdit.getTitleBeforeEdit());
-	        b.getPostAt(postPosInBlog).setPostBody(currentPostEdit.getContentBeforeEdit());
+			if(errorCode == -1){
+				System.out.println("Error inserting post edit into database: Unable to establish connection with database.");
+				return -1;
+			}
+			
+			if(errorCode == -2){
+				System.out.println("Error inserting post edit into database: SQL error.");
+				return -2;
+			}
 	        				
 		} catch (SQLException sqlE) {
 			System.out.println("Error with PostEdit Reversal: SQL error");
@@ -643,14 +616,15 @@ public class Post {
 			return -2;
 		}finally{
 			try {
+				if(rs != null){
+					rs.close();
+				}
 				pst.close();
-				rs.close();
 			} catch (SQLException sqlE) {
 				sqlE.printStackTrace();
 			}
 			
 		}
-    	
     	return 0;
     }
 	

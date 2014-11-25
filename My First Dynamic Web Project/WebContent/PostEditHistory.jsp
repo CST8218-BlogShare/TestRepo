@@ -28,6 +28,17 @@
 		session.setAttribute("currentPostEdit", postEdits.get(postEditPos));
 	%>
 	
+	<%  
+		if( request.getAttribute("errorMessage") != null)
+		{ %>
+		<div class="container">
+			<div class="alert alert-danger alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<%= request.getAttribute("errorMessage") %>
+			</div>
+		</div>
+	<%	}	%>
+	
 	<p class="FillScreenTextCentered" style="font-size:36px"><b><%= lang.getString("editfor") %> <%=currentPost.getPostTitle() %></b></p>
 	
 	<br>	

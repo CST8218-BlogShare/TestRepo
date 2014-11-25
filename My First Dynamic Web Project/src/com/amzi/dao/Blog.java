@@ -34,15 +34,15 @@ public class Blog {
     	try{
 	    	if(blogTitle.equals("")){
 	    		System.out.println("Blog does not have a title, throwing blogCreateError.");
-	    		errorMessage = "Error with Post. Missing information";
-            	errorMessageFR = "Il y a eu une erreur lors de la creation du Post. Vérifer que toute l'information est present.";
+	    		errorMessage = "Error with Blog. Missing information";
+            	errorMessageFR = "Il y a eu une erreur lors de la creation du Blog. Vérifer que toute l'information est present.";
 	    		throw blogCreateError;
 	    	}
 	   
 	    	if(username.equals("")){
 	    		System.out.println("Username contains no characters, throwing blogCreateError.");
 	    		errorMessage = "Problem with User";
-            	errorMessageFR = "Il y a eu une erreur lors de la creation du Post.";
+            	errorMessageFR = "Il y a eu une erreur lors de la creation du Blog.";
 	    		throw blogCreateError;
 	    	}
 	    	
@@ -54,6 +54,15 @@ public class Blog {
     	this.blogTitle = blogTitle;
     	this.author = username;
     	this.isPublic = isPublic;
+	}
+	
+	public Blog(int blogId){
+		
+		if(blogId > 0){
+			this.blogId = blogId;
+		}else{
+			return;
+		}
 	}
 	
 	public boolean getEditMode() {
@@ -133,17 +142,6 @@ public class Blog {
 		this.isPublic = isPublic;
 	}
 	
-	//I don't like that these are public...at all.
-	
-	public void addPost(Post p){
-		 postList.add(p);
-		 ++postCount;
-	}
-	 
-	public void removePost(int postAt){
-		 postList.remove(postAt);
-		 --postCount;
-	}
 	 
 	protected void setPostList(ArrayList<Post> posts){
 		 this.postList = posts; 
@@ -213,6 +211,7 @@ public class Blog {
 	     }  	
 	        
 	     b.setPostList(Post.getPostListFromDatabaseByBlogId(blogId));
+	     b.setPostCount(b.postList.size());
 	     return b;
 	 }
 	 
@@ -330,7 +329,7 @@ public class Blog {
         	
         	//insert blog title and creation date into blog table -- The SQL function now(), retrieves the current dateTime value. 
         	//the boolean isPublic needs to be converted to an int value, since the bool datatype is represented as TinyInt(1) by MySQL DBMS.
-            pst = connectionManager.getConnection().prepareStatement("insert into blog values(0, ?, now(), ?)");  
+            pst = connectionManager.getConnection().prepareStatement("insert into blog (blogid, title, creationDateTime, isPublic) values (0, ?, now(), ?)");  
             pst.setString(1,blogTitle);
             pst.setInt(2, blogIsPublicAsInt);
             pst.executeUpdate(); 
@@ -348,7 +347,7 @@ public class Blog {
             pst.close();
              
             //insert blogid and userid into user_blog table
-            pst = connectionManager.getConnection().prepareStatement("insert into user_blog values(?, ?)");
+            pst = connectionManager.getConnection().prepareStatement("insert into user_blog (userid, blogid) values(?, ?)");
             pst.setInt(1,userId);
             pst.setInt(2, blogId);
             pst.executeUpdate();
@@ -376,8 +375,8 @@ public class Blog {
         return blogId;
     } 
     
-    /*Fulfills the update portion of crud functionality, since the title is the only editable portion of a blog */
-    public static int updateTitleInDatabase(Blog b, String newTitle){
+    /*Fulfills the update portion of crud functionality, since the title is the only editable portion of a blog*/
+    public static int updateTitleInDatabase(String newTitle, int blogId){
     	PreparedStatement pst = null; 
     	DbConnection connectionManager = null;
           
@@ -391,14 +390,11 @@ public class Blog {
         try {
 			pst = connectionManager.getConnection().prepareStatement("UPDATE Blog set title = ? where blogid = ?");
 			pst.setString(1, newTitle);
-			pst.setInt(2, b.getBlogId());
+			pst.setInt(2, blogId);
 			//if one row was affected by the update, change the title of this blog to the new value..
-			if(pst.executeUpdate() == 1){
-				b.setBlogTitle(newTitle);
-			}else{
+			if(pst.executeUpdate() != 1){
 				//rollback
-			}
-				
+			}				
        } catch (SQLException sqlE) {
     	   System.out.println("Error with updating Blog title: SQL error.");
     	   sqlE.printStackTrace();

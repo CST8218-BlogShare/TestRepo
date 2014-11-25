@@ -46,7 +46,7 @@ if (request.getParameter("language") != null){
 	
 	<body>
 	
-		<%  
+	<%  
 		if( request.getAttribute("errorMessage") != null)
 		{ %>
 		<div class="container">
