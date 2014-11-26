@@ -146,14 +146,9 @@ public class Blog {
 	        
 	     connectionManager = DbConnection.getInstance();
 	     
-	     try {
-			if(connectionManager.getConnection().isValid(0) == false){
-			    System.out.println("Error with Blog retrieval by blogId: Unable to establish connection with database.");
-			    connectionManager.closeConnection();
-			    return null;
-			 }
-		 } catch (SQLException sqlConE) {
-			sqlConE.printStackTrace();
+	     if(DbConnection.testConnection(connectionManager) == false){
+	    	 System.out.println("Error with Blog retrieval by blogId: Unable to establish connection with database.");
+			return null;
 		 }
 	        
 	     /*
@@ -227,17 +222,11 @@ public class Blog {
 		 //gaining access to the shared database connection.
 	     connectionManager = DbConnection.getInstance();
 	      
-	     try {
-	     	if(connectionManager.getConnection().isValid(0) == false){
-	     		System.out.println("Error with Blog author retrieval by blogId: Unable to establish connection with database.");
-	     		connectionManager.closeConnection();
-	     		return null;
-	     	}
-	     } catch (SQLException sqlConE) {
-	     	sqlConE.printStackTrace();
-	     }
-	     
-	     
+	     if(DbConnection.testConnection(connectionManager) == false){
+	    	 System.out.println("Error with Blog author retrieval by blogId: Unable to establish connection with database.");
+			return null;
+		 }
+	        
          try{
 	         pst = connectionManager.getConnection().prepareStatement("select username from user where userId = "
 	        		 												+ "(select u.userId from user u, blog b, user_blog ub"
@@ -274,16 +263,11 @@ public class Blog {
 	    //gaining access to the shared database connection.
 	    connectionManager = DbConnection.getInstance();
 	    
-	    try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with BlogId retrieval by Blog title: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return -1;
-     		}
-	    } catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-	    }
-	    	        
+	    if(DbConnection.testConnection(connectionManager) == false){
+	    	System.out.println("Error with BlogId retrieval by Blog title: Unable to establish connection with database.");
+			return -1;
+		}
+	     	        
 	    try { 
 	           	
 	        //get the blog's id and isPubic value using the value of the title
@@ -320,16 +304,11 @@ public class Blog {
         
         //gaining access to the shared database connection.
         connectionManager = DbConnection.getInstance();
-        	
-        try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with insertion of Blog into database: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return -1;
-     		}
-     	} catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-     	}
+        
+        if(DbConnection.testConnection(connectionManager) == false){
+        	System.out.println("Error with insertion of Blog into database: Unable to establish connection with database.");
+			return -1;
+		}
         	    
         if(blogIsPublic == true){
     		blogIsPublicAsInt = 1;
@@ -405,16 +384,11 @@ public class Blog {
     	
         connectionManager = DbConnection.getInstance();
 	    
-        try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error updating Blog title: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return -1;
-     		}
-	    } catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-	    }
-        
+        if(DbConnection.testConnection(connectionManager) == false){
+        	System.out.println("Error updating Blog title: Unable to establish connection with database.");
+			return -1;
+		}
+         
         try {
 			pst = connectionManager.getConnection().prepareStatement("UPDATE Blog set title = ? where blogid = ?");
 			pst.setString(1, newTitle);
@@ -446,15 +420,10 @@ public class Blog {
     	
     	connectionManager = DbConnection.getInstance();
     	
-    	try {
-      		if(connectionManager.getConnection().isValid(0) == false){
-      			System.out.println("Error with Blog deletion by blogId: Unable to establish connection with database.");
-      			connectionManager.closeConnection();
-      			return -1;
-      		}
- 	    } catch (SQLException sqlConE) {
-      		sqlConE.printStackTrace();
- 	    }
+    	if(DbConnection.testConnection(connectionManager) == false){
+    		System.out.println("Error updating Blog title: Unable to establish connection with database.");
+			return -1;
+		}
     	
     	try {
 			pst = connectionManager.getConnection().prepareStatement("delete from blog where blogId = ?");
@@ -491,16 +460,11 @@ public class Blog {
 	    
 	    connectionManager = DbConnection.getInstance();
 	    
-	    try {
-      		if(connectionManager.getConnection().isValid(0) == false){
-      			System.out.println("Error adding Blog to BlogDeleted table: Unable to establish connection with database.");
-      			connectionManager.closeConnection();
-      			return -1;
-      		}
- 	    } catch (SQLException sqlConE) {
-      		sqlConE.printStackTrace();
- 	    }
-	    
+	    if(DbConnection.testConnection(connectionManager) == false){
+	    	System.out.println("Error adding Blog to BlogDeleted table: Unable to establish connection with database.");
+			return -1;
+		}
+	     
 	    try{
 		   ps = connectionManager.getConnection().prepareStatement("insert into blogdeleted(blogDeletedId, blogId) values(0,?)");
 		   ps.setInt(1,blogId);
@@ -530,18 +494,11 @@ public class Blog {
 	    
 	    connectionManager = DbConnection.getInstance();
 	    
-	    try {
-      		if(connectionManager.getConnection().isValid(0) == false){
-      			System.out.println("Error with blog deletion check: Unable to establish connection with database.");
-      			connectionManager.closeConnection();
-      			return -1;
-      		}
- 	    } catch (SQLException sqlConE) {
-      		sqlConE.printStackTrace();
- 	    }
-	    
-	    
-	    
+	    if(DbConnection.testConnection(connectionManager) == false){
+	    	System.out.println("Error with blog deletion check: Unable to establish connection with database.");
+			return -1;
+		}
+	     
 	    try{
 	   
 		   ps = connectionManager.getConnection().prepareStatement("select blogId from blogDeleted where blogId = ?");

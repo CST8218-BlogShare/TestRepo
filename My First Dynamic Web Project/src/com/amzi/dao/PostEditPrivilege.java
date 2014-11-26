@@ -1,3 +1,4 @@
+
 package com.amzi.dao;
 
 import java.sql.PreparedStatement;
@@ -26,15 +27,10 @@ public class PostEditPrivilege {
 		
 		connectionManager = DbConnection.getInstance();
 	    
-		try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with retrieval of postEditPrivilegeId by postId: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return -1;
-     		}
-	    } catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-	    }
+		if(DbConnection.testConnection(connectionManager) == false){
+			System.out.println("Error with retrieval of postEditPrivilegeId by postId: Unable to establish connection with database.");
+			return -1;
+		}
 		  
 	    try{
 	    	pst = connectionManager.getConnection().prepareStatement("select pep.postEditPrivilegeId as postEditPrivilegeId"
@@ -95,7 +91,6 @@ public class PostEditPrivilege {
 			System.out.println("Error with insertion of postEditPrivilege into database: The value of userId is invalid");
 			return -4;
 		}
-		
 		
 		try{
 			

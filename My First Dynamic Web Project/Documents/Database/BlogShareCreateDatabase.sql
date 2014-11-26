@@ -97,6 +97,8 @@ CREATE TABLE BlogDeleted
 	
 ALTER TABLE BlogDeleted	
 	ADD CONSTRAINT BlogDeleted_PK PRIMARY KEY ( BlogDeletedId );
+	
+ALTER TABLE BlogDeleted MODIFY COLUMN BlogDeletedId INT AUTO_INCREMENT;
 
 -- creating post table
 CREATE TABLE Post 
@@ -163,6 +165,8 @@ CREATE TABLE PostDeleted
 ALTER TABLE PostDeleted	
 	ADD CONSTRAINT PostDeleted_PK PRIMARY KEY ( PostDeletedId );
 
+ALTER TABLE PostDeleted MODIFY COLUMN PostDeletedId INT AUTO_INCREMENT;	
+	
 desc PostDeleted;
 	
 -- creating PostEdit table

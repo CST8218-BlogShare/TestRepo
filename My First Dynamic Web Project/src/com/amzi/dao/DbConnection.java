@@ -76,10 +76,32 @@ public class DbConnection {
 	
 	
 	public static synchronized DbConnection getInstance() {
-		if (connectionHelper == null) {
+		if(connectionHelper == null) {
 			connectionHelper = new DbConnection();
+			
+			//if the connection was not established with the database, it is useless. 
+			if(connectionHelper.conn == null){
+				connectionHelper = null;
+			}
 		}
 		return connectionHelper;
 	}
-
+	
+	public static boolean testConnection(DbConnection connectionManager){
+		
+		if(connectionManager == null){
+			return false;
+		}
+		
+		try {
+     		if(connectionManager.getConnection().isValid(0) == false){
+     			connectionManager.closeConnection();
+     			return false;
+     		}
+		} catch (SQLException sqlConE) {
+     		sqlConE.printStackTrace();
+     	}
+		return true;
+	}
+	
 }

@@ -78,15 +78,10 @@ public class PostEdit {
 		
 		connectionManager = DbConnection.getInstance();
 		
-		try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with insertion of post edit into database: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return -1;
-     		}
-	    } catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-	    }
+		if(DbConnection.testConnection(connectionManager) == false){
+			System.out.println("Error with insertion of post edit into database: Unable to establish connection with database.");
+			return -1;
+		}
 			
 		try{
 		
@@ -143,18 +138,12 @@ public class PostEdit {
 		
 		connectionManager = DbConnection.getInstance();
 		
-		try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with post edit retrieval using post id: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return null;
-     		}
-		} catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
+		if(DbConnection.testConnection(connectionManager) == false){
+			System.out.println("Error with post edit retrieval using post id: Unable to establish connection with database.");
+			return null;
 		}
 		
 		/* selecting all postEdits based on PostId*/
-		
 		try {
 			pst = connectionManager.getConnection().prepareStatement("select postEditId, postId, editDateTime, titleBeforeEdit, contentBeforeEdit" 
 					  												 + " from postEdit where Postid = ? " 

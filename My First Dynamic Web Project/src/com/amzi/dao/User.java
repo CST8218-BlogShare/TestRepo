@@ -65,16 +65,11 @@ public class User{
 	    
 		connectionManager = DbConnection.getInstance();
 		
-		try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with User retrieval by credentials: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return null;
-     		}
-		} catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-     	}
-		
+		if(DbConnection.testConnection(connectionManager) == false){
+			System.out.println("Error with User retrieval by credentials: Unable to establish connection with database.");
+			return null;
+		}
+			
 		try {
 			pst = connectionManager.getConnection().prepareStatement("select * from user where username=? and password=?");
 			pst.setString(1, username);  
@@ -109,16 +104,11 @@ public class User{
 	     
 	     connectionManager = DbConnection.getInstance();
 	     
-	     try {
-	    	 if(connectionManager.getConnection().isValid(0) == false){
-	    		 System.out.println("Error with User retrieval by userId: Unable to establish connection with database.");
-	    		 connectionManager.closeConnection();
-	     		 return null;
-	    	 }
-		 } catch (SQLException sqlConE) {
-			 sqlConE.printStackTrace();
-	     }
-	      
+	     if(DbConnection.testConnection(connectionManager) == false){
+	    	 	System.out.println("Error with User retrieval by userId: Unable to establish connection with database.");
+				return null;
+		 }
+	       
 	     try {
 	    	 pst = connectionManager.getConnection().prepareStatement("select username, dateRegistered from user where userid = ?");
 	    	 pst.setInt(1, userId);
@@ -155,15 +145,10 @@ public class User{
 		 
 	     connectionManager = DbConnection.getInstance();
 	     
-	     try {
-	     	if(connectionManager.getConnection().isValid(0) == false){
-	     		System.out.println("Error with insertion of user into database: Unable to establish connection with database.");
-	     		connectionManager.closeConnection();
-	     		return -1;
-	     	}
-	     } catch (SQLException sqlConE) {
-	     		sqlConE.printStackTrace();
-	     }
+	     if(DbConnection.testConnection(connectionManager) == false){
+	    	 	System.out.println("Error with insertion of user into database: Unable to establish connection with database.");
+				return -1;
+		 }
 	     
 		 try {
 			pst = connectionManager.getConnection().prepareStatement("insert into User (userId, username, password, dateRegistered)  values(0, ?,?, curdate())");
@@ -180,13 +165,13 @@ public class User{
 			sqlE.printStackTrace();
 			return -3;
 		 }finally{
-			try {
+		 	try {
 				pst.close();
 			} catch (SQLException sqlE) {
 				sqlE.printStackTrace();
 			}
-		}
-		return 0;
+		 }
+		 return 0;
 	}
 	
 	public static int updateUserCredentialsInDatabase(String newUsername, String newPass, int userId) {
@@ -195,16 +180,11 @@ public class User{
 	       	    	
 	    //gaining access to the shared database connection
 	    connectionManager = DbConnection.getInstance();
-	        
-	    try {
-	    	if(connectionManager.getConnection().isValid(0) == false){
-		     	System.out.println("Error with update of user credentials within database: Unable to establish connection with database.");
-		     	connectionManager.closeConnection();
-		     	return -1;
-		    }
-		} catch (SQLException sqlConE) {
-		     	sqlConE.printStackTrace();
-		}
+	    
+	    if(DbConnection.testConnection(connectionManager) == false){
+	    	System.out.println("Error with update of user credentials within database: Unable to establish connection with database.");
+			return -1;
+	    }
 	    
 	    try{  
 	    	 
@@ -244,16 +224,11 @@ public class User{
         ArrayList<String> userBlogs = null;
          
         connectionManager = DbConnection.getInstance();
-        	
-        try {
-        	if(connectionManager.getConnection().isValid(0) == false){
-    	     	System.out.println("Error with retrieval of list of blogs by user id: Unable to establish connection with database.");
-    	     	connectionManager.closeConnection();
-    	     	return null;
-    	    }
-    	} catch (SQLException sqlConE) {
-    		sqlConE.printStackTrace();
-    	}
+        
+        if(DbConnection.testConnection(connectionManager) == false){
+        	System.out.println("Error with retrieval of list of blogs by user id: Unable to establish connection with database.");
+			return null;
+	    }
         	
         try { 
         	

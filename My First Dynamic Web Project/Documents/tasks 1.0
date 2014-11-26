@@ -3,7 +3,9 @@ tasks
 
 convert SearchResult to a pattern of other servlets and beans.
 ensure translations are complete - ensure currentPage is updated on every page.
-add additional error messages to update and deletion when the sql fails to modify the db.
+
+--ensure insertPostIntoDatabase() works
+
 
 
 how blog share works
