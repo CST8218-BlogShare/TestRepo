@@ -96,6 +96,7 @@ public class EditUserServlet extends HttpServlet {
 	        }    
         }catch(Exception e){
         	System.out.println("An error occured while editing the credentials of the current user");
+        	e.printStackTrace();
         }
         
 	}

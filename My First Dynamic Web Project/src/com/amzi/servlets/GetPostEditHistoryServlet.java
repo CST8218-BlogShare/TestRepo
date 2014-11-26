@@ -38,14 +38,8 @@ public class GetPostEditHistoryServlet extends HttpServlet {
 			ArrayList<PostEdit> postEdits = PostEdit.getPostEditsFromDatabaseByPostId(b.getPostAt(postPos).getPostId());
 			
 			if(postEdits.size() == 0){
-				
-				if(request.getSession().getAttribute("language").equals("EN"))
-					request.setAttribute("errorMessage", "error1");
-				else if(request.getSession().getAttribute("language").equals("FR")){
-					request.setAttribute("errorMessage", "error1");	
-				}
+				request.setAttribute("errorMessage", "alert.noedits");
 				url = "BlogEdit.jsp";
-				
 			}else{
 				
 				request.getSession().setAttribute("currentPostEditList", postEdits);

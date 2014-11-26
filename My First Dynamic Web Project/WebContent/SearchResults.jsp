@@ -15,20 +15,20 @@
 
 
 	session.setAttribute("currentPage","Blog");
-	ResourceBundle lang = ResourceBundle.getBundle("Blog_EN");
+	ResourceBundle lang = ResourceBundle.getBundle("SearchResults_EN");
 
 	//if the session language is FR switch to french, otherwise remains english as set above
 	if (session.getAttribute("language").toString().equals("FR")){
-		lang = ResourceBundle.getBundle("Blog_FR");
+		lang = ResourceBundle.getBundle("SearchResults_FR");
 	} 
 
 	//if the user clicked change language, set to appropriate language
 	if (request.getParameter("language") != null){	
 		if (request.getParameter("language").equals("FR")){
-			lang = ResourceBundle.getBundle("Blog_FR");
+			lang = ResourceBundle.getBundle("SearchResults_FR");
 			session.setAttribute("language","FR");
 		} else {
-			lang = ResourceBundle.getBundle("Blog_EN");
+			lang = ResourceBundle.getBundle("SearchResults_EN");
 			session.setAttribute("language","EN");
 		}
 	}		
@@ -43,7 +43,7 @@
 		<div class="container">
 			<div class="alert alert-danger alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<%= request.getAttribute("errorMessage") %>
+				<%= lang.getString(request.getAttribute("errorMessage").toString()) %>
 			</div>
 		</div>
 	<%	}	%>

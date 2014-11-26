@@ -37,10 +37,10 @@ public class ReversePostEditServlet extends HttpServlet {
 		//If the parameters passed to getPostAt are not initialized, editPostInDatabase will throw an error 
 		
 		errorCode = currentBlog.getPostAt(currentPostPos).reverseEditToPostInDatabase(currentPostPos,currentPostEdit,currentUserId);
-		
+				
 		if(errorCode < 0){
 			if(errorCode == -1){
-				request.setAttribute("errorMessage", "reversepostediterror1.");
+				request.setAttribute("errorMessage", "reversepostediterror1");
 			}
 				
 			if(errorCode == -2){

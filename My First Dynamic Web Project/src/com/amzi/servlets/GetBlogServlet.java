@@ -44,7 +44,7 @@ public class GetBlogServlet extends HttpServlet {
 			 */
 			if(b == null || b.getBlogTitle().equals(blogTitle) == false){
 				
-				blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle + "fsd");
+				blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
 					
 				if(blogId < 0){
 						

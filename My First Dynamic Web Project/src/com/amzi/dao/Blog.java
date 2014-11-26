@@ -408,12 +408,17 @@ public class Blog {
     public static int updateTitleInDatabase(String newTitle, int blogId){
     	PreparedStatement pst = null; 
     	DbConnection connectionManager = null;
-          
+        
+    	if(blogId < 1){
+    		System.out.println("Error updating Blog title: provided value of blogId is invalid.");
+    		return -3;
+    	}
+    	
         connectionManager = DbConnection.getInstance();
 	    
         try {
      		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with updating Blog title: Unable to establish connection with database.");
+     			System.out.println("Error updating Blog title: Unable to establish connection with database.");
      			connectionManager.closeConnection();
      			return -1;
      		}
@@ -425,12 +430,13 @@ public class Blog {
 			pst = connectionManager.getConnection().prepareStatement("UPDATE Blog set title = ? where blogid = ?");
 			pst.setString(1, newTitle);
 			pst.setInt(2, blogId);
-			//if one row was affected by the update, change the title of this blog to the new value..
-			if(pst.executeUpdate() != 1){
-				//rollback
+			//if an blogid was provided that did not match any blogId within the database.
+			if(pst.executeUpdate() == 0){
+				System.out.println("Error updating Blog title: provided value for blogId does not match any rows in blog table.");
+				return -4;
 			}				
        } catch (SQLException sqlE) {
-    	   System.out.println("Error with updating Blog title: SQL error.");
+    	   System.out.println("Error updating Blog title: SQL error.");
     	   sqlE.printStackTrace();
     	   return -2;
        }finally{

@@ -42,7 +42,7 @@ public class LoadSearchResultServlet extends HttpServlet {
 					b = Blog.getBlogFromDatabaseById(Integer.parseInt(request.getParameter("blogId")));
 					
 					if(b == null){
-						request.setAttribute("errorMessage", "Error loading blog contents from search result, unable to retrieve blog from database by id.");
+						request.setAttribute("errorMessage", "errorblog");
 						throw error;
 					}
 					
@@ -53,14 +53,14 @@ public class LoadSearchResultServlet extends HttpServlet {
 					p = Post.getPostFromDatabaseById(Integer.parseInt(request.getParameter("postId")));
 					
 					if(p == null){
-						request.setAttribute("errorMessage", "Error loading post contents from search result, unable to retrieve post from database by id.");
+						request.setAttribute("errorMessage", "errorpost");
 						throw error;
 					}
 					
 					b = Blog.getBlogFromDatabaseById(p.getBlogId());
 					
 					if(b == null){
-						request.setAttribute("errorMessage", "Error loading blog contents from search result, unable to retrieve blog from database by id.");
+						request.setAttribute("errorMessage", "errorpost2");
 						throw error;
 					}
 					
@@ -73,7 +73,7 @@ public class LoadSearchResultServlet extends HttpServlet {
 					u = User.getUserFromDatabaseById(Integer.parseInt(request.getParameter("userId")));
 					
 					if(u == null){
-						request.setAttribute("errorMessage", "Error loading user contents from search result, unable to retrieve user from database id.");
+						request.setAttribute("errorMessage", "erroruser");
 						throw error;
 					}
 					

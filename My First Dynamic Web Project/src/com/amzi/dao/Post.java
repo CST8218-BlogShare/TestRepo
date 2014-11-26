@@ -673,7 +673,7 @@ public class Post {
 	        				
 		} catch (SQLException sqlE) {
 			sqlE.printStackTrace();
-			errorCode = 2;
+			errorCode = -2;
 		}finally{
 			try {
 				if(rs != null){
