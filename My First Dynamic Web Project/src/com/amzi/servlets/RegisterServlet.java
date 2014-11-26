@@ -44,7 +44,7 @@ public class RegisterServlet extends HttpServlet {
 				e.printStackTrace();
 			}    
 	    }else{
-	        request.setAttribute("errorMessage", Register.errorMessege);
+	        request.setAttribute("errorMessage", Register.error);
 	        	
 	        RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
 	            

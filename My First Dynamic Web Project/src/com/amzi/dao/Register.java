@@ -2,7 +2,7 @@ package com.amzi.dao;
     
 public class Register {  
 	
-	public static String errorMessege = null;
+	public static String error = null;
 	
 	//could return a user object instead and if null an error occured.
 	public static User validate(String name, String pass, String pass2) {          
@@ -15,25 +15,25 @@ public class Register {
         	
         if(name.equals("")){
         	System.out.println("Username was not entered.");
-        	errorMessege = "Error with registration. Username was not entered";
+        	error = "errorregister.nousername";
         	return null;
         }
         	
         if(pass.equals("")){
         	System.out.println("Password was not entered.");
-        	errorMessege = "Error with registration. Password was not entered";
+        	error = "errorregister.nopass";
         	return null;
         }
         	
         if(pass2.equals("")){
         	System.out.println("Password was not rentered.");
-        	errorMessege = "Error with registration. Password was not reentered";
+        	error = "errorregister.nopassreenter";
         	return null;
         }
         	
         if(!pass.equals(pass2)){
         	System.out.println("The passwords that were entered do not match.");
-        	errorMessege = "Error with registration. The passwords that were entered do not match";
+        	error = "errorregister.nopassmatch";
         	return null;
         }
         	        	
@@ -41,19 +41,19 @@ public class Register {
         
         if(errorCode == -1){
         	System.out.println("Unable to establish connection with database.");
-        	errorMessege = "Error with registration. Unable to establish connection with database.";
+        	error = "errorregister.sqlconnection";
         	return null;
         }
         
         if(errorCode == -2){
         	System.out.println("A user with the same name already exists within BlogShare.");
-        	errorMessege = "Error with registration. A user with the name name already exists within BlogShare";
+        	error = "errorregister.userexists";
         	return null;
         }
         
         if(errorCode == -3){
         	System.out.println("Error with database interaction.");
-        	errorMessege = "Error with registration. Error with database interaction";
+        	error = "errorregister.sql";
         	return null;
         }
         
