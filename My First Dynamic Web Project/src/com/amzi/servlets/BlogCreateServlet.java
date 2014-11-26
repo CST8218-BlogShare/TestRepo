@@ -31,10 +31,10 @@ public class BlogCreateServlet extends HttpServlet{
 	 
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		 
-		 HttpSession userSession = null;
-		 
 		 Exception error = new Exception();
+		 HttpSession userSession = null;
 		 Boolean errorState = false;
+		 DbConnection connectionManager = null;
 		 
 		 User u = null;
 		 Blog b = null;
@@ -71,7 +71,21 @@ public class BlogCreateServlet extends HttpServlet{
 			System.exit(-1);
 		}
 		
+		connectionManager = DbConnection.getInstance();
+		
 		try{
+			
+			if(DbConnection.testConnection(connectionManager) == false){
+				request.setAttribute("errorMessage", "errorconnectfailed");
+				throw error;
+			}
+			
+			/* 
+			 * Setting up a database transaction where the blog, post and postEditPrivilege entries all need to be inserted into the database.
+			 * If all three items cannot be inserted into the database, any completed insertions are reversed to this point.
+			 */
+			
+			connectionManager.getConnection().setAutoCommit(false);
 			
 			blogTitle=request.getParameter("blogTitle").trim();
 			
@@ -98,13 +112,6 @@ public class BlogCreateServlet extends HttpServlet{
 			if(request.getParameter("blogEditableCheckBox") != null){
 				blogIsPublic = true;
 			}
-			
-			/* 
-			 * Setting up a database transaction where the blog, post and postEditPrivilege entries all need to be inserted into the database.
-			 * If all three items cannot be inserted into the database, any completed insertions are reversed to this point.
-			 */
-			
-			DbConnection.getInstance().getConnection().setAutoCommit(false);
 			
 			/*The function insertBlogInDatabase() is called to take the contents entered into the
 			 form within blogCreate held within Blog Object b, and insert this info into the database
@@ -169,17 +176,22 @@ public class BlogCreateServlet extends HttpServlet{
 				
 				
 				throw error;
-			}		 
+			}
+			
+			if(DbConnection.testConnection(connectionManager) == false){
+				request.setAttribute("errorMessage", "errorconnectfailed");
+				throw error;
+			}
 		
-			//Now that it is proved that the insertion of blog, post and postEditPrivilege were successful, the changes are applied to the database. 
-			DbConnection.getInstance().getConnection().commit();
+			//Now that it is proven that the insertion of blog, post and postEditPrivilege were successful, the changes are applied to the database. 
+			connectionManager.getConnection().commit();
 			
 			/*
 			 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
 			 * This statement is placed here to avoid another try-catch block within the method. 
 			 */
 			
-			DbConnection.getInstance().getConnection().setAutoCommit(true);
+			connectionManager.getConnection().setAutoCommit(true);
 			
 			/*
 			 * Adding the newly created blog object to the ServletContext object, 
@@ -190,18 +202,20 @@ public class BlogCreateServlet extends HttpServlet{
 			//Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.
 		}catch(Exception e){
 			errorState = true;
-			try {
-				DbConnection.getInstance().getConnection().rollback();
-				
-				/*
-				 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
-				 * This statement is placed here to avoid another try-catch block within the method. 
-				 */
-				
-				DbConnection.getInstance().getConnection().setAutoCommit(true);
-			} catch (SQLException sqlE) {
-				// TODO Auto-generated catch block
-				sqlE.printStackTrace();
+			
+			if(DbConnection.testConnection(connectionManager) == true){
+				try {
+					connectionManager.getConnection().rollback();
+					
+					/*
+					 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+					 * This statement is placed here to avoid another try-catch block within the method. 
+					 */
+					
+					connectionManager.getConnection().setAutoCommit(true);
+				} catch (SQLException sqlE) {
+					sqlE.printStackTrace();
+				}
 			}
 			e.printStackTrace();
 		}

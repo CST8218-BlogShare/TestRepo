@@ -25,8 +25,9 @@ public class PostDeleteServlet extends HttpServlet {
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Blog b = null;
 		Exception error = new Exception();
+		DbConnection connectionManager = null;
+		Blog b = null;
 		int errorCode = 0;
 		int postPos = -1;
 		int postEditPrivilegeId = 0;
@@ -39,9 +40,16 @@ public class PostDeleteServlet extends HttpServlet {
 			System.exit(1);
 		}
 		
+		connectionManager = DbConnection.getInstance();
+		
 		try{
 			
-			DbConnection.getInstance().getConnection().setAutoCommit(false);
+			if(DbConnection.testConnection(connectionManager) == false){
+				request.setAttribute("errorMessage", "postdelete.errorconnectfailed");
+				throw error;
+			}
+			
+			connectionManager.getConnection().setAutoCommit(false);
 			
 			postPos = Integer.parseInt(request.getParameter("postPos"));
 			
@@ -98,34 +106,39 @@ public class PostDeleteServlet extends HttpServlet {
 				throw error;
 			}
 			
-			//Now that it is proved that the insertion of blog, post and postEditPrivilege were successful, the changes are applied to the database. 
-			DbConnection.getInstance().getConnection().commit();
+			if(DbConnection.testConnection(connectionManager) == false){
+				request.setAttribute("errorMessage", "postdelete.errorconnectfailed");
+				throw error;
+			}
+			
+			//Now that it is proved that the insertion of post and postEditPrivilege were successful, the changes are applied to the database. 
+			connectionManager.getConnection().commit();
 			
 			/*
 			 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
 			 * This statement is placed here to avoid another try-catch block within the method. 
 			 */
 			
-			DbConnection.getInstance().getConnection().setAutoCommit(true);
+			connectionManager.getConnection().setAutoCommit(true);
 			
 			
 		}catch(Exception e){
-			try {
-				DbConnection.getInstance().getConnection().rollback();
-				
-				/*
-				 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
-				 * This statement is placed here to avoid another try-catch block within the method. 
-				 */
-				
-				DbConnection.getInstance().getConnection().setAutoCommit(true);
-			} catch (SQLException sqlE) {
-				// TODO Auto-generated catch block
-				sqlE.printStackTrace();
+			if(DbConnection.testConnection(connectionManager) == true){
+				try {
+					DbConnection.getInstance().getConnection().rollback();
+					
+					/*
+					 * Resetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+					 * This statement is placed here to avoid another try-catch block within the method. 
+					 */
+					
+					DbConnection.getInstance().getConnection().setAutoCommit(true);
+				} catch (SQLException sqlE) {
+					// TODO Auto-generated catch block
+					sqlE.printStackTrace();
+				}
 			}
-			
 			e.printStackTrace();
-			
 		}
 		
 		RequestDispatcher rd=request.getRequestDispatcher("BlogEdit.jsp");

@@ -267,7 +267,6 @@ public class Post {
 		PreparedStatement pst = null; 
 	    ResultSet rs = null;
 	    DbConnection connectionManager = null;
-	    Connection conn = null;
 	    int errorCode = 0;
 	    int postId = 0;
 	    int postIsPublicAsInt = 0; // default value is false
@@ -278,9 +277,7 @@ public class Post {
 	    	System.out.println("Error with post insertion into database: Unable to establish connection with database.");
 			return -1;
 		}
-	    
-	    conn = connectionManager.getConnection();
-	    
+	      
 	    if(postIsPublic == true){
 			postIsPublicAsInt = 1;
 		}
@@ -292,7 +289,7 @@ public class Post {
 			    */
 					
 	    		try{
-			        pst = conn.prepareStatement("insert into post (postid, blogid, title, content, creationDateTime, isPublic)"
+			        pst = connectionManager.getConnection().prepareStatement("insert into post (postid, blogid, title, content, creationDateTime, isPublic)"
 			        						  + " values( 0, ?, ?, ?, now(), ?)");  
 					pst.setInt(1, b.getBlogId());
 					pst.setString(2, postTitle);
@@ -302,7 +299,7 @@ public class Post {
 					pst.close();
 			            
 					//selecting value of postId column generated from previous statement.
-					pst = conn.prepareStatement("select last_insert_id() as PostId");
+					pst = connectionManager.getConnection().prepareStatement("select last_insert_id() as PostId");
 					rs = pst.executeQuery();
 					rs.first();
 					postId = rs.getInt("PostId");
@@ -310,7 +307,7 @@ public class Post {
 					pst.close();
 						            
 					//insert postid and user id into user_post
-					pst = conn.prepareStatement("insert into user_post (userid,postid) values(?,?) ");
+					pst = connectionManager.getConnection().prepareStatement("insert into user_post (userid,postid) values(?,?) ");
 					pst.setInt(1, userId);
 					pst.setInt(2, postId);
 					pst.executeUpdate();

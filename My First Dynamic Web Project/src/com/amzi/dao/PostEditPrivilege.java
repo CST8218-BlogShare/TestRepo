@@ -72,15 +72,10 @@ public class PostEditPrivilege {
 		
 		connectionManager = DbConnection.getInstance();
 	    
-		try {
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with insertion of postEditPrivilege into database: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return -1;
-     		}
-	    } catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-	    }
+		if(DbConnection.testConnection(connectionManager) == false){
+			System.out.println("Error with insertion of postEditPrivilege into database: Unable to establish connection with database.");
+			return -1;
+		}
 		
 		if(postId <= 0){
 			System.out.println("Error with insertion of postEditPrivilege into database: The value of postId is invalid");
@@ -151,15 +146,10 @@ public class PostEditPrivilege {
 		
 		connectionManager = DbConnection.getInstance();
 	    
-		try{
-     		if(connectionManager.getConnection().isValid(0) == false){
-     			System.out.println("Error with deletion of PostEditPrivilege by id: Unable to establish connection with database.");
-     			connectionManager.closeConnection();
-     			return -1;
-     		}
-	    }catch (SQLException sqlConE) {
-     		sqlConE.printStackTrace();
-	    }
+		if(DbConnection.testConnection(connectionManager) == false){
+			System.out.println("Error with deletion of PostEditPrivilege by id: Unable to establish connection with database.");
+			return -1;
+		}
 		
 		try{
 			pst = connectionManager.getConnection().prepareStatement("delete from postEditPrivilege where postEditPrivilegeId = ?");

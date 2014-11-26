@@ -26,6 +26,7 @@ public class PostCreateServlet extends HttpServlet {
 		Exception error = new Exception();
 		Boolean errorState = false;
 		String url = "";
+		DbConnection connectionManager = null; 
 		
 		User u = null;
 		Blog b = null; 
@@ -60,7 +61,22 @@ public class PostCreateServlet extends HttpServlet {
 			toEdit = -1;
 		}
 		
+		connectionManager = DbConnection.getInstance();
+		
 		try{
+			
+			if(DbConnection.testConnection(connectionManager) == false){
+		    	request.setAttribute("errorMessage", "errorconnectfailed");
+		    	throw error;
+		    }
+		    
+		    /* 
+			 * Setting up a database transaction where the post and postEditPrivilege entries both need to be inserted into the database.
+			 * If the two items cannot be inserted into the database, any completed insertions are reversed to this point.
+			 */
+		    
+		    connectionManager.getConnection().setAutoCommit(false);
+			
 			postTitle = request.getParameter("postTitle").trim();
 			postBody = request.getParameter("postBody").trim();
 				
@@ -81,12 +97,14 @@ public class PostCreateServlet extends HttpServlet {
 		    if(b.getIsPublic() && b.getPostCount() != 0 || request.getParameter("postEditableCheckBox") != null ){ 
 		    	postIsPublic = true;
 		    }
-						   
-		     /* 
-			  * Checking to see if the Blog this post is a member of or will be a member of, has been deleted. 
-			  * When isEditMode equals true, 
-			  *		The check for blogDeletion prevents any attempt to modify a post within a non-existent blog.
-			  */ 
+			
+		    
+		    
+		    /* 
+			 * Checking to see if the Blog this post is a member of or will be a member of, has been deleted. 
+			 * When isEditMode equals true, 
+			 *		The check for blogDeletion prevents any attempt to modify a post within a non-existent blog.
+			 */ 
 		    if(Blog.checkForDeletion(b.getBlogId()) == 1){
 		    	request.setAttribute("errorMessage","errorblogdeleted");
 		    	throw error;
@@ -105,14 +123,8 @@ public class PostCreateServlet extends HttpServlet {
 		    	}
 		    }
 		    
-		    /* 
-			 * Setting up a database transaction where the post and postEditPrivilege entries both need to be inserted into the database.
-			 * If the two items cannot be inserted into the database, any completed insertions are reversed to this point.
-			 */
-			
-			DbConnection.getInstance().getConnection().setAutoCommit(false);
 		    
-		    /* If the post is currently being edited (isEditMode == false), 
+		    /* If the post is currently being edited (isEditMode == true), 
 		     * The post is not added to a blog and updatePostInDatabaseById() is called within insertPostInDatabase().
 		     */
 		    postId = Post.insertPostInDatabase(postTitle, postBody, u.getUserId(), u.getUsername(), postIsPublic, b, isEditMode);
@@ -153,32 +165,40 @@ public class PostCreateServlet extends HttpServlet {
 				}
 			}
 		    
-		    //Now that it is proved that the insertion of blog, post and postEditPrivilege were successful, the changes are applied to the database. 
-			DbConnection.getInstance().getConnection().commit();
+		    if(DbConnection.testConnection(connectionManager) == false){
+		    	request.setAttribute("errorMessage", "errorconnectfailed");
+		    	throw error;
+		    }
+		    
+		    //Now that it is proved that the insertion of post and postEditPrivilege were successful, the changes are applied to the database. 
+			connectionManager.getConnection().commit();
 			
 			/*
 			 * Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
 			 * This statement is placed here to avoid another try-catch block within the method. 
 			 */
 			
-			DbConnection.getInstance().getConnection().setAutoCommit(true);
+			connectionManager.getConnection().setAutoCommit(true);
 		    
 		}catch(Exception e){
 			errorState = true;
-			try {
-				if(DbConnection.getInstance().getConnection().getAutoCommit() == false){
-					DbConnection.getInstance().getConnection().rollback();
-				
-					/*
-				 	* Ressetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
-				 	* This statement is placed here to avoid another try-catch block within the method. 
-				 	*/
-				
-					DbConnection.getInstance().getConnection().setAutoCommit(true);
+			
+			if(DbConnection.testConnection(connectionManager) == true){
+		    	try {
+					
+		    		connectionManager.getConnection().rollback();
+					
+				   /*
+					* Resetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+					* This statement is placed here to avoid another try-catch block within the method. 
+					*/
+					
+					connectionManager.getConnection().setAutoCommit(true);
+					
+				} catch (SQLException sqlE) {
+					sqlE.printStackTrace();
 				}
-			} catch (SQLException sqlE) {
-				sqlE.printStackTrace();
-			}
+		    }
 			e.printStackTrace();
 		}
 		
@@ -188,9 +208,6 @@ public class PostCreateServlet extends HttpServlet {
 		} 
 		
 		if(errorState == true){
-			/*if(request.getSession().getAttribute("language").equals("EN")){
-			}else if(request.getSession().getAttribute("language").equals("FR")){
-			}*/
 			if(isEditMode){
 				url = "PostCreate.jsp?editEnabled=true&post="+toEdit;
 			}else{

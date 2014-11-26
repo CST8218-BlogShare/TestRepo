@@ -4,7 +4,9 @@ tasks
 convert SearchResult to a pattern of other servlets and beans.
 ensure translations are complete - ensure currentPage is updated on every page.
 
---ensure insertPostIntoDatabase() works
+blogDeleteServlet needs to have sql transaction code fixed - trys to connect to a non existent db
+postDeleteServlet
+reversePostEditToPostinDB
 
 
 

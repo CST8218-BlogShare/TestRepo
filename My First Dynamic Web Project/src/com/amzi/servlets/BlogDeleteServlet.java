@@ -27,6 +27,7 @@ public class BlogDeleteServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		Exception error = new Exception();
+		DbConnection connectionManager = null;
 		ArrayList<Post> postsInBlog = null;
 		String blogTitle = "";
 		int errorCode = 0;
@@ -39,10 +40,22 @@ public class BlogDeleteServlet extends HttpServlet {
 		}
 		
 		blogTitle = request.getParameter("blogTitle");
-			
+		
+		connectionManager = DbConnection.getInstance();
+		
 		try{
 			
-			DbConnection.getInstance().getConnection().setAutoCommit(false);
+			if(DbConnection.testConnection(connectionManager) == false){
+				request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
+				throw error;
+			}
+			
+			/* 
+			 * Setting up a database transaction where the blog and postEditPrivilege entries all need to be deleted from the database.
+			 * If both items cannot be deleted, any completed deletions are reversed to this point.
+			 */
+			
+			connectionManager.getConnection().setAutoCommit(false);
 			
 			blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
 			
@@ -124,18 +137,32 @@ public class BlogDeleteServlet extends HttpServlet {
 				throw error;
 			}
 			
-			DbConnection.getInstance().getConnection().commit();
-			DbConnection.getInstance().getConnection().setAutoCommit(true);
+			if(DbConnection.testConnection(connectionManager) == false){
+				request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
+				throw error;
+			}
+			
+			//Now that it is proven that the deletion of blog and postEditPrivilege were successful, the changes are applied to the database.
+			connectionManager.getConnection().commit();
+			
+			/*
+			 * Resetting the connection back to it's default behavior where every transaction is applied as soon as it is executed.
+			 * This statement is placed here to avoid another try-catch block within the method. 
+			 */
+			
+			connectionManager.getConnection().setAutoCommit(true);
 			
 		}catch(Exception e){
 			System.out.println("Error deleting post, for more details see stack trace.");
 			
-			try {
-				DbConnection.getInstance().getConnection().rollback();
-				DbConnection.getInstance().getConnection().setAutoCommit(true);
-			} catch (SQLException sqlE) {
-				// TODO Auto-generated catch block
-				sqlE.printStackTrace();
+			if(DbConnection.testConnection(connectionManager) == true){
+				try {
+					connectionManager.getConnection().rollback();
+					connectionManager.getConnection().setAutoCommit(true);
+				} catch (SQLException sqlE) {
+					// TODO Auto-generated catch block
+					sqlE.printStackTrace();
+				}
 			}
 			e.printStackTrace();
 		}
