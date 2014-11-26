@@ -2,8 +2,7 @@ package com.amzi.dao;
   
 public class Login { 
 	
-	public static String errorMessege = null;
-	public static String errorMessegeFR = null;
+	public static String error = null;
 	
 	//could return a user object instead, and if null then there was an error.
     public static User validate(String name, String pass) {          
@@ -14,15 +13,13 @@ public class Login {
             
         if(name == ""){
             System.out.println("Username was not entered\n");
-            errorMessege = "Error with previous login attempt. Username was not entered.";
-            errorMessegeFR = "Il y a eu une erreur de connection. Veuiller entre un Nom D'utilisateur.";
+            error = "error.nousername";
             return null;
         }
             
         if(pass == ""){
         	System.out.println("Password was not entered\n");
-        	errorMessege = "Error with previous login attempt. User password was not entered.";
-            errorMessegeFR = "Il y a eu une erreur de connection. Veuiller entre un Mot de passe.";
+        	error = "error.nopass";
             return null;
         }
             
@@ -30,8 +27,7 @@ public class Login {
             
         if(u == null){
         	System.out.println("The entered username and password do not match registered users, throwing SQLException\n");
-            errorMessege = "Error with previous login attempt. Incorrect Username and Password.";
-            errorMessegeFR = "Il y a eu une erreur de connection. Verifier votre Nom d'Utilisateur et votre Mot de passe.";
+            error = "error.wrongcredentials";
             return null;
         }
         return u;   

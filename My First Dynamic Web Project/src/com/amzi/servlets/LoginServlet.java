@@ -39,12 +39,8 @@ public class LoginServlet extends HttpServlet{
 			}    
         }    
         else{
-        	if(request.getSession().getAttribute("language").toString().equals("EN")){
-	        	request.setAttribute("errorMessage", Login.errorMessege);
-        	}else{
- 	        	request.setAttribute("errorMessage", Login.errorMessegeFR);
-        	}
 
+	        request.setAttribute("errorMessage", Login.error);
             RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");    
             
             try {
