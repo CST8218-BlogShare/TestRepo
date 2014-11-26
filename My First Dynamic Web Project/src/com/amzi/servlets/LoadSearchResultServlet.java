@@ -42,7 +42,7 @@ public class LoadSearchResultServlet extends HttpServlet {
 					b = Blog.getBlogFromDatabaseById(Integer.parseInt(request.getParameter("blogId")));
 					
 					if(b == null){
-						request.setAttribute("errorMessage", "errorblog");
+						request.setAttribute("errorMessage", "errorblogload");
 						throw error;
 					}
 					
@@ -53,14 +53,14 @@ public class LoadSearchResultServlet extends HttpServlet {
 					p = Post.getPostFromDatabaseById(Integer.parseInt(request.getParameter("postId")));
 					
 					if(p == null){
-						request.setAttribute("errorMessage", "errorpost");
+						request.setAttribute("errorMessage", "errorpostload");
 						throw error;
 					}
 					
 					b = Blog.getBlogFromDatabaseById(p.getBlogId());
 					
 					if(b == null){
-						request.setAttribute("errorMessage", "errorpost2");
+						request.setAttribute("errorMessage", "errorpostloadblog");
 						throw error;
 					}
 					
@@ -73,7 +73,7 @@ public class LoadSearchResultServlet extends HttpServlet {
 					u = User.getUserFromDatabaseById(Integer.parseInt(request.getParameter("userId")));
 					
 					if(u == null){
-						request.setAttribute("errorMessage", "erroruser");
+						request.setAttribute("errorMessage", "erroruserload");
 						throw error;
 					}
 					

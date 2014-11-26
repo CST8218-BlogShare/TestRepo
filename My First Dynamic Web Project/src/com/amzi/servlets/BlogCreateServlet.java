@@ -153,7 +153,7 @@ public class BlogCreateServlet extends HttpServlet{
 			p = Post.getPostFromDatabaseById(postId);
 			
 			if(p == null){
-				request.setAttribute("errorMessage", "error2");
+				request.setAttribute("errorMessage", "errorsql");
 				throw error;
 			}
 						

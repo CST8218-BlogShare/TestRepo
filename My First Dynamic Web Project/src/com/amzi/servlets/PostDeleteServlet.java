@@ -80,9 +80,7 @@ public class PostDeleteServlet extends HttpServlet {
 				
 				if(errorCode == -1){
 					request.setAttribute("errorMessage", "postdelete.errorconnectfailed");
-				}
-				
-				if(errorCode == -2){
+				}else{
 					request.setAttribute("errorMessage", "postdelete.errorsql");
 				}
 				throw error;

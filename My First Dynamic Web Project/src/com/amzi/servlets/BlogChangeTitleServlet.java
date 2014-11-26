@@ -38,19 +38,9 @@ public class BlogChangeTitleServlet extends HttpServlet {
 			
 	    	if(errorCode < 0){
 	    		if(errorCode == -1){
-	    			request.setAttribute("errorMessage", "error1");
-	    		}
-	    		
-	    		if(errorCode == -2){
-	    			request.setAttribute("errorMessage", "error2");
-	    		}
-	    		
-	    		if(errorCode == -3){
-	    			request.setAttribute("errorMessage", "error3");
-	    		}
-	    		
-	    		if(errorCode == -4){
-	    			request.setAttribute("errorMessage", "error4");
+	    			request.setAttribute("errorMessage", "errorconnectfailed");
+	    		}else{
+	    			request.setAttribute("errorMessage", "errorsql");
 	    		}
 	    	}
 	    	

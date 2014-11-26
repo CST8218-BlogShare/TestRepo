@@ -21,10 +21,20 @@ public class Blog {
 	
 	public static String errorMessage = null;
 	public static String errorMessageFR = null;
+	
 	public Blog(){
 		
 	}
-		
+	
+	public Blog(int blogId){
+		if(blogId > 0){
+			this.blogId = blogId;
+		}else{
+			System.out.println("Error creating blog object, blog value is invalid");
+			return;
+		}
+	}
+	
 	public Blog(String blogTitle, String username, Boolean isPublic){
 		Exception blogCreateError = new Exception();
 		
@@ -54,15 +64,6 @@ public class Blog {
     	this.blogTitle = blogTitle;
     	this.author = username;
     	this.isPublic = isPublic;
-	}
-	
-	public Blog(int blogId){
-		
-		if(blogId > 0){
-			this.blogId = blogId;
-		}else{
-			return;
-		}
 	}
 	
 	public boolean getEditMode() {
@@ -97,19 +98,7 @@ public class Blog {
 	protected void setToEdit(int toEdit){
 		this.toEdit = toEdit;
 	}
-	
-	
-	/*
-	protected void setErrorMessage(String message){
-		this.errorMessage = message;
-	}
-	
-	
-	public String getErrorMessage(){
-		return errorMessage;
-	}
-	*/
-	
+		
 	public String getBlogTitle(){
 		return blogTitle;
 	}
@@ -432,7 +421,7 @@ public class Blog {
 			pst.setInt(2, blogId);
 			//if an blogid was provided that did not match any blogId within the database.
 			if(pst.executeUpdate() == 0){
-				System.out.println("Error updating Blog title: provided value for blogId does not match any rows in blog table.");
+				System.out.println("Error updating Blog title: the Provided value for blogId does not match any rows in blog table.");
 				return -4;
 			}				
        } catch (SQLException sqlE) {
@@ -459,7 +448,7 @@ public class Blog {
     	
     	try {
       		if(connectionManager.getConnection().isValid(0) == false){
-      			System.out.println("Error with Blog deletion by BlogId: Unable to establish connection with database.");
+      			System.out.println("Error with Blog deletion by blogId: Unable to establish connection with database.");
       			connectionManager.closeConnection();
       			return -1;
       		}
@@ -470,9 +459,14 @@ public class Blog {
     	try {
 			pst = connectionManager.getConnection().prepareStatement("delete from blog where blogId = ?");
 			pst.setInt(1, blogId);
-			pst.executeUpdate();
+			
+			if(pst.executeUpdate() == 0){
+				System.out.println("Error with Blog deletion by blogId: The provided value for blogId does not match any rows in blog table");
+				return -3;
+			}
+			
 		} catch (SQLException sqlE) {
-			System.out.println("Error with Blog deletion by BlogId: SQL error.");
+			System.out.println("Error with Blog deletion by blogId: SQL error.");
 			sqlE.printStackTrace();
 			return -2;
 		}finally{

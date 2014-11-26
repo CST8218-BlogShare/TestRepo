@@ -372,6 +372,11 @@ public class Post {
 					if(errorCode == -3){
 						return -3;
 					}
+					
+					if(errorCode == -4){
+						return -4;
+					}
+					
 				}
 		    }
 	    return postId;
@@ -418,7 +423,7 @@ public class Post {
 	    	
 	    	if(errorCode < 0){
 	    		System.out.println("Error with post update: Unable to create post edit entry to track the update to post.");
-	    		return -3;
+	    		return -4;
 	    	}
 	    	    
 	    	pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ?, isPublic = ? WHERE postID  = ?");  
@@ -426,7 +431,12 @@ public class Post {
 	    	pst.setString(2, postContent);
 	    	pst.setBoolean(3, postIsPublic);
 	    	pst.setInt(4, postId);
-	    	pst.executeUpdate(); 
+	    	
+	    	if(pst.executeUpdate() == 0){
+	    		System.out.println("Error with post update: The provided value for postId does not match any rows in post table.");
+	    		return -3;
+	    	}
+	    	
 	    	pst.close();
 	    
 	    } catch (SQLException sqlE){
@@ -467,9 +477,9 @@ public class Post {
 	    	 pst = connectionManager.getConnection().prepareStatement("delete from post where postid = ?");
 	    	 pst.setInt(1, postId);
 	    	 
-	    	 if(pst.executeUpdate() != 1){
-	    		//rollback
-	    		//return -3;
+	    	 if(pst.executeUpdate() == 0){
+	    		 System.out.println("Error with post deletion by postId: The provided value for postId does not match any rows in post table.");
+	    		 return -3;
 	    	 }
 	    	 
 	     }catch(SQLException sqlE){	

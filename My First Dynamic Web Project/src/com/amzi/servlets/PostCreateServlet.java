@@ -122,8 +122,12 @@ public class PostCreateServlet extends HttpServlet {
 					request.setAttribute("errorMessage", "errorconnectfailed");
 				}
 				
-				if(postId == -2){
+				if(postId == -2 || postId == -3){
 					request.setAttribute("errorMessage", "errorsql");
+				}
+				
+				if(postId == -4){
+					request.setAttribute("errorMessage", "errorpostedit");
 				}
 				throw error;
 		    }

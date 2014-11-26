@@ -3,15 +3,12 @@ tasks
 
 convert SearchResult to a pattern of other servlets and beans.
 ensure translations are complete - ensure currentPage is updated on every page.
-convert blog.jsp to build the blog on every load - done! - confirm I have minimized my use of Blog object.
+add additional error messages to update and deletion when the sql fails to modify the db.
 
-add all error messages to resource bundle....will always throw error if not included.
-
-need to make properties file for searchResult
 
 how blog share works
 
 registered user can create and view blogs
 non registered user can view blogs, posts and users.
 
-expand on error code creation for post update, blog deletion and post deletion...
+

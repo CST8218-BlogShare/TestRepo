@@ -105,9 +105,7 @@ public class BlogDeleteServlet extends HttpServlet {
 				
 				if(errorCode == -1){
 					request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
-				}
-				
-				if(errorCode == -2){
+				}else{
 					request.setAttribute("errorMessage", "blogdelete.errorsql");
 				}
 				
