@@ -52,9 +52,9 @@
 		<section class="FillScreenTextCentered" style="background-color:DodgerBlue;">
 			<table  style="width:100%; border-spacing:1em; text-align:center; font-size:28px; ">
 				<tr>
-					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("Blog")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("blog") %>" /></td>
-					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("Post")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("post") %>" /></td>
-					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("User")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("user") %>"/></td>
+					<td class="searchSelectButton" <% if(result.getResultType().equals("Blog")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("blog") %>" /></td>
+					<td class="searchSelectButton" <% if(result.getResultType().equals("Post")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("post") %>" /></td>
+					<td class="searchSelectButton" <% if(result.getResultType().equals("User")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("user") %>"/></td>
 				</tr>
 			</table>
 		</section>
