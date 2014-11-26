@@ -14,7 +14,7 @@
 	SearchResult result = (SearchResult) session.getAttribute("currentSearchResult");
 
 
-	session.setAttribute("currentPage","Blog");
+	session.setAttribute("currentPage","SearchResults");
 	ResourceBundle lang = ResourceBundle.getBundle("SearchResults_EN");
 
 	//if the session language is FR switch to french, otherwise remains english as set above
@@ -52,9 +52,9 @@
 		<section class="FillScreenTextCentered" style="background-color:DodgerBlue;">
 			<table  style="width:100%; border-spacing:1em; text-align:center; font-size:28px; ">
 				<tr>
-					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("Blog")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="Blog" /></td>
-					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("Post")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="Post" /></td>
-					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("User")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="User"/></td>
+					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("Blog")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("blog") %>" /></td>
+					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("Post")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("post") %>" /></td>
+					<td class="searchSelectButton" <% if(result.getResultType().contentEquals("User")) { %> style="background-color:white;" <% } %>> <input type=submit name=resultType value="<%= lang.getString("user") %>"/></td>
 				</tr>
 			</table>
 		</section>
@@ -67,11 +67,11 @@
 			<%
 				if(result.getResultCount() == 0){
 			%>
-					Unable to find any <%=result.getResultType() %> content during previous search, relating to search term "<%= result.getSearchTerm() %>". 
+					<%=lang.getString("unabletofind") %> <%=result.getResultType() %> <%=lang.getString("unabletofind2") %> "<%= result.getSearchTerm() %>".
 			<% 
 				}else{
 			%>		
-					<%= result.getResultCount() %> <%= result.getResultType() %>(s) found relating to search term "<%= result.getSearchTerm() %>".
+					<%= result.getResultCount() %> <%= result.getResultType() %> <%=lang.getString("foundrelating") %> "<%= result.getSearchTerm() %>".
 			<% 
 				}
 			%>
@@ -128,14 +128,14 @@
 								<tr>
 									<td style="font-size:18px; width:50%;">
 									<div style="float:right; padding-right:2%">
-										<div style="text-decoration:underline">Blog Title</div> 
+										<div style="text-decoration:underline"><%=lang.getString("blogtitle") %></div> 
 										<%= blogTitle %>
 									</div>
 									</td>
 									
 									<td style="font-size:18px; width:50%;">
 									<div style="float:left; padding-left:2%">
-										<div style="text-decoration:underline"> Author</div> 
+										<div style="text-decoration:underline"><%=lang.getString("author") %></div> 
 										<%= blogAuthor %> 
 									</div>
 								</tr>
@@ -150,7 +150,7 @@
 								<tr>
 									<td colspan="2">
 										<input type="hidden" name="blogId" value="<%= result.getResultIdAt(i) %>">
-										<input  style="color:black;" type="submit" name="loadSearchResult" value="Load Blog"/>
+										<input  style="color:black;" type="submit" name="loadSearchResult" value="<%=lang.getString("loadblog") %>"/>
 									</td>
 								</tr>
 				<% 				break;
@@ -186,14 +186,14 @@
 								<tr>
 									<td style="font-size:18px; width:50%;">
 										<div style="float:right; padding-right:2%">
-											<div style="text-decoration:underline">Blog Title</div> 
+											<div style="text-decoration:underline"><%=lang.getString("blogtitle") %></div> 
 											<%= blogTitle %>
 										</div>
 									</td>
 									
 									<td style="font-size:18px; width:50%;">
 									<div style="float:left; padding-left:2%">
-										<div style="text-decoration:underline"> Author</div> 
+										<div style="text-decoration:underline"><%=lang.getString("author") %></div> 
 										<%= blogAuthor %> 
 									</div>
 								</tr>
@@ -207,7 +207,7 @@
 									
 								<tr>
 									<td colspan="2" style="font-size:18px;">
-										<div style="text-decoration:underline"> Title </div> 
+										<div style="text-decoration:underline"> <%=lang.getString("title") %> </div> 
 										<%= postTitle %>
 									</td>
 								</tr>
@@ -221,7 +221,7 @@
 								
 								<tr>
 									<td colspan="2" style="font-size:18px;">
-										<div style="text-decoration:underline"> Content </div> 
+										<div style="text-decoration:underline"> <%=lang.getString("content") %> </div> 
 										<%= postBody %>
 									</td>
 								</tr>
@@ -236,7 +236,7 @@
 								<tr>
 									<td colspan="2">
 										<input type="hidden" name="postId" value="<%= result.getResultIdAt(i) %>">
-										<input style="color:black;" type="submit" name="loadSearchResult" value="Load Post"/>
+										<input style="color:black;" type="submit" name="loadSearchResult" value="<%=lang.getString("loadpost") %>"/>
 									</td>
 								</tr>
 								
@@ -248,7 +248,7 @@
 				%>
 								<tr>
 									<td style="font-size:18px;">
-									Username: <br>
+									<%=lang.getString("username") %>: <br>
 									<%= rs.getString("username") %>
 									</td>
 								</tr>	
@@ -263,7 +263,7 @@
 								<tr>
 									<td colspan="2">
 										<input type="hidden" name="userId" value="<%= result.getResultIdAt(i) %>">
-										<input style="color:black;" type="submit" name="loadSearchResult" value="Load User Profile"/>
+										<input style="color:black;" type="submit" name="loadSearchResult" value="<%=lang.getString("loadprofile") %>"/>
 									</td>
 								</tr>		
 				<% 		
