@@ -49,11 +49,11 @@ public class PostDeleteServlet extends HttpServlet {
 			
 			if(postEditPrivilegeId <= 0){
 				if(postEditPrivilegeId == -1){
-					request.setAttribute("errorMessage", "Error retrieving post edit privilege by id, error connecting to database");
+					request.setAttribute("errorMessage", "postdelete.errorconnectfailed");
 				}
 				
 				if(postEditPrivilegeId == -2){
-					request.setAttribute("errorMessage", "Error retrieving post edit privilege by id, SQL error.");
+					request.setAttribute("errorMessage", "postdelete.errorsql");
 				}
 				
 				throw error;
@@ -64,11 +64,11 @@ public class PostDeleteServlet extends HttpServlet {
 			if(errorCode < 0){
 				
 				if(errorCode == -1){
-					request.setAttribute("errorMessage", "Error deleting postEditPrivilege, error connecting to database.");
+					request.setAttribute("errorMessage", "postdelete.errorconnectfailed");
 				}
 				
 				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error deleting postEditPrivilege, SQL error.");
+					request.setAttribute("errorMessage", "postdelete.errorsql");
 				}
 				
 				throw error;
@@ -79,11 +79,11 @@ public class PostDeleteServlet extends HttpServlet {
 			if(errorCode < 0){
 				
 				if(errorCode == -1){
-					request.setAttribute("errorMessage", "Error deleting post, error connecting to database.");
+					request.setAttribute("errorMessage", "postdelete.errorconnectfailed");
 				}
 				
 				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error deleting post, SQL error.");
+					request.setAttribute("errorMessage", "postdelete.errorsql");
 				}
 				throw error;
 			}
@@ -92,16 +92,11 @@ public class PostDeleteServlet extends HttpServlet {
 			
 			if(errorCode < 0){
 				if(errorCode == -1){
-					request.setAttribute("errorMessage", "Error adding postid to postDeleted, error connecting to database.");
+					request.setAttribute("errorMessage", "postdelete.errorconnectfailed");
+				}else{
+					request.setAttribute("errorMessage", "postdelete.errorsql");
 				}
 				
-				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error adding postid to postDeleted, SQL error.");
-				}
-				
-				if(errorCode == -3){
-					request.setAttribute("errorMessage", "Error adding postid to postDelete, value of postId is invalid.");
-				}
 				throw error;
 			}
 			

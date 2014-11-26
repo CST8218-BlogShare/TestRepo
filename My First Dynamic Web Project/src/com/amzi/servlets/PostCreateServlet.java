@@ -65,12 +65,16 @@ public class PostCreateServlet extends HttpServlet {
 			postBody = request.getParameter("postBody").trim();
 				
 			//if the title/body are empty make the response PostCreate, with corresponding error
-			if (postTitle.length() == 0 || postBody.length() == 0) {
-					
-				request.setAttribute("errorMessage", "alert.emptyfields");
+			if(postTitle.length() == 0) {
+				request.setAttribute("errorMessage", "errornotitle");
 				throw error;
-				
 			}
+			
+			if(postBody.length() == 0){
+				request.setAttribute("errorMessage", "errornocontent");
+				throw error;
+			}
+			
 			
 			//checking if the post is part of a blog that is publicly editable
 			////if the checkbox has not been activated, the parameter postEditableCheckBox will not be initialized and the value null will be returned.
@@ -84,7 +88,7 @@ public class PostCreateServlet extends HttpServlet {
 			  *		The check for blogDeletion prevents any attempt to modify a post within a non-existent blog.
 			  */ 
 		    if(Blog.checkForDeletion(b.getBlogId()) == 1){
-		    	request.setAttribute("errorMessage","alert.blogdeleted");
+		    	request.setAttribute("errorMessage","errorblogdeleted");
 		    	throw error;
 			}
 			   
@@ -96,7 +100,7 @@ public class PostCreateServlet extends HttpServlet {
 			 */ 
 		    	
 		    	if(Post.checkForDeletion(b.getPostAt(b.getToEdit()).getPostId()) == 1){
-		    		request.setAttribute("errorMessage", "alert.postdeleted");
+		    		request.setAttribute("errorMessage", "errorpostdeleted");
 		    		throw error;
 		    	}
 		    }
@@ -115,11 +119,11 @@ public class PostCreateServlet extends HttpServlet {
 			
 		    if(postId < 0){
 		    	if(postId == -1){
-					request.setAttribute("errorMessage", "Error creating post while retreiving postId, error connecting to database");
+					request.setAttribute("errorMessage", "errorconnectfailed");
 				}
 				
 				if(postId == -2){
-					request.setAttribute("errorMessage", "Error creating post while retrieving postId, SQL error.");
+					request.setAttribute("errorMessage", "errorsql");
 				}
 				throw error;
 		    }
@@ -129,7 +133,7 @@ public class PostCreateServlet extends HttpServlet {
 				p = Post.getPostFromDatabaseById(postId);
 				
 				if(p == null){
-					request.setAttribute("errorMessage", "Error creating post while adding post to current Blog, unable to retrieve post from database by id.");
+					request.setAttribute("errorMessage", "errorsql");
 					throw error;
 				}
 					
@@ -137,19 +141,9 @@ public class PostCreateServlet extends HttpServlet {
 					
 				if(postEditPrivilegeId < 0){
 					if(postEditPrivilegeId == -1){
-						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, error connecting to database");
-					}
-						
-					if(postEditPrivilegeId == -2){
-						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, SQL error..");
-					}
-					
-					if(postEditPrivilegeId == -3){
-						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, invalid postId value.");
-					}
-					
-					if(postEditPrivilegeId == -4){
-						request.setAttribute("errorMessage", "Error creating post while inserting PostEditPrivilege in database, invalid userId value.");
+						request.setAttribute("errorMessage", "errorconnectfailed");
+					}else{
+						request.setAttribute("errorMessage", "errorsql");
 					}
 					throw error;
 				}

@@ -76,24 +76,21 @@ public class BlogCreateServlet extends HttpServlet{
 			blogTitle=request.getParameter("blogTitle").trim();
 			
 			if (blogTitle.length() == 0){
-				if(userSession.getAttribute("language").equals("EN"))
-					request.setAttribute("errorMessage", "Error: You cannot leave the Blog Title empty.");
-				else if(userSession.getAttribute("language").equals("FR")){
-					request.setAttribute("errorMessage", "Erreur: Il manque un titre au Blog.");	
-				}
+				request.setAttribute("errorMessage","errornoblogtitle");	
 				throw error;
 			}
 			
 			postTitle=request.getParameter("postTitle").trim();
 			postBody=request.getParameter("postBody").trim();
 			
-			if (postTitle.length() == 0 || postBody.length() == 0){
+			if (postTitle.length() == 0){
+				request.setAttribute("errorMessage","errornopostitle");
+				throw error;
+			}
+			
+			if(postBody.length() == 0){
 				
-				if(userSession.getAttribute("language").equals("EN"))
-					request.setAttribute("errorMessage", "Error: You cannot leave the Post Title or Body empty.");
-				else if(userSession.getAttribute("language").equals("FR")){
-					request.setAttribute("errorMessage", "Erreur: Il vous manque le Titre ou le contenu du Post.");	
-				}
+				request.setAttribute("errorMessage","errornopostcontent");	
 				throw error;
 			}
 			
@@ -118,15 +115,15 @@ public class BlogCreateServlet extends HttpServlet{
 			
 			if(blogId < 0){
 				if(blogId == -1){
-					request.setAttribute("errorMessage", "Error creating blog, error connecting to database.");
+					request.setAttribute("errorMessage", "errorconnectfailed");
 				}
 				
 				if(blogId == -2){
-					request.setAttribute("errorMessage", "Error creating blog, SQL error.");
+					request.setAttribute("errorMessage", "errorsql");
 				}
 				
 				if(blogId == -3){
-					request.setAttribute("errorMessage", "Error creating blog, a blog with the same title already exists within BlogShare.");
+					request.setAttribute("errorMessage", "errorblogexists");
 				}
 				throw error;
 			}
@@ -134,7 +131,7 @@ public class BlogCreateServlet extends HttpServlet{
 			b = Blog.getBlogFromDatabaseById(blogId);
 			
 			if(b == null){
-				request.setAttribute("errorMessage", "Error creating blog for display on webpage, unable to retrieve blog from database.");
+				request.setAttribute("errorMessage", "errorsql");
 				throw error;
 			}
 			
@@ -143,11 +140,11 @@ public class BlogCreateServlet extends HttpServlet{
 			if(postId < 0){
 				
 				if(postId == -1){
-					request.setAttribute("errorMessage", "Error creating first post of blog, error connecting to database");
+					request.setAttribute("errorMessage", "errorconnectfailed");
 				}
 				
 				if(postId == -2){
-					request.setAttribute("errorMessage", "Error creating first post of blog, SQL error.");
+					request.setAttribute("errorMessage", "errorsql");
 				}
 				
 				throw error;
@@ -156,7 +153,7 @@ public class BlogCreateServlet extends HttpServlet{
 			p = Post.getPostFromDatabaseById(postId);
 			
 			if(p == null){
-				request.setAttribute("errorMessage", "Error adding first post to blog, unable to retrieve post from database.");
+				request.setAttribute("errorMessage", "error2");
 				throw error;
 			}
 						
@@ -165,18 +162,11 @@ public class BlogCreateServlet extends HttpServlet{
 			if(postEditPrivilegeId < 0){
 				
 				if(postEditPrivilegeId == -1){
-					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, error connecting to database");
+					request.setAttribute("errorMessage", "errorconnectfailed");
+				}else{
+					request.setAttribute("errorMessage", "errorsql");
 				}
 				
-				if(postEditPrivilegeId == -2){
-					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, SQL error.");
-				}
-				if(postEditPrivilegeId == -3){
-					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, invalid postId value.");
-				}
-				if(postEditPrivilegeId == -4){
-					request.setAttribute("errorMessage", "Error creating PostEditPrivilege for post, invalid userId value.");
-				}
 				
 				throw error;
 			}		 

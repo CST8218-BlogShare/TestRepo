@@ -33,28 +33,26 @@ public class BlogDeleteServlet extends HttpServlet {
 		int blogId = 0;
 		int postEditPrivilegeId = 0;
 		
+		//if this is not true, this servlet will never succeed and the request is invalid.
+		if(request.getParameter("blogTitle") == null){
+			System.exit(-1);
+		}
 		
 		blogTitle = request.getParameter("blogTitle");
-		blogTitle = blogTitle.trim();
-		
+			
 		try{
 			
 			DbConnection.getInstance().getConnection().setAutoCommit(false);
-			
-			if(blogTitle.equals("")){
-				request.setAttribute("errorMessage", "Error: Blog title is empty.");
-				throw error;
-			}
 			
 			blogId = Blog.getBlogIdFromDatabaseByTitle(blogTitle);
 			
 			if(blogId < 0){
 				if(blogId == -1){
-					request.setAttribute("errorMessage", "Error retrieving blogId by Blog title, error connection to database.");
+					request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
 				}
 				
 				if(blogId == -2){
-					request.setAttribute("errorMessage", "Error retrieving blogId using Blog title, SQL error while interacting with database.");
+					request.setAttribute("errorMessage", "blogdelete.errorsql");
 				}
 				throw error;
 			}
@@ -62,7 +60,7 @@ public class BlogDeleteServlet extends HttpServlet {
 			postsInBlog = Post.getPostListFromDatabaseByBlogId(blogId);
 			
 			if(postsInBlog == null){
-				request.setAttribute("errorMessage", "Error retrieving posts for this blog, unable to retrieve post list using blogId.");
+				request.setAttribute("errorMessage", "blogdelete.errorsql");
 				throw error;
 			}
 			
@@ -73,11 +71,11 @@ public class BlogDeleteServlet extends HttpServlet {
 				if(postEditPrivilegeId < 0){
 					
 					if(postEditPrivilegeId == -1){
-						request.setAttribute("errorMessage", "Error retrieving post edit privilege id for a post contained within the current blog, unable to retrieve post edit privilege id using postId.");
+						request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
 					}
 					
 					if(postEditPrivilegeId == -2){
-						request.setAttribute("errorMessage", "Error retrieving post edit privilege id for a post contained within the current blog, SQL error while interacting with database.");
+						request.setAttribute("errorMessage", "blogdelete.errorsql");
 					}
 					
 					throw error;
@@ -88,11 +86,11 @@ public class BlogDeleteServlet extends HttpServlet {
 				if(errorCode < 0){
 					
 					if(errorCode == -1){
-						request.setAttribute("errorMessage", "Error deleting post edit privilege id for a post contained within the current blog, unable to retrieve post edit privilege id using postId.");
+						request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
 					}
 					
 					if(errorCode == -2){
-						request.setAttribute("errorMessage", "Error deleting post edit privilege id for a post contained within the current blog, SQL error while interacting with database.");
+						request.setAttribute("errorMessage", "blogdelete.errorsql");
 					}
 					
 					throw error;
@@ -106,11 +104,11 @@ public class BlogDeleteServlet extends HttpServlet {
 			if(errorCode < 0){
 				
 				if(errorCode == -1){
-					request.setAttribute("errorMessage", "Error deleting post, error connecting to database.");
+					request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
 				}
 				
 				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error deleting post, SQL error while interacting with database.");
+					request.setAttribute("errorMessage", "blogdelete.errorsql");
 				}
 				
 				throw error;
@@ -121,15 +119,9 @@ public class BlogDeleteServlet extends HttpServlet {
 			if(errorCode < 0){
 				
 				if(errorCode == -1){
-					request.setAttribute("errorMessage", "Error deleting post, error connecting to database.");
-				}
-				
-				if(errorCode == -2){
-					request.setAttribute("errorMessage", "Error deleting post, SQL error while interacting with database.");
-				}
-				
-				if(errorCode == -3){
-					request.setAttribute("errorMessage", "Error deleting post, the value of BlogId is invalid.");
+					request.setAttribute("errorMessage", "blogdelete.errorconnectfailed");
+				}else{
+					request.setAttribute("errorMessage", "blogdelete.errorsql");
 				}
 				throw error;
 			}
