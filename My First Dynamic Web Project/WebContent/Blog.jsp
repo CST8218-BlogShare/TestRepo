@@ -68,6 +68,9 @@
 				e.printStackTrace();
 			}	
 		}
+		
+		//setting the initalized blog as a session attribute.
+		session.setAttribute("currentBlog", b);
 %>
 
 <!--  If the user is navigating from the searchResults page causing the sessionVariable postToView to be set.
