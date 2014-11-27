@@ -24,7 +24,6 @@
 		<br>
 		
 		<!--
-		 	
 		 	 Gathering and displaying the information on the HTTP error
 		 	 
 		 	 Adapted implementation from information and code sample found at 

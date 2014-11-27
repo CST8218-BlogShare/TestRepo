@@ -1,5 +1,5 @@
 <%@ page language="java" 
-		import="com.amzi.dao.User, com.amzi.dao.SearchResult, java.util.ResourceBundle, com.amzi.dao.DbConnection, java.sql.PreparedStatement, java.sql.ResultSet, java.sql.SQLException" %>
+		import="com.amzi.dao.User, com.amzi.dao.SearchResult, java.util.ResourceBundle, com.amzi.dao.DbConnection, java.sql.PreparedStatement, java.sql.ResultSet, java.sql.SQLException, java.io.IOException" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +13,23 @@
 <%
 	SearchResult result = (SearchResult) session.getAttribute("currentSearchResult");
 
+	if(result == null){
+		/* 	
+		If the search result cannot be retrieved, this page cannot be displayed. 
+		This should not happen within normal operation of the program.
+		In response to this behaviour the current user is logged out.
+	*/
+		
+		RequestDispatcher rd=request.getRequestDispatcher("/logoutServlet");
+		 
+		 try {
+			rd.include(request,response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
 
 	session.setAttribute("currentPage","SearchResults");
 	ResourceBundle lang = ResourceBundle.getBundle("SearchResults_EN");

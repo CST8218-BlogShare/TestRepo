@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html;" import="com.amzi.dao.Blog, com.amzi.dao.Post, java.util.ResourceBundle"%>
+<%@ page language="java" contentType="text/html;" import="com.amzi.dao.Blog, com.amzi.dao.Post, java.util.ResourceBundle, java.io.IOException"%>
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
@@ -13,7 +13,22 @@
 
 	//if the blog cannot be retrieved, this page cannot be displayed. So the program is closed...could also logout
 	if(b == null){
-		System.exit(-1);
+	
+	/* 	
+		If the blog cannot be retrieved, this page cannot be displayed. 
+		This should not happen within normal operation of the program.
+		In response to this behaviour the current user is logged out.
+	*/
+		
+		RequestDispatcher rd=request.getRequestDispatcher("/logoutServlet");
+		 
+		 try {
+			rd.include(request,response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}else{
 		session.setAttribute("currentBlog",b);
 	}

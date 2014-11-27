@@ -87,7 +87,7 @@ public class DbConnection {
 		return connectionHelper;
 	}
 	
-	public static boolean testConnection(DbConnection connectionManager){
+	public static synchronized boolean testConnection(DbConnection connectionManager){
 		
 		if(connectionManager == null){
 			return false;

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html;" import="java.util.ArrayList, com.amzi.dao.Post, com.amzi.dao.PostEdit, java.util.ResourceBundle"%>
+<%@ page language="java" contentType="text/html;" import="java.util.ArrayList, com.amzi.dao.Post, com.amzi.dao.PostEdit, java.util.ResourceBundle, java.io.IOException"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,9 +22,29 @@
 %>
 
 	<% 
-		int postEditPos = (int) session.getAttribute("currentPostEditPos");
+		int postEditPos;
 		Post currentPost= (Post) session.getAttribute("currentPost");
 		ArrayList<PostEdit> postEdits = (ArrayList<PostEdit>) session.getAttribute("currentPostEditList");	
+		
+		if(currentPost == null || postEdits == null || session.getAttribute("currentPostEditPos") == null){
+			/* 	
+			If the current post or it's list of post edits cannot be retrieved, this page cannot be displayed. 
+			This should not happen within normal operation of the program.
+			In response to this behaviour the current user is logged out.
+		*/
+			
+			RequestDispatcher rd=request.getRequestDispatcher("/logoutServlet");
+			 
+			 try {
+				rd.include(request,response);
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
+		
+		postEditPos = (int) session.getAttribute("currentPostEditPos");
 		session.setAttribute("currentPostEdit", postEdits.get(postEditPos));
 	%>
 	

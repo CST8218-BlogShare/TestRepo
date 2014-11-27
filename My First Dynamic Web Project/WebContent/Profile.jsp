@@ -34,6 +34,25 @@ contentType="text/html; charset=ISO-8859-1"
 	}		
 	
 	u = (User) session.getAttribute("currentUser");
+	
+	if(u == null){
+		/* 	
+		If the user cannot be retrieved, this page cannot be displayed. 
+		This should not happen within normal operation of the program.
+		In response to this behaviour the current user is logged out.
+	*/
+		
+		RequestDispatcher rd=request.getRequestDispatcher("/logoutServlet");
+		 
+		 try {
+			rd.include(request,response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
 	usersProfile = true;
 	
 	/* If the user has navigated to Profile.jsp from searchResults.jsp, currentProfile will be initailized 

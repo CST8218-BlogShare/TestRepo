@@ -3,7 +3,6 @@ package com.amzi.dao;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.amzi.dao.Blog;
@@ -600,65 +599,78 @@ public class Post {
 	 }  
 	
 	public int reverseEditToPostInDatabase(int postPosInBlog, PostEdit currentPostEdit, int currentUserId){
-    	PreparedStatement pst = null;
+    	Exception error = new Exception();
+		PreparedStatement pst = null;
 		ResultSet rs = null;
 		DbConnection connectionManager = null;
 		int errorCode = 0;
 		
 	    connectionManager = DbConnection.getInstance();
-    	
-	    if(DbConnection.testConnection(connectionManager) == false){
-	    	System.out.println("Error with post edit reversal: Unable to establish connection with database.");
-			return -1;
-		}
-	    
+    	  
     	try {
 			
+    		if(DbConnection.testConnection(connectionManager) == false){
+    			System.out.println("Error with post edit reversal: Unable to establish connection with database.");
+    			errorCode = -1;
+    			throw error;
+    		}
+	    	
     		connectionManager.getConnection().setAutoCommit(false);
-    		
-    		pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ? WHERE postID  = ?");
+	    		
+	    	pst = connectionManager.getConnection().prepareStatement("UPDATE post SET title = ?, content = ? WHERE postID  = ?");
 			pst.setString(1, currentPostEdit.getTitleBeforeEdit());
 			pst.setString(2, currentPostEdit.getContentBeforeEdit());
 			pst.setInt(3, this.getPostId());
 			pst.execute();
-			
+				
 			pst.close();
 			
 			errorCode = PostEdit.insertPostEditInDatabase(currentUserId,postId,this.getPostTitle(),this.getPostBody());	
-	        				
-		} catch (SQLException sqlE) {
+			
+			if(DbConnection.testConnection(connectionManager) == false){ 
+				errorCode = -1;
+				throw error;
+			}
+			connectionManager.getConnection().commit();
+    		connectionManager.getConnection().setAutoCommit(true);
+    	} catch (SQLException sqlE) {
 			sqlE.printStackTrace();
 			errorCode = -2;
+		}catch(Exception e){
+			e.printStackTrace();
 		}finally{
 			try {
 				if(rs != null){
 					rs.close();
 				}
-				pst.close();
+				if(pst != null){
+					pst.close();
+				}
 			} catch (SQLException sqlE) {
 				sqlE.printStackTrace();
 			}			
 		}
     	
-    	try {
-    		if(errorCode < 0){
-    			connectionManager.getConnection().rollback();
-        		connectionManager.getConnection().setAutoCommit(true);
-    			
-        		if(errorCode == -1){
-        			System.out.println("Error inserting post edit into database: Unable to establish connection with database.");
-        		}
-        		
-        		if(errorCode == -2){
-        			System.out.println("Error inserting post edit into database: SQL error.");
-        		}
-    		}else{
-    			connectionManager.getConnection().commit();
-    			connectionManager.getConnection().setAutoCommit(true);
+    	if(errorCode < 0){
+    		
+    		if(DbConnection.testConnection(connectionManager) == true){
+				try {
+        			connectionManager.getConnection().rollback();
+        			connectionManager.getConnection().setAutoCommit(true);
+				} catch (SQLException sqlE) {
+					sqlE.printStackTrace();
+				}
+			}
+    		
+    		if(errorCode == -1){
+        		System.out.println("Error inserting post edit into database: Unable to establish connection with database.");
     		}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        		
+        	if(errorCode == -2){
+        		System.out.println("Error inserting post edit into database: SQL error.");
+        	}
+    	}
+		
     	return errorCode;
 	}
 }

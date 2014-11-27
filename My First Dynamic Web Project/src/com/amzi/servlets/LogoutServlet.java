@@ -30,12 +30,10 @@ public class LogoutServlet extends HttpServlet {
 		RequestDispatcher rd=request.getRequestDispatcher("Home.jsp");
 		 
 		 try {
-			rd.include(request,response);
+			rd.forward(request,response);
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

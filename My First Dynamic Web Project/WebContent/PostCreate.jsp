@@ -1,7 +1,7 @@
 <%@ page language="java" 
 	contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="com.amzi.dao.Blog, com.amzi.dao.User, java.util.ResourceBundle"
+	import="com.amzi.dao.Blog, com.amzi.dao.User, java.util.ResourceBundle, java.io.IOException"
 	%>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -30,8 +30,21 @@
 	User u = (User) session.getAttribute("currentUser");
 	
 	if(b == null){
-		//System.out.println("The session is invalid");
-		System.exit(1);
+	/* 	
+		If the blog cannot be retrieved, this page cannot be displayed. 
+		This should not happen within normal operation of the program.
+		In response to this behaviour the current user is logged out.
+	*/
+		
+		RequestDispatcher rd=request.getRequestDispatcher("/logoutServlet");
+		 
+		 try {
+			rd.include(request,response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 	
 	try{
