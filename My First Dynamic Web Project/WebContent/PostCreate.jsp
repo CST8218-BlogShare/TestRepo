@@ -26,7 +26,7 @@
 		lang = ResourceBundle.getBundle("PostCreate_FR");
 	} 
 	
-	Blog b = (Blog) session.getAttribute("currentBlog");
+	Blog b = Blog.getBlogFromDatabaseById(((Blog) session.getAttribute("currentBlog")).getBlogId());
 	User u = (User) session.getAttribute("currentUser");
 	
 	if(b == null || u == null){

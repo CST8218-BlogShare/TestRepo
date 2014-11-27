@@ -197,6 +197,7 @@ public class BlogCreateServlet extends HttpServlet{
 			 * Adding the newly created blog object to the ServletContext object, 
 			 * allowing it and it's data members to be retrieved within Blog.jsp
 			 */	 
+			
 			userSession.setAttribute("currentBlog", b);
 				 	
 			//Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.

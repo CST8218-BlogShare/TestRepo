@@ -23,7 +23,7 @@
 
 	<% 
 		int postEditPos;
-		Post currentPost= (Post) session.getAttribute("currentPost");
+		Post currentPost = (Post) session.getAttribute("currentPost");
 		ArrayList<PostEdit> postEdits = (ArrayList<PostEdit>) session.getAttribute("currentPostEditList");	
 		
 		if(currentPost == null || postEdits == null || session.getAttribute("currentPostEditPos") == null){
