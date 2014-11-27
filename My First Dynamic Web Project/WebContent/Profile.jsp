@@ -11,9 +11,7 @@ contentType="text/html; charset=ISO-8859-1"
 <%
 	User u = null;
 	Boolean usersProfile;
-	String test =(String) session.getAttribute("currentPage");
 	
-
 	session.setAttribute("currentPage","Profile");
 	ResourceBundle lang = ResourceBundle.getBundle("Profile_EN");
 	
