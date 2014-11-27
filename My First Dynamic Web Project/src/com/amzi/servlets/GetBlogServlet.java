@@ -20,7 +20,6 @@ public class GetBlogServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		Exception error = new Exception();
 		String url;
-		
 		Blog b = null;
 		int blogId = 0;
 		String blogTitle = null;
@@ -28,10 +27,6 @@ public class GetBlogServlet extends HttpServlet {
 		
 		blogTitle = request.getParameter("blogTitle");
 		isBlogEdit =  Boolean.parseBoolean(request.getParameter("isBlogEdit"));
-		
-		if(blogTitle == null){
-			System.exit(-1);
-		}
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		

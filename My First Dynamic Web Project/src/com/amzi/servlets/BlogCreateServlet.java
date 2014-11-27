@@ -32,7 +32,6 @@ public class BlogCreateServlet extends HttpServlet{
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		 
 		 Exception error = new Exception();
-		 HttpSession userSession = null;
 		 Boolean errorState = false;
 		 DbConnection connectionManager = null;
 		 
@@ -48,28 +47,14 @@ public class BlogCreateServlet extends HttpServlet{
 		 Boolean blogIsPublic = false;
 		 Boolean postIsPublic = false;
 		 Boolean isEditMode = false;
-		 
-		 
-		 //If a session has not been created, none will be created
-		 userSession = request.getSession(false);
-				
-		try{
-		
-			u = (User) userSession.getAttribute("currentUser");
+		 				
+		 u = (User) request.getSession().getAttribute("currentUser");
 
-		}catch(NumberFormatException nfE){
-			nfE.printStackTrace();
-			System.exit(-1);
-		}catch(IllegalStateException isE){
-			isE.printStackTrace();
-			System.exit(-1);
-		}
-		
-		//if current user cannot be retrieved, the session is no longer valid.
-		if(u == null){
-			System.out.println("Current user could not be retrieved from current session");
-			System.exit(-1);
-		}
+		 //if current user cannot be retrieved, the session is no longer valid.
+		 if(u == null){
+			 System.out.println("Current user could not be retrieved from current session");
+			 System.exit(-1);
+		 }
 		
 		connectionManager = DbConnection.getInstance();
 		
@@ -198,7 +183,7 @@ public class BlogCreateServlet extends HttpServlet{
 			 * allowing it and it's data members to be retrieved within Blog.jsp
 			 */	 
 			
-			userSession.setAttribute("currentBlog", b);
+			request.getSession().setAttribute("currentBlog", b);
 				 	
 			//Adding userBlogList back into the session is unneeded as userBlogList has the same reference id as the object stored in the userSession.
 		}catch(Exception e){

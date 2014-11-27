@@ -25,11 +25,6 @@ public class BlogChangeTitleServlet extends HttpServlet {
 		
 		blogId = ((Blog) request.getSession().getAttribute("currentBlog")).getBlogId();
 		
-		//if current blog cannot be retrieved, the session is no longer valid.
-		if(blogId == -1){
-			System.exit(1);
-		}
-		
 		newBlogTitle = request.getParameter("newBlogTitle");
 		newBlogTitle = newBlogTitle.trim();
          

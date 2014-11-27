@@ -34,12 +34,6 @@ public class PostDeleteServlet extends HttpServlet {
 		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
-		
-		//if current blog cannot be retrieved, the session is no longer valid.
-		if(b == null){
-			System.exit(1);
-		}
-		
 		connectionManager = DbConnection.getInstance();
 		
 		try{

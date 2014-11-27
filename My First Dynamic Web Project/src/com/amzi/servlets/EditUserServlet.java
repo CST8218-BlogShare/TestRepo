@@ -27,10 +27,6 @@ public class EditUserServlet extends HttpServlet {
 
         userId = ((User) (request.getSession().getAttribute("currentUser"))).getUserId();
         
-        if(userId == -1){
-        	System.exit(-1);
-        }
-        
         try{
         
 	        //checking for invalid credentials

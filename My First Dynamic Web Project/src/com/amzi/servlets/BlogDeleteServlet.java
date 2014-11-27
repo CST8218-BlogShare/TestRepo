@@ -34,11 +34,6 @@ public class BlogDeleteServlet extends HttpServlet {
 		int blogId = 0;
 		int postEditPrivilegeId = 0;
 		
-		//if this is not true, this servlet will never succeed and the request is invalid.
-		if(request.getParameter("blogTitle") == null){
-			System.exit(-1);
-		}
-		
 		blogTitle = request.getParameter("blogTitle");
 		
 		connectionManager = DbConnection.getInstance();
