@@ -102,8 +102,8 @@ contentType="text/html; charset=ISO-8859-1"
 							<button type="button" class="btn btn-default btn-lrg" style="width: 100%">
 								<% out.println(lang.getString("create")); %>
 							</button></a>
-					<% } %>
 						</div>
+					<% } %>
 				</div>
 			</div><!-- end col-sm-11-->
 		</div><!-- End row -->
