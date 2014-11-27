@@ -158,8 +158,6 @@
 		function deletePostClick(elementClicked){
 			var form = document.forms['deletePost'];
 			form.postToDeletePostPos.value = elementClicked.parentNode.parentNode.getAttribute("postPosition");
-				//alert(form.postToDeletePostId.value);
-				//alert(form.postToDeletePostPos.value);
 			form.submit();
 		}
 	</script>
