@@ -20,7 +20,6 @@ public class Blog {
 	private int toEdit = 0;
 	
 	public static String errorMessage = null;
-	public static String errorMessageFR = null;
 	
 	public Blog(){
 		
@@ -44,15 +43,15 @@ public class Blog {
     	try{
 	    	if(blogTitle.equals("")){
 	    		System.out.println("Blog does not have a title, throwing blogCreateError.");
-	    		errorMessage = "Error with Blog. Missing information";
-            	errorMessageFR = "Il y a eu une erreur lors de la creation du Blog. Vérifer que toute l'information est present.";
+	    		//errorMessage = "Error with Blog. Missing information";
+            	//errorMessageFR = "Il y a eu une erreur lors de la creation du Blog. Vérifer que toute l'information est present.";
 	    		throw blogCreateError;
 	    	}
 	   
 	    	if(username.equals("")){
 	    		System.out.println("Username contains no characters, throwing blogCreateError.");
-	    		errorMessage = "Problem with User";
-            	errorMessageFR = "Il y a eu une erreur lors de la creation du Blog.";
+	    		//errorMessage = "Problem with User";
+            	//errorMessageFR = "Il y a eu une erreur lors de la creation du Blog.";
 	    		throw blogCreateError;
 	    	}
 	    	
