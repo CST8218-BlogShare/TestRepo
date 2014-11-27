@@ -114,7 +114,7 @@
 							  If not display a personal greeting. */
 							
 						   if(session.getAttribute("currentUser") == null){ %>
-						   		<td> Welcome!</td>
+						   		<td> <% out.println(lang.getString("welcome")); %> </td>
 						<% }else{ %>
 								<td> <a href="Profile.jsp"> <% out.println(lang.getString("welcome")); %> <%= ((User)session.getAttribute("currentUser")).getUsername() %>!</a></td>
 						<% } %>
