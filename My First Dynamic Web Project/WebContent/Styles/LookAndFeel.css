@@ -72,7 +72,6 @@ fixed-panel{
 }
 
 
-
 .searchSelectButton{
 	height:100%; 
 	padding-top:2%; 
@@ -99,7 +98,6 @@ fixed-panel{
 	border-style:dashed; 
 	border-width:medium; 
 	border-color:white;	
-    padding:1%;	
 }
 
 td{

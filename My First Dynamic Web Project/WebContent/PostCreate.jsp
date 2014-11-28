@@ -27,11 +27,12 @@
 	} 
 	
 	Blog b = (Blog) session.getAttribute("currentBlog");
+	//Blog b = Blog.getBlogFromDatabaseById(((Blog) session.getAttribute("currentBlog")).getBlogId());
 	User u = (User) session.getAttribute("currentUser");
 	
-	if(b == null){
+	if(b == null || u == null){
 	/* 	
-		If the blog cannot be retrieved, this page cannot be displayed. 
+		If the blog or current user cannot be retrieved, this page cannot be displayed. 
 		This should not happen within normal operation of the program.
 		In response to this behaviour the current user is logged out.
 	*/

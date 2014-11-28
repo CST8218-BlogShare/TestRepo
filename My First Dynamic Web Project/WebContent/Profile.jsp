@@ -11,9 +11,7 @@ contentType="text/html; charset=ISO-8859-1"
 <%
 	User u = null;
 	Boolean usersProfile;
-	String test =(String) session.getAttribute("currentPage");
 	
-
 	session.setAttribute("currentPage","Profile");
 	ResourceBundle lang = ResourceBundle.getBundle("Profile_EN");
 	
@@ -34,25 +32,6 @@ contentType="text/html; charset=ISO-8859-1"
 	}		
 	
 	u = (User) session.getAttribute("currentUser");
-	
-	if(u == null){
-		/* 	
-		If the user cannot be retrieved, this page cannot be displayed. 
-		This should not happen within normal operation of the program.
-		In response to this behaviour the current user is logged out.
-	*/
-		
-		RequestDispatcher rd=request.getRequestDispatcher("/logoutServlet");
-		 
-		 try {
-			rd.include(request,response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
-	
 	usersProfile = true;
 	
 	/* If the user has navigated to Profile.jsp from searchResults.jsp, currentProfile will be initailized 
@@ -67,7 +46,7 @@ contentType="text/html; charset=ISO-8859-1"
 			usersProfile = false; //Set to false to prevent display of the additional functionality related to the logged in user. 
 		}else if(u != null){ //If there is a currently logged in user. 
 			//If the logged in user is not the same as the user profile that is associated with the current search result.
-			if(!u.getUsername().equals(((User) session.getAttribute("currentProfile")).getUsername())){
+			if(u.getUsername().equals(((User) session.getAttribute("currentProfile")).getUsername()) == false){
 				u = (User) session.getAttribute("currentProfile");
 				usersProfile = false; 
 			}
@@ -121,8 +100,8 @@ contentType="text/html; charset=ISO-8859-1"
 							<button type="button" class="btn btn-default btn-lrg" style="width: 100%">
 								<% out.println(lang.getString("create")); %>
 							</button></a>
-					<% } %>
 						</div>
+					<% } %>
 				</div>
 			</div><!-- end col-sm-11-->
 		</div><!-- End row -->

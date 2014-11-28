@@ -31,10 +31,6 @@ public class LoadSearchResultServlet extends HttpServlet {
 		String url = "";
 				
 		currentSearch =  (SearchResult) request.getSession().getAttribute("currentSearchResult");
-		//if currentSearch cannot be retrieved from the session, the session is invalid.
-		if(currentSearch == null){
-			System.exit(-1);
-		}
 		
 		try{
 			switch(currentSearch.getResultType()){

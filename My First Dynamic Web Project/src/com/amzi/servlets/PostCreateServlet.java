@@ -44,11 +44,6 @@ public class PostCreateServlet extends HttpServlet {
 		u = (User) request.getSession().getAttribute("currentUser");
 		b = (Blog) request.getSession().getAttribute("currentBlog");
 		
-		if(u == null || b == null){
-			// If the current user and the current blog, cannot be retrieved from the session, the session is invalid 
-			System.exit(-1);
-		}
-		
 		try{
 			isEditMode = Boolean.parseBoolean(request.getSession().getAttribute("editMode").toString());
 		}catch(Exception e){

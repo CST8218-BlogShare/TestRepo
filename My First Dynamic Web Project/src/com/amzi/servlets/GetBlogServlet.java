@@ -19,8 +19,7 @@ public class GetBlogServlet extends HttpServlet {
 	//load the requested blog into the session and forward to blog.jsp
 	protected void doPost(HttpServletRequest request, HttpServletResponse response){
 		Exception error = new Exception();
-		String url = "Blog.jsp";
-		
+		String url;
 		Blog b = null;
 		int blogId = 0;
 		String blogTitle = null;
@@ -29,12 +28,7 @@ public class GetBlogServlet extends HttpServlet {
 		blogTitle = request.getParameter("blogTitle");
 		isBlogEdit =  Boolean.parseBoolean(request.getParameter("isBlogEdit"));
 		
-		if(blogTitle == null){
-			System.exit(-1);
-		}
-		
 		b = (Blog) request.getSession().getAttribute("currentBlog");
-		
 		
 		try{
 		
@@ -60,7 +54,7 @@ public class GetBlogServlet extends HttpServlet {
 				}
 				
 				/* 
-				 * Since Blog.getBlogFromDatabaseById() is called on every load of Blog.jsp, a Blog object
+				 * Since Blog.getBlogFromDatabaseById() is called on every load of BlogEdit.jsp, a Blog object
 				 * is initialized with only the blogId of the Blog corresponding to the retrieved title. 
 				 */
 				
@@ -71,6 +65,8 @@ public class GetBlogServlet extends HttpServlet {
 			
 			if(isBlogEdit){
 				url = "BlogEdit.jsp";
+			}else{
+				url = "Blog.jsp";
 			}
 		
 		}catch(Exception e){

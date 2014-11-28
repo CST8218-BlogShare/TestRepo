@@ -9,6 +9,7 @@
 
 <%
 
+	session.setAttribute("currentPage","BlogEdit");
 	Blog b = Blog.getBlogFromDatabaseById(((Blog) session.getAttribute("currentBlog")).getBlogId());
 
 	//if the blog cannot be retrieved, this page cannot be displayed. So the program is closed...could also logout
@@ -42,6 +43,17 @@
 	if (session.getAttribute("language").toString().equals("FR")){
 		lang = ResourceBundle.getBundle("BlogEdit_FR");
 	} 
+
+	//if the user clicked change language, set to appropriate language
+	if (request.getParameter("language") != null){	
+		if (request.getParameter("language").equals("FR")){
+			lang = ResourceBundle.getBundle("BlogEdit_FR");
+			session.setAttribute("language","FR");
+		} else {
+			lang = ResourceBundle.getBundle("BlogEdit_EN");
+			session.setAttribute("language","EN");
+		}
+	}		
 
 %>
 <body>
@@ -158,8 +170,6 @@
 		function deletePostClick(elementClicked){
 			var form = document.forms['deletePost'];
 			form.postToDeletePostPos.value = elementClicked.parentNode.parentNode.getAttribute("postPosition");
-				//alert(form.postToDeletePostId.value);
-				//alert(form.postToDeletePostPos.value);
 			form.submit();
 		}
 	</script>

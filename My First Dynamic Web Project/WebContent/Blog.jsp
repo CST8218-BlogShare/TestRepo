@@ -41,11 +41,8 @@
 
 <% 
 		
-		/* 
-			Retrieving the user and blog objects accociated with the 
-			currently logged in user and the blog to be displayed.
-		*/
 		
+		//Initalizes the blog with the posts created by the current or another user. 
 		Blog b = Blog.getBlogFromDatabaseById(((Blog) session.getAttribute("currentBlog")).getBlogId());
 		User u = (User) session.getAttribute("currentUser");
 		String postTitle = (String) session.getAttribute("postToView");		
@@ -68,6 +65,9 @@
 				e.printStackTrace();
 			}	
 		}
+		
+		//setting the initalized blog as a session attribute.
+		session.setAttribute("currentBlog", b);
 %>
 
 <!--  If the user is navigating from the searchResults page causing the sessionVariable postToView to be set.
