@@ -35,6 +35,7 @@ public class PostCreateServlet extends HttpServlet {
 		String postBody = "";
 		int postId = 0;
 		int postEditPrivilegeId = 0;
+		int blogAuthorUserId = 0;
 		boolean postIsPublic = false;
 		
 		int toEdit = -1;
@@ -157,6 +158,39 @@ public class PostCreateServlet extends HttpServlet {
 						request.setAttribute("errorMessage", "errorsql");
 					}
 					throw error;
+				}
+				
+				/*
+				 * Since the author of the Blog gains editing permissions for every post in the Blog.
+				 * If the current user is not the author of this Blog, 
+				 * another postEditPrivilege entry is made for the Blog author.
+				 */
+				
+				if(u.getUsername() != b.getAuthor()){
+					
+					blogAuthorUserId = User.getUserIdFromDatabaseByUsername(b.getAuthor());
+					
+					if(blogAuthorUserId < 0){
+						if(blogAuthorUserId == -1){
+							request.setAttribute("errorMessage", "errorconnectfailed");
+						}
+						
+						if(blogAuthorUserId == -2){
+							request.setAttribute("errorMessage", "errorsql");
+						}
+						throw error;
+					}
+					
+					postEditPrivilegeId = PostEditPrivilege.insertPostEditPrivilegeInDatabase(postId, blogAuthorUserId);
+					
+					if(postEditPrivilegeId < 0){
+						if(postEditPrivilegeId == -1){
+							request.setAttribute("errorMessage", "errorconnectfailed");
+						}else{
+							request.setAttribute("errorMessage", "errorsql");
+						}
+						throw error;
+					}
 				}
 			}
 		    

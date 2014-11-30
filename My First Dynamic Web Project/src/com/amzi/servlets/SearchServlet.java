@@ -81,7 +81,8 @@ public class SearchServlet extends HttpServlet {
 					if(searchEditable == true){
 						String username = null;
 						
-						ps = connectionManager.getConnection().prepareStatement("select blogId from blog where isPublic = 1");
+						ps = connectionManager.getConnection().prepareStatement("select blogId from blog where isPublic = 1"
+																			  + " AND title like '%"+searchTerm+"%'");
 						
 						rs = ps.executeQuery();
 						
@@ -157,20 +158,13 @@ public class SearchServlet extends HttpServlet {
 			}
 			
 			if(searchPosts == true){
-				//String searchTermColumns = "";
 				String searchTermTitleBody = "";
 
 				if(searchTitle){
-					//searchTermColumns = searchTermColumns.concat("title");
 					searchTermTitleBody = searchTermTitleBody.concat("title like '%"+searchTerm+"%'");
 				}
 				
-				if(searchBody){
-					/*if(!searchTermColumns.contentEquals("")){
-						searchTermColumns = searchTermColumns.concat(", ");
-					}
-					searchTermColumns = searchTermColumns.concat("content");*/
-					
+				if(searchBody){					
 					if(!searchTermTitleBody.contentEquals("")){
 						searchTermTitleBody = searchTermTitleBody.concat(" OR ");
 					}
@@ -183,7 +177,8 @@ public class SearchServlet extends HttpServlet {
 					if(searchEditable == true){
 						int userId = -1;
 						
-						ps = connectionManager.getConnection().prepareStatement("select postId from post where isPublic = 1");
+						ps = connectionManager.getConnection().prepareStatement("select postId from post where isPublic = 1"
+																		      + " AND ("+searchTermTitleBody+")");
 						
 						rs = ps.executeQuery();
 						
@@ -203,20 +198,16 @@ public class SearchServlet extends HttpServlet {
 						}
 						
 						//find the posts where the user has been granted editing privileges and the title and or body of the post matches the search term.  
-						ps = connectionManager.getConnection().prepareStatement("select p.postId from post p, user u, user_post up, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
+						ps = connectionManager.getConnection().prepareStatement("select p.postId from post p, user u, posteditprivilege pep, user_posteditprivilege upep, post_posteditprivilege ppep" +
 																				" where u.userid = upep.userid AND" +
 																				" upep.postEditPrivilegeId = pep.postEditPrivilegeId AND" + 
 																				" pep.postEditPrivilegeId = ppep.postEditPrivilegeId AND" +
 																				" p.postid = ppep.postid AND" +
-																				" u.userid = up.userid AND" +
-																				" p.postid = up.postid AND" +
 																				" u.userId = ? AND" + 
 																				" ("+searchTermTitleBody+") AND"
 																			  + " p.postId NOT IN" + 
 																				" (select postId from post where isPublic = 1)");
 						ps.setInt(1,userId);
-						System.out.println(ps.toString());
-						
 						rs = ps.executeQuery();
 						
 						searchResultsPost = SearchResult.parseSearchResults(searchResultsPost,"postId",rs);

@@ -138,6 +138,45 @@ public class User{
 	     return u;
 	}
 	
+	public static int getUserIdFromDatabaseByUsername(String username){
+		int userId = 0;
+		 PreparedStatement pst = null; 
+	     ResultSet rs = null;
+	     DbConnection connectionManager = null;
+	     
+	     connectionManager = DbConnection.getInstance();
+	     
+	     if(DbConnection.testConnection(connectionManager) == false){
+	    	 	System.out.println("Error with User retrieval by userId: Unable to establish connection with database.");
+				return -1;
+		 }
+	       
+	     try {
+	    	 pst = connectionManager.getConnection().prepareStatement("select userid from user where username = ?");
+	    	 pst.setString(1, username);
+			 rs = pst.executeQuery();
+			 rs.first();
+
+		     userId = rs.getInt("userId");
+		    
+		     rs.close();
+		     pst.close();
+		    
+	     } catch (SQLException sqlE) {
+	    	 System.out.println("Error with User Retrieval by userid: Unable to retrieve User information based on UserId");
+	    	 sqlE.printStackTrace();
+			 return -2;
+	     }finally { 
+	    	 try {  
+	    		 rs.close();
+	    		 pst.close();  
+	         } catch (SQLException sqlE) {  
+	        	 sqlE.printStackTrace();  
+	         }  
+	     }   
+	     return userId;
+	}
+	
 	//Called when the user completes registration
 	public static int insertUserIntoDatabase(String username, String password){
 		 PreparedStatement pst = null;
