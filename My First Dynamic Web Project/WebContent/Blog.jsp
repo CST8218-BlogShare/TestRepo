@@ -138,7 +138,11 @@
 				//if there is no user logged in, the post will never be editable.
 				 if(u == null){
 				 	editEnabled = false;
-				 }else{
+				 //if the current user is the author of the blog, the post is always editable.	
+				 }else if(u.getUsername().equals(b.getAuthor())){
+				 	editEnabled = true;
+				 }else{ 
+				 //the author of the post is not the author or the blog, and a user is logged in.
 					editEnabled = Post.determinePostEditPrivilegeById(p.getPostId(), p.getAuthor(), p.getIsPublic() , u.getUserId(), u.getUsername());
 				 }
 		 %>
