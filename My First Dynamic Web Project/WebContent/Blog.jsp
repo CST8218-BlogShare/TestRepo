@@ -100,7 +100,7 @@
 			 	<!-- blog title -->
 			 	<tr>
 					<td>					
-						<p title="<%=lang.getString("blogtitle")%>" style="font-size:36px"> <b> <%= b.getBlogTitle() %> </b> </p>
+						<p style="font-size:36px"><a href="Blog.jsp" title="<%= lang.getString("linktoblogtitle") %>" style="color:lightblue;"><b> <%= b.getBlogTitle() %> </b> </a> </p>
 					</td>
 					<td>
 						<!-- space for edit logo 
