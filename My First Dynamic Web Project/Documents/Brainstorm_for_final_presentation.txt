@@ -1,0 +1,117 @@
+Plan for Product Demo
+
+What to show off
+
+Blog creation, post creation.
+Blog editing, post editing.
+Searching for users, posts and blogs.
+
+Multi-User Functionality
+
+Creating posts in other blogs
+Editing posts in each others blogs.
+Creating posts at the same time with multiple users. 
+(There is an issue with this, if someone creates a post while another user is viewing the blog page.
+ The posts will appear after the blog is reloaded though, same goes for edits.)
+ Creating a post in a deleted blog.
+ Editing post that was deleted. 
+
+Blog management features.
+
+Reversing the edit of a post.
+Deleting posts and blogs from blogedit menu
+
+
+Schedule for demo
+
+Vince
+
+Register and log in.
+Make public blog derek's blog
+Create a post in the public blog
+Navigate to post.
+Edit the post.
+ 
+
+Jan -
+
+Register and log in.
+Make blog Jan's blog (non public)
+Search for derek in search bar (show off all results)
+Go to dereks profile.
+Navigate to blog via profile
+Edit Derek's post. 
+Refresh page to show its edited back.
+
+Log out, log in as derek.
+
+Show off blog edit menu.
+
+Explained by Vince and Jan
+
+Jan
+Register and log in.
+Make non public Blog
+Make additional post
+Search name of additional post in search bar.
+Go to that blog, note the additonal post.
+Make an edit to the post description
+Post description will show edit.
+Create new blog this publicly editable
+ 
+Vince
+Log in.
+Search post.
+Make post.
+Reload Page,note post.
+Edit post.
+Search for blog
+Search for blog with editable flag, should be no result.
+search for blog find both,
+search with editable flag, find both.
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+toTest if editEnabled is working as planned.
+
+log in as Derek
+
+create blog that is not publicly editable
+make two posts, second one is editable
+logout - search for post, should be editable 
+login as different user - search for post, should be editable - 
+
+works as should
+
+
+create blog that is publicly editable
+create posts - should be publicly editable - with isPublic checked
+logout 
+searchBlog - all posts should be editable - with isPublic checked
+
+if a user is editing a post and the blog is deleted. 
+
+the user will first check if the blog is deleted,
+then if the post is deleted. 
+
+this allows me to not add all posts to the postDeleted table on blog removal 
+
+if the user is creating a post, there is not chance the post has been deleted. 
