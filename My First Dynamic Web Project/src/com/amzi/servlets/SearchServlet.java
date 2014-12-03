@@ -108,7 +108,7 @@ public class SearchServlet extends HttpServlet {
 																				" AND b.blogId = ub.blogId" +
 																				" AND u.userId = ub.userId" +
 																				" AND u.username = ? AND" +
-																				" b.postId NOT IN" + 
+																				" b.blogId NOT IN" + 
 																				" (select blogId from blog where isPublic = 1)");
 						ps.setString(1,username);
 						
