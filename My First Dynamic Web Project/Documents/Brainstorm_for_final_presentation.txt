@@ -50,25 +50,42 @@ Show off blog edit menu.
 Explained by Vince and Jan
 
 Jan
-Register and log in.
-Make non public Blog
-Make additional post
-Search name of additional post in search bar.
-Go to that blog, note the additonal post.
-Make an edit to the post description
-Post description will show edit.
-Create new blog this publicly editable
- 
+1.
+	Register and log in.
+	Make non public Blog
+	Make additional post
+		Vince goes 1
+3.
+	Search name of additional post in search bar.
+	Go to that blog, note the additonal post.
+		Vince goes 4	
+5.
+	Refresh page, note the edit. 
+	Make an edit to the post description
+	Post description will show edit.
+		Vince goes 6
+7.
+	Create new blog this publicly editable
+ 		Vince goes 8
+ 	
 Vince
-Log in.
-Search post.
-Make post.
-Reload Page,note post.
-Edit post.
-Search for blog
-Search for blog with editable flag, should be no result.
-search for blog find both,
-search with editable flag, find both.
+2.
+	Log in.
+	Search post.
+	Make post.
+	Reload Page,note post.
+		Jan goes 3
+4.	
+	Edit post.
+		Jan goes 5
+6. 
+	Search for blog
+	Search for blog with editable flag, should be no result.
+		Jan goes 7.
+8.
+	Search for blog find both,
+	Search with editable flag, find both.
+	Logout?
 
 
 
