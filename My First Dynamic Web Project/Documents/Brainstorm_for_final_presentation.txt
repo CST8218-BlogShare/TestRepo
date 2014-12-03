@@ -56,17 +56,24 @@ Jan
 	Make additional post
 		Vince goes 1
 3.
-	Search name of additional post in search bar.
-	Go to that blog, note the additonal post.
+	Refresh the page notice additional post, note the additonal post.
 		Vince goes 4	
 5.
 	Refresh page, note the edit. 
 	Make an edit to the post description
 	Post description will show edit.
 		Vince goes 6
-7.
-	Create new blog this publicly editable
- 		Vince goes 8
+		
+7.	Search for blog find both,
+	Search with editable flag, find both.
+	Edit content in this blog.
+		
+8.	Go to blog edit, the post edit history.
+	Reverse edit to dereks post in first blog.
+	
+9.	Then delete all content.
+	
+ 		
  	
 Vince
 2.
@@ -81,11 +88,9 @@ Vince
 6. 
 	Search for blog
 	Search for blog with editable flag, should be no result.
+	Create blog that is publicly editable
 		Jan goes 7.
-8.
-	Search for blog find both,
-	Search with editable flag, find both.
-	Logout?
+
 
 
 

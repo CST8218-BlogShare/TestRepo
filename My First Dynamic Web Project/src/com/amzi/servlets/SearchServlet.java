@@ -104,10 +104,12 @@ public class SearchServlet extends HttpServlet {
 						//since privileges may not be given to edit a blog, only select from the set of blogs where the currentUser is the author of the blog.
 						//further checks are unneeded as editing privileges may not be granted for a a blog. 
 						ps =  connectionManager.getConnection().prepareStatement("select b.blogID from blog b, user u, user_blog ub " +
-																					" where b.title like '%"+searchTerm+"%' " +
-																					" AND b.blogId = ub.blogId" +
-																					" AND u.userId = ub.userId" +
-																					" AND u.username = ? ");
+																				" where b.title like '%"+searchTerm+"%' " +
+																				" AND b.blogId = ub.blogId" +
+																				" AND u.userId = ub.userId" +
+																				" AND u.username = ? AND" +
+																				" b.postId NOT IN" + 
+																				" (select blogId from blog where isPublic = 1)");
 						ps.setString(1,username);
 						
 						rs = ps.executeQuery();
